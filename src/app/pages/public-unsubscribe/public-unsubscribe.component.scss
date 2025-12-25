@@ -1,0 +1,103 @@
+.unsubscribe-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+
+  .unsubscribe-card {
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+
+    mat-card-content {
+      padding: 60px 40px;
+    }
+
+    .state-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+
+      h2 {
+        font-size: 28px;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      p {
+        font-size: 16px;
+        color: #666;
+        margin: 0;
+        line-height: 1.6;
+      }
+
+      .sub-message {
+        font-size: 14px;
+        color: #999;
+      }
+
+      .state-icon {
+        font-size: 80px;
+        width: 80px;
+        height: 80px;
+      }
+
+      &.loading {
+        h2 {
+          color: #1976d2;
+        }
+      }
+
+      &.success {
+        .state-icon {
+          color: #4caf50;
+        }
+
+        h2 {
+          color: #4caf50;
+        }
+      }
+
+      &.error {
+        .state-icon {
+          color: #f44336;
+        }
+
+        h2 {
+          color: #f44336;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .unsubscribe-container {
+    .unsubscribe-card {
+      mat-card-content {
+        padding: 40px 20px;
+      }
+
+      .state-content {
+        h2 {
+          font-size: 24px;
+        }
+
+        p {
+          font-size: 14px;
+        }
+
+        .state-icon {
+          font-size: 60px;
+          width: 60px;
+          height: 60px;
+        }
+      }
+    }
+  }
+}

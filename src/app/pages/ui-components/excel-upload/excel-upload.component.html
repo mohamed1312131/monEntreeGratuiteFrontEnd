@@ -1,0 +1,339 @@
+<mat-card class="cardWithShadow">
+  <mat-card-header>
+    <mat-card-title class="m-b-0">Gestion des Utilisateurs Excel</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="b-t-1">
+    
+    <!-- Foire Selection -->
+    <div class="row m-t-20">
+      <div class="col-12">
+        <div class="foire-selection-card">
+          <mat-icon class="selection-icon">event</mat-icon>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Sélectionner une Foire</mat-label>
+            <mat-select [(ngModel)]="selectedFoireId" (selectionChange)="onFoireChange()" required>
+              <mat-option *ngFor="let foire of foires" [value]="foire.id">
+                {{ foire.name }} - {{ foire.city }} ({{ foire.date | date:'dd/MM/yyyy' }})
+              </mat-option>
+            </mat-select>
+            <mat-hint>Sélectionnez une foire pour voir et gérer ses utilisateurs</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Upload Section -->
+    <div class="row m-t-20">
+      <div class="col-12">
+        <mat-card class="upload-card">
+          <mat-card-content>
+            <h3 class="m-b-16">Télécharger un fichier Excel</h3>
+            
+            <!-- Drag and Drop Zone -->
+            <div 
+              class="drop-zone"
+              [class.dragging]="isDragging"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)"
+              (click)="fileInput.click()">
+              
+              <input 
+                #fileInput
+                type="file" 
+                accept=".xlsx,.xls" 
+                (change)="onFileSelected($event)"
+                style="display: none;">
+              
+              <div class="drop-zone-content">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                <p class="m-t-16 m-b-8">
+                  <strong>Glissez-déposez votre fichier Excel ici</strong>
+                </p>
+                <p class="text-muted m-b-16">ou cliquez pour sélectionner</p>
+                <p class="text-muted small">Formats acceptés: .xlsx, .xls</p>
+              </div>
+            </div>
+
+            <!-- Selected File Info -->
+            <div *ngIf="selectedFile" class="selected-file m-t-16">
+              <div class="file-info">
+                <mat-icon>description</mat-icon>
+                <span class="file-name">{{ selectedFile.name }}</span>
+                <span class="file-size">({{ (selectedFile.size / 1024).toFixed(2) }} KB)</span>
+                <button mat-icon-button color="warn" (click)="clearFile()" [disabled]="isUploading">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Upload Button -->
+            <div class="m-t-16">
+              <button 
+                mat-raised-button 
+                color="primary" 
+                (click)="uploadFile()"
+                [disabled]="!selectedFile || !selectedFoireId || isUploading">
+                <mat-icon *ngIf="!isUploading">upload</mat-icon>
+                <mat-spinner *ngIf="isUploading" diameter="20" class="inline-spinner"></mat-spinner>
+                {{ isUploading ? 'Téléchargement...' : 'Télécharger le fichier' }}
+              </button>
+            </div>
+
+            <!-- Upload Response -->
+            <div *ngIf="uploadResponse" class="upload-response m-t-16">
+              <mat-card [class.success-card]="uploadResponse.success" [class.error-card]="!uploadResponse.success">
+                <mat-card-content>
+                  <h4>{{ uploadResponse.message }}</h4>
+                  <div class="response-stats">
+                    <p><strong>Total de lignes:</strong> {{ uploadResponse.totalRows }}</p>
+                    <p><strong>Lignes réussies:</strong> {{ uploadResponse.successfulRows }}</p>
+                    <p><strong>Lignes échouées:</strong> {{ uploadResponse.failedRows }}</p>
+                  </div>
+                  <div *ngIf="uploadResponse.errors && uploadResponse.errors.length > 0" class="errors-list">
+                    <h5>Erreurs:</h5>
+                    <ul>
+                      <li *ngFor="let error of uploadResponse.errors">{{ error }}</li>
+                    </ul>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Data Table Section -->
+    <div class="row m-t-20">
+      <div class="col-12">
+        <mat-card>
+          <mat-card-content>
+            
+            <!-- Empty State -->
+            <div *ngIf="!selectedFoireId" class="empty-state">
+              <mat-icon class="empty-icon">event</mat-icon>
+              <h3>Sélectionnez une foire</h3>
+              <p class="text-muted">Veuillez sélectionner une foire ci-dessus pour voir les utilisateurs téléchargés</p>
+            </div>
+
+            <!-- Table Header with Actions -->
+            <div *ngIf="selectedFoireId" class="table-header">
+              <div class="header-info">
+                <h3>Liste des Utilisateurs</h3>
+                <mat-chip-set>
+                  <mat-chip class="count-chip">
+                    <mat-icon>people</mat-icon>
+                    {{ allUsers.length }} utilisateur(s)
+                  </mat-chip>
+                  <mat-chip class="foire-chip" *ngIf="getSelectedFoireName()">
+                    <mat-icon>event</mat-icon>
+                    {{ getSelectedFoireName() }}
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
+              <div class="actions">
+                <mat-form-field appearance="outline" class="search-field">
+                  <mat-label>Rechercher</mat-label>
+                  <input matInput (keyup)="applyFilter($event)" placeholder="Nom, Email, Code...">
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                
+                <mat-chip-set *ngIf="selection.selected.length > 0">
+                  <mat-chip class="selected-chip">
+                    <mat-icon>check_circle</mat-icon>
+                    {{ selection.selected.length }} sélectionné(s)
+                  </mat-chip>
+                </mat-chip-set>
+
+                <button 
+                  mat-raised-button 
+                  color="accent" 
+                  (click)="openTemplateSelection()"
+                  [disabled]="selection.selected.length === 0"
+                  class="m-l-8">
+                  <mat-icon>send</mat-icon>
+                  Envoyer Emails
+                </button>
+
+                <button 
+                  mat-raised-button 
+                  color="warn" 
+                  (click)="deleteAllForFoire()"
+                  [disabled]="allUsers.length === 0"
+                  class="m-l-8">
+                  <mat-icon>delete_sweep</mat-icon>
+                  Supprimer Tous
+                </button>
+              </div>
+            </div>
+
+            <!-- Loading State -->
+            <div *ngIf="selectedFoireId && isLoading" class="loading-state">
+              <mat-spinner diameter="50"></mat-spinner>
+              <p class="m-t-16">Chargement des utilisateurs...</p>
+            </div>
+
+            <!-- No Data State -->
+            <div *ngIf="selectedFoireId && !isLoading && allUsers.length === 0" class="empty-state">
+              <mat-icon class="empty-icon">inbox</mat-icon>
+              <h3>Aucun utilisateur trouvé</h3>
+              <p class="text-muted">Téléchargez un fichier Excel pour ajouter des utilisateurs à cette foire</p>
+            </div>
+
+            <!-- Data Table -->
+            <div *ngIf="selectedFoireId && !isLoading && allUsers.length > 0" class="table-container m-t-16">
+              <table mat-table [dataSource]="dataSource" matSort class="w-100">
+                
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox
+                      (change)="$event ? toggleAllRows() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()"
+                      [aria-label]="checkboxLabel()">
+                    </mat-checkbox>
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <mat-checkbox
+                      (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)"
+                      [aria-label]="checkboxLabel(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <!-- Nom Column -->
+                <ng-container matColumnDef="nom">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+                  <td mat-cell *matCellDef="let user">{{ user.nom }}</td>
+                </ng-container>
+
+                <!-- Email Column -->
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                  <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+                </ng-container>
+
+                <!-- Date Column -->
+                <ng-container matColumnDef="date">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                  <td mat-cell *matCellDef="let user">{{ user.date || 'N/A' }}</td>
+                </ng-container>
+
+                <!-- Heure Column -->
+                <ng-container matColumnDef="heure">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Heure</th>
+                  <td mat-cell *matCellDef="let user">{{ user.heure || 'N/A' }}</td>
+                </ng-container>
+
+                <!-- Code Column -->
+                <ng-container matColumnDef="code">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                  <td mat-cell *matCellDef="let user">{{ user.code || 'N/A' }}</td>
+                </ng-container>
+
+                <!-- Foire Name Column -->
+                <ng-container matColumnDef="foireName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Foire</th>
+                  <td mat-cell *matCellDef="let user">{{ user.foireName }}</td>
+                </ng-container>
+
+                <!-- Created At Column -->
+                <ng-container matColumnDef="createdAt">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Créé le</th>
+                  <td mat-cell *matCellDef="let user">{{ user.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let user">
+                    <button 
+                      mat-icon-button 
+                      color="warn" 
+                      (click)="deleteUser(user.id, user.nom)"
+                      matTooltip="Supprimer">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <!-- No Data Row -->
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                    <div class="no-data" *ngIf="!isLoading">
+                      <mat-icon>inbox</mat-icon>
+                      <p>Aucun utilisateur trouvé</p>
+                    </div>
+                    <div class="loading" *ngIf="isLoading">
+                      <mat-spinner diameter="40"></mat-spinner>
+                      <p>Chargement...</p>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Template Selection Modal -->
+              <div *ngIf="showTemplateSelection" class="template-selection-overlay">
+                <mat-card class="template-selection-card">
+                  <mat-card-header>
+                    <mat-card-title>
+                      <mat-icon>email</mat-icon>
+                      Sélectionner un Template
+                    </mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p class="m-b-16">
+                      Envoyer des emails à <strong>{{ selection.selected.length }} utilisateur(s)</strong>
+                    </p>
+
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>Template Email</mat-label>
+                      <mat-select [(ngModel)]="selectedTemplateId" required>
+                        <mat-option *ngFor="let template of templates" [value]="template.id">
+                          {{ template.name }} - {{ template.subject }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-hint>Choisissez le template à utiliser pour l'envoi</mat-hint>
+                    </mat-form-field>
+
+                    <div class="template-actions m-t-20">
+                      <button 
+                        mat-raised-button 
+                        (click)="cancelTemplateSelection()"
+                        [disabled]="isSendingEmails">
+                        Annuler
+                      </button>
+                      <button 
+                        mat-raised-button 
+                        color="primary" 
+                        (click)="sendEmailsToSelected()"
+                        [disabled]="!selectedTemplateId || isSendingEmails">
+                        <mat-icon *ngIf="!isSendingEmails">send</mat-icon>
+                        <mat-spinner *ngIf="isSendingEmails" diameter="20" class="inline-spinner"></mat-spinner>
+                        {{ isSendingEmails ? 'Envoi en cours...' : 'Envoyer' }}
+                      </button>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+
+              <mat-paginator 
+                [pageSizeOptions]="pageSizeOptions" 
+                [pageSize]="10"
+                showFirstLastButtons>
+              </mat-paginator>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+  </mat-card-content>
+</mat-card>

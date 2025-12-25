@@ -1,0 +1,156 @@
+// Exposant Management Component Styles
+
+// Header Section
+.header-section {
+  .title-icon {
+    vertical-align: middle;
+    margin-right: 8px;
+    color: #01B3A7;
+  }
+}
+
+// Action Toolbar
+.action-toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .search-field {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  button {
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(1, 179, 167, 0.3);
+    }
+  }
+}
+
+// Table Styles
+.mat-elevation-z8 {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+table {
+  background: white;
+
+  th {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #2a3547;
+    font-weight: 600;
+    padding: 12px 8px;
+  }
+
+  td {
+    padding: 12px 8px;
+  }
+
+  .table-row {
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(1, 179, 167, 0.05);
+    }
+  }
+}
+
+// ID Badge
+.id-badge {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  color: #1976d2;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+// Country Flag
+.country-flag {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+// Personnes Chip
+.personnes-chip {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  color: #2e7d32;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.875rem;
+}
+
+// Age Chip
+.age-chip {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  color: #e65100;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.875rem;
+}
+
+// Snackbar Styles
+::ng-deep {
+  .snack-bar-success {
+    background-color: #01B3A7 !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+
+  .snack-bar-error {
+    background-color: #fa896b !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .action-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+
+    .search-field {
+      width: 100%;
+      min-width: auto;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .country-flag {
+    width: 24px;
+    height: 24px;
+  }
+
+  table {
+    th, td {
+      padding: 8px 4px;
+      font-size: 0.875rem;
+    }
+  }
+}

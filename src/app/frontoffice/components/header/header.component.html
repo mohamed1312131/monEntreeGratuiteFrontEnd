@@ -1,0 +1,32 @@
+<header>
+	<div id="header-wrap" [class.scrolled]="isScrolled">
+		<nav id="navbar">
+			<div class="main-logo">
+				<a href="/">
+					<img src="assets/images/logos/Mon ENTREE GRATUITE.png" alt="Mon Entrée Gratuite" class="logo-img">
+				</a>
+			</div>
+		</nav>
+
+		<div class="side-nav-bar">
+			<button class="menu-btn" [class.active]="isMenuOpen" (click)="toggleMenu()">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+		</div>
+	</div>
+
+	<!-- Navigation Overlay -->
+	<div class="nav-overlay" [class.open]="isMenuOpen" (click)="closeMenu()">
+		<nav class="nav-content" (click)="$event.stopPropagation()">
+			<ul class="nav-list">
+				<li class="nav-item" [style.animation-delay]="'0.1s'"><a href="/" (click)="closeMenu()">Accueil</a></li>
+				<li class="nav-item" [style.animation-delay]="'0.2s'"><a href="/foires" (click)="closeMenu()">Foires et Salons</a></li>
+				<li class="nav-item" [style.animation-delay]="'0.3s'"><a href="/reserver" (click)="closeMenu()">Réserver Mon Entrée Gratuite</a></li>
+				<li class="nav-item" [style.animation-delay]="'0.4s'"><a href="/exposant-sponsor" (click)="closeMenu()">Devenir exposant sponsor</a></li>
+				<li class="nav-item" [style.animation-delay]="'0.5s'"><a href="/qui-sommes-nous" (click)="closeMenu()">Qui sommes nous</a></li>
+			</ul>
+		</nav>
+	</div>
+</header>

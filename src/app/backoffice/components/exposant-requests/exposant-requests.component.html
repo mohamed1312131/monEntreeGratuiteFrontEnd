@@ -1,0 +1,170 @@
+<div class="reservation-container">
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des demandes exposants...</p>
+  </div>
+
+  <!-- Compact Header Bar -->
+  <div class="header-bar">
+    <div class="header-left">
+      <div class="title-section">
+        <mat-icon class="header-icon">business_center</mat-icon>
+        <h1 class="header-title">Demandes Exposants</h1>
+        <span class="count-badge">{{ getTotalRequests() }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compact Action Bar -->
+  <div class="action-bar">
+    <div class="action-left">
+      <mat-form-field appearance="outline" class="compact-search">
+        <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher..." />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline" class="compact-filter">
+        <mat-label>Statut</mat-label>
+        <mat-select [(ngModel)]="selectedStatus" (selectionChange)="applyFilters()" multiple>
+          <mat-option value="PENDING">En attente</mat-option>
+          <mat-option value="CONTACTED">Contacté</mat-option>
+          <mat-option value="ACCEPTED">Accepté</mat-option>
+          <mat-option value="REJECTED">Refusé</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    
+    <div class="action-right">
+      <button mat-stroked-button class="compact-btn" (click)="exportToExcel()" [disabled]="selection.selected.length === 0">
+        <mat-icon>download</mat-icon>
+        <span class="btn-text">Excel ({{ selection.selected.length }})</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- High-Density Table -->
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort class="compact-table">
+      
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="col-check">
+          <mat-checkbox
+            (change)="$event ? toggleAllRows() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+            class="compact-checkbox"
+          ></mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row" class="col-check">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)"
+            class="compact-checkbox"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-id">ID</th>
+        <td mat-cell *matCellDef="let request" class="col-id">
+          <span class="id-text">{{ request.id }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-date">Date</th>
+        <td mat-cell *matCellDef="let request" class="col-date">{{ request.createdAt | date:'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <!-- Etablissement Column -->
+      <ng-container matColumnDef="nomEtablissement">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-etablissement">Établissement</th>
+        <td mat-cell *matCellDef="let request" class="col-etablissement">
+          <span class="truncate-text" [title]="request.nomEtablissement">{{ request.nomEtablissement }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Secteur Column -->
+      <ng-container matColumnDef="secteurActivite">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-secteur">Secteur</th>
+        <td mat-cell *matCellDef="let request" class="col-secteur">{{ request.secteurActivite }}</td>
+      </ng-container>
+
+      <!-- Contact Column -->
+      <ng-container matColumnDef="nomPrenom">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-contact">Contact</th>
+        <td mat-cell *matCellDef="let request" class="col-contact">{{ request.nomPrenom }}</td>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef class="col-email">Email</th>
+        <td mat-cell *matCellDef="let request" class="col-email">
+          <span class="truncate-text" [title]="request.email">{{ request.email }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Phone Column -->
+      <ng-container matColumnDef="telephone">
+        <th mat-header-cell *matHeaderCellDef class="col-phone">Tél</th>
+        <td mat-cell *matCellDef="let request" class="col-phone">{{ request.telephone }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-status">Statut</th>
+        <td mat-cell *matCellDef="let request" class="col-status">
+          <span [class]="'status-badge ' + getStatusClass(request.status)">{{ getStatusLabel(request.status) }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="col-actions">Actions</th>
+        <td mat-cell *matCellDef="let request" class="col-actions">
+          <div class="action-btns">
+            <button mat-icon-button class="action-icon confirm-icon" (click)="updateStatus(request.id, 'CONTACTED'); $event.stopPropagation()" matTooltip="Marquer contacté">
+              <mat-icon>phone_in_talk</mat-icon>
+            </button>
+            <button mat-icon-button class="action-icon confirm-icon" (click)="updateStatus(request.id, 'ACCEPTED'); $event.stopPropagation()" matTooltip="Accepter">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button mat-icon-button class="action-icon block-icon" (click)="updateStatus(request.id, 'REJECTED'); $event.stopPropagation()" matTooltip="Refuser">
+              <mat-icon>cancel</mat-icon>
+            </button>
+            <button mat-icon-button class="action-icon delete-icon" (click)="deleteRequest(request.id); $event.stopPropagation()" matTooltip="Supprimer">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="compact-header"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="compact-row"></tr>
+
+      <tr class="mat-row no-data-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <div class="no-data">
+            <mat-icon>inbox</mat-icon>
+            <span>Aucune demande trouvée</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Compact Paginator -->
+  <div class="paginator-wrapper">
+    <mat-paginator
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      [pageSize]="10"
+      showFirstLastButtons
+      class="compact-paginator"
+    ></mat-paginator>
+  </div>
+</div>

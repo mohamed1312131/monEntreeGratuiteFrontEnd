@@ -1,0 +1,62 @@
+<mat-card class="cardWithShadow chart-card">
+  <mat-card-content class="p-24">
+    <!-- Header -->
+    <div class="card-header">
+      <div class="d-flex align-items-center">
+        <div class="icon-wrapper">
+          <mat-icon>people</mat-icon>
+        </div>
+        <div>
+          <h3 class="card-title">Réservations par Âge</h3>
+          <p class="card-subtitle">Distribution par tranche d'âge</p>
+        </div>
+      </div>
+      <div class="d-flex gap-8">
+        <mat-form-field class="filter-select" appearance="outline">
+          <mat-label>Année</mat-label>
+          <mat-select 
+            [(ngModel)]="selectedYear" 
+            (selectionChange)="updateChart()"
+          >
+            <mat-option *ngFor="let year of years" [value]="year">
+              {{ year }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="filter-select" appearance="outline">
+          <mat-label>Pays</mat-label>
+          <mat-select 
+            [(ngModel)]="selectedCountry" 
+            (selectionChange)="updateChart()"
+          >
+            <mat-option value="FR">France</mat-option>
+            <mat-option value="BE">Belgique</mat-option>
+            <mat-option value="CH">Suisse</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Chargement...</p>
+    </div>
+
+    <!-- Chart -->
+    <div *ngIf="!loading && chartOptions" class="chart-content">
+      <apx-chart 
+        [series]="chartOptions.series!"
+        [chart]="chartOptions.chart!"
+        [labels]="chartOptions.labels!"
+        [responsive]="chartOptions.responsive!"
+      ></apx-chart>
+    </div>
+
+    <!-- No Data -->
+    <div *ngIf="!loading && !chartOptions" class="no-data">
+      <mat-icon>inbox</mat-icon>
+      <p>Aucune donnée disponible pour cette sélection</p>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,43 @@
+<mat-card class="cardWithShadow chart-card">
+  <mat-card-content class="p-24">
+    <!-- Header -->
+    <div class="card-header">
+      <div class="d-flex align-items-center">
+        <div class="icon-wrapper">
+          <mat-icon>analytics</mat-icon>
+        </div>
+        <div>
+          <h3 class="card-title">Vue d'Ensemble Annuelle</h3>
+          <p class="card-subtitle">Entrées utilisateurs et réservations mensuelles</p>
+        </div>
+      </div>
+      <mat-form-field class="filter-select" appearance="outline">
+        <mat-label>Année</mat-label>
+        <mat-select [value]="selectedYear" (selectionChange)="onYearChange($event.value)">
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Chargement des données...</p>
+    </div>
+
+    <!-- Chart -->
+    <div *ngIf="!isLoading && salesOverviewChart" class="chart-content">
+      <apx-chart
+        [series]="salesOverviewChart.series!"
+        [chart]="salesOverviewChart.chart!"
+        [plotOptions]="salesOverviewChart.plotOptions!"
+        [xaxis]="salesOverviewChart.xaxis!"
+        [yaxis]="salesOverviewChart.yaxis!"
+        [stroke]="salesOverviewChart.stroke!"
+        [tooltip]="salesOverviewChart.tooltip!"
+      ></apx-chart>
+    </div>
+  </mat-card-content>
+</mat-card>

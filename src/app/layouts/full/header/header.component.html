@@ -1,0 +1,20 @@
+<mat-toolbar class="topbar">
+  <!-- Mobile Menu -->
+  <button mat-icon-button (click)="toggleMobileNav.emit()" *ngIf="!showToggle">
+    <i-tabler name="menu-2" class="icon-20 d-flex"></i-tabler>
+  </button>
+  <span class="flex-1-auto"></span>
+
+  <!-- User Info and Logout Button -->
+  <span class="user-info" *ngIf="currentUser">
+    <span class="username">{{ currentUser.username }}</span>
+  </span>
+  <button
+    mat-icon-button
+    (click)="logout()"
+    matTooltip="Déconnexion"
+    aria-label="Logout"
+  >
+    <i-tabler name="logout" class="icon-20 d-flex"></i-tabler>
+  </button>
+</mat-toolbar>

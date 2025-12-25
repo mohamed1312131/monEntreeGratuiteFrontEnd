@@ -1,0 +1,324 @@
+<div class="editor-container">
+  <div *ngIf="loading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading template...</p>
+  </div>
+
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>{{ templateId ? 'edit' : 'add' }}</mat-icon>
+        {{ templateId ? 'Edit Template' : 'Create New Template' }} (Simplified Builder)
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="header-actions">
+        <button mat-raised-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Back to List
+        </button>
+        <button mat-raised-button color="primary" (click)="saveTemplate()" 
+                [disabled]="saving || templateForm.invalid">
+          <mat-icon>{{ saving ? 'hourglass_empty' : 'save' }}</mat-icon>
+          {{ saving ? 'Saving...' : (templateId ? 'Update' : 'Create') }}
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <form [formGroup]="templateForm" class="template-form">
+    <div class="form-layout">
+      <!-- Left Column: Configuration -->
+      <div class="left-column">
+        
+        <!-- Basic Info -->
+        <mat-card class="form-card">
+          <mat-card-content>
+            <h3>Basic Information</h3>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Template Name</mat-label>
+              <input matInput formControlName="name" placeholder="e.g., Event Invitation">
+              <mat-icon matSuffix>label</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email Subject</mat-label>
+              <input matInput formControlName="subject" placeholder="e.g., You're Invited!">
+              <mat-icon matSuffix>subject</mat-icon>
+              <mat-hint>Can include dynamic fields like {{'{{'}}NOM{{'}}'}}</mat-hint>
+            </mat-form-field>
+
+            <div class="toggle-field">
+              <mat-slide-toggle formControlName="isActive" color="primary">
+                Active Template
+              </mat-slide-toggle>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Styling -->
+        <mat-card class="form-card">
+          <mat-card-content>
+            <h3>Global Styling</h3>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Background Color</mat-label>
+              <input matInput formControlName="backgroundColor" type="color">
+              <mat-icon matSuffix>palette</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Primary Color</mat-label>
+              <input matInput formControlName="primaryColor" type="color">
+              <mat-icon matSuffix>palette</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Font Family</mat-label>
+              <mat-select formControlName="fontFamily">
+                <mat-option *ngFor="let font of fontFamilies" [value]="font.value">
+                  {{ font.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Font Size</mat-label>
+              <mat-select formControlName="fontSize">
+                <mat-option *ngFor="let size of fontSizes" [value]="size.value">
+                  {{ size.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Header Image -->
+        <mat-card class="form-card">
+          <mat-card-content>
+            <h3>Header Image (Full Width)</h3>
+            
+            <input type="file" 
+                   #headerFileInput 
+                   accept="image/*" 
+                   (change)="onHeaderImageSelected($event)"
+                   style="display: none;">
+            
+            <button mat-raised-button 
+                    type="button"
+                    (click)="headerFileInput.click()" 
+                    [disabled]="uploadingHeader"
+                    color="primary">
+              <mat-icon>{{ uploadingHeader ? 'hourglass_empty' : 'cloud_upload' }}</mat-icon>
+              {{ uploadingHeader ? 'Uploading...' : 'Upload Header Image' }}
+            </button>
+
+            <div *ngIf="headerImagePreview" class="image-preview">
+              <img [src]="headerImagePreview" alt="Header Preview">
+              <button mat-icon-button 
+                      (click)="removeHeaderImage()" 
+                      color="warn"
+                      class="remove-image-btn"
+                      matTooltip="Remove image">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Content Sections -->
+        <mat-card class="form-card">
+          <mat-card-content>
+            <h3>Content Sections</h3>
+            <p class="section-hint">Check boxes to include dynamic fields in your template</p>
+
+            <div class="checkbox-field">
+              <mat-checkbox formControlName="recipientNameText">
+                Include Recipient Name ({{'{{'}}NOM{{'}}'}})
+              </mat-checkbox>
+            </div>
+
+            <div class="checkbox-field">
+              <mat-checkbox formControlName="eventDateText">
+                Include Event Date ({{'{{'}}DATE{{'}}'}})
+              </mat-checkbox>
+            </div>
+
+            <div class="checkbox-field">
+              <mat-checkbox formControlName="eventTimeText">
+                Include Event Time ({{'{{'}}HEURE{{'}}'}})
+              </mat-checkbox>
+            </div>
+
+            <div class="checkbox-field">
+              <mat-checkbox formControlName="ticketCodeText">
+                Include Ticket Code ({{'{{'}}CODE{{'}}'}})
+              </mat-checkbox>
+            </div>
+
+            <div class="checkbox-field">
+              <mat-checkbox formControlName="foireNameText">
+                Include Fair Name ({{'{{'}}FOIRE_NAME{{'}}'}})
+              </mat-checkbox>
+            </div>
+
+            <mat-divider style="margin: 20px 0;"></mat-divider>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Custom Text Section 1</mat-label>
+              <textarea matInput formControlName="customText1" rows="3"
+                        placeholder="Add your custom text here..."></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Custom Text Section 2</mat-label>
+              <textarea matInput formControlName="customText2" rows="3"
+                        placeholder="Add more custom text here..."></textarea>
+            </mat-form-field>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Button -->
+        <mat-card class="form-card">
+          <mat-card-content>
+            <h3>Call-to-Action Button</h3>
+
+            <div class="toggle-field">
+              <mat-slide-toggle formControlName="buttonEnabled" color="primary">
+                Include Button
+              </mat-slide-toggle>
+            </div>
+
+            <div *ngIf="templateForm.get('buttonEnabled')?.value">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Button Text</mat-label>
+                <input matInput formControlName="buttonText" placeholder="e.g., Register Now">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Button Link</mat-label>
+                <input matInput formControlName="buttonLink" placeholder="https://...">
+              </mat-form-field>
+
+              <div class="color-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Background Color</mat-label>
+                  <input matInput formControlName="buttonBgColor" type="color">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Text Color</mat-label>
+                  <input matInput formControlName="buttonTextColor" type="color">
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- GPS Coordinates -->
+        <mat-card class="form-card">
+          <mat-card-content>
+            <h3>GPS Coordinates</h3>
+
+            <div class="toggle-field">
+              <mat-slide-toggle formControlName="gpsEnabled" color="primary">
+                Include GPS Section
+              </mat-slide-toggle>
+            </div>
+
+            <div *ngIf="templateForm.get('gpsEnabled')?.value">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Section Label</mat-label>
+                <input matInput formControlName="gpsLabel" placeholder="COORDONNÉES GPS">
+              </mat-form-field>
+
+              <div class="color-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Latitude</mat-label>
+                  <input matInput formControlName="gpsLatitude" placeholder="48.8566">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Longitude</mat-label>
+                  <input matInput formControlName="gpsLongitude" placeholder="2.3522">
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Gallery Images -->
+        <mat-card class="form-card">
+          <mat-card-content>
+            <h3>Image Gallery</h3>
+            
+            <input type="file" 
+                   #galleryFileInput 
+                   accept="image/*" 
+                   multiple
+                   (change)="onGalleryImagesSelected($event)"
+                   style="display: none;">
+            
+            <button mat-raised-button 
+                    type="button"
+                    (click)="galleryFileInput.click()" 
+                    [disabled]="uploadingGallery"
+                    color="primary">
+              <mat-icon>{{ uploadingGallery ? 'hourglass_empty' : 'add_photo_alternate' }}</mat-icon>
+              {{ uploadingGallery ? 'Uploading...' : 'Upload Gallery Images' }}
+            </button>
+            <p class="section-hint">You can select multiple images at once</p>
+
+            <div *ngIf="galleryPreviews.length > 0" class="gallery-preview">
+              <div *ngFor="let url of galleryPreviews; let i = index" class="gallery-item">
+                <img [src]="url" alt="Gallery Image">
+                <button mat-icon-button 
+                        (click)="removeGalleryImage(i)" 
+                        color="warn"
+                        class="remove-gallery-btn"
+                        matTooltip="Remove image">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Footer Options -->
+        <mat-card class="form-card">
+          <mat-card-content>
+            <h3>Footer Options</h3>
+
+            <div class="checkbox-field">
+              <mat-checkbox formControlName="includeSocialLinks">
+                Include Social Links (from settings)
+              </mat-checkbox>
+            </div>
+
+            <div class="checkbox-field">
+              <mat-checkbox formControlName="includeUnsubscribe" [disabled]="true">
+                Include Unsubscribe Link (Required)
+              </mat-checkbox>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+
+      <!-- Right Column: Preview -->
+      <div class="right-column">
+        <mat-card class="preview-card sticky">
+          <mat-card-content>
+            <h3>Live Preview</h3>
+            <p class="preview-hint">Dynamic fields show sample data</p>
+            
+            <div class="email-preview-wrapper">
+              <div class="email-preview" [innerHTML]="getPreviewHtml()"></div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+</div>

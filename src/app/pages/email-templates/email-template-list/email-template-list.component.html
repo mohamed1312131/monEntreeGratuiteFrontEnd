@@ -1,0 +1,115 @@
+<div class="email-template-list-container">
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>email</mat-icon>
+        Email Templates
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="header-actions">
+        <mat-form-field class="search-field" appearance="outline">
+          <mat-label>Search templates</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (keyup.enter)="searchTemplates()" placeholder="Search by name or subject">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="createTemplate()">
+          <mat-icon>add</mat-icon>
+          Create Template
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading templates...</p>
+      </div>
+
+      <div *ngIf="!loading && getFilteredTemplates().length === 0" class="empty-state">
+        <mat-icon>inbox</mat-icon>
+        <h3>No templates found</h3>
+        <p>Create your first email template to get started</p>
+        <button mat-raised-button color="primary" (click)="createTemplate()">
+          <mat-icon>add</mat-icon>
+          Create Template
+        </button>
+      </div>
+
+      <div *ngIf="!loading && getFilteredTemplates().length > 0" class="table-container">
+        <table mat-table [dataSource]="getFilteredTemplates()" class="templates-table">
+          
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Template Name</th>
+            <td mat-cell *matCellDef="let template">
+              <div class="template-name">
+                <mat-icon class="template-icon">description</mat-icon>
+                <span>{{ template.name }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="subject">
+            <th mat-header-cell *matHeaderCellDef>Subject</th>
+            <td mat-cell *matCellDef="let template">
+              <span class="subject-text">{{ template.subject }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let template">
+              <mat-chip-set>
+                <mat-chip [class.active-chip]="template.isActive" [class.inactive-chip]="!template.isActive">
+                  {{ template.isActive ? 'Active' : 'Inactive' }}
+                </mat-chip>
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>Created</th>
+            <td mat-cell *matCellDef="let template">
+              {{ template.createdAt | date:'short' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let template">
+              <div class="action-buttons">
+                <button mat-icon-button color="primary" (click)="viewTemplate(template)" matTooltip="View">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" (click)="editTemplate(template)" matTooltip="Edit">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button [color]="template.isActive ? 'warn' : 'primary'" 
+                        (click)="toggleStatus(template)" 
+                        [matTooltip]="template.isActive ? 'Deactivate' : 'Activate'">
+                  <mat-icon>{{ template.isActive ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteTemplate(template)" matTooltip="Delete">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="template-row"></tr>
+        </table>
+
+        <mat-paginator 
+          [length]="totalElements"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[5, 10, 25, 50]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons>
+        </mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

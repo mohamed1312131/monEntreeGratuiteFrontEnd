@@ -1,0 +1,66 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>Modifier la section "À Propos"</h2>
+    <button mat-icon-button (click)="onCancel()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <form class="edit-form">
+      <!-- Title -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Titre</mat-label>
+        <input matInput [(ngModel)]="aboutUs.title" name="title" required placeholder="Titre de la section" />
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput [(ngModel)]="aboutUs.description" name="description" rows="5" required placeholder="Description détaillée"></textarea>
+      </mat-form-field>
+
+      <!-- Image Upload -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Image</mat-label>
+        <input matInput [(ngModel)]="imageFileName" name="imageDisplay" [value]="imageFileName" readonly placeholder="Choisir une nouvelle image..." />
+        <button mat-icon-button matSuffix (click)="fileInput.click()" type="button" [disabled]="isUploading">
+          <mat-icon *ngIf="!isUploading">upload</mat-icon>
+          <mat-icon *ngIf="isUploading" class="spinning">hourglass_empty</mat-icon>
+        </button>
+      </mat-form-field>
+      <input #fileInput type="file" accept="image/*" (change)="onImageChange($event)" hidden />
+
+      <!-- Current Image Preview -->
+      <div class="image-preview" *ngIf="aboutUs.imageUrl && !isUploading">
+        <p class="preview-label">Image actuelle:</p>
+        <img [src]="aboutUs.imageUrl" [alt]="aboutUs.title" class="preview-img" />
+      </div>
+
+      <!-- Upload Progress -->
+      <div class="upload-progress" *ngIf="isUploading">
+        <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+        <p class="upload-text">Téléchargement en cours...</p>
+      </div>
+
+      <!-- Active Status -->
+      <div class="status-toggle">
+        <mat-slide-toggle [(ngModel)]="aboutUs.isActive" name="isActive" color="primary">
+          Section active
+        </mat-slide-toggle>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-stroked-button (click)="onCancel()" [disabled]="isUploading">
+      Annuler
+    </button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="isUploading">
+      <mat-icon *ngIf="!isUploading">save</mat-icon>
+      <mat-icon *ngIf="isUploading" class="spinning">hourglass_empty</mat-icon>
+      <span *ngIf="!isUploading">Enregistrer</span>
+      <span *ngIf="isUploading">Enregistrement...</span>
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,305 @@
+<div class="settings-container">
+  <!-- Header Bar -->
+  <div class="header-bar">
+    <div class="header-left">
+      <div class="title-section">
+        <mat-icon class="header-icon">settings</mat-icon>
+        <h1 class="header-title">Paramètres du Site</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-content">
+    <!-- About Us Section -->
+    <mat-expansion-panel class="settings-panel" [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="section-icon">info</mat-icon>
+          <span class="section-title">À Propos</span>
+          <span class="item-count">{{ aboutUsList.length }}</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="panel-content">
+        <!-- Add About Us Form -->
+        <div class="form-section">
+          <h3 class="form-title">Ajouter une section "À Propos"</h3>
+          <form class="compact-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Titre</mat-label>
+                <input matInput [(ngModel)]="newAboutUs.title" name="aboutTitle" placeholder="Titre de la section" />
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput [(ngModel)]="newAboutUs.description" name="aboutDescription" rows="4" placeholder="Description détaillée"></textarea>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Vidéo</mat-label>
+                <input matInput [(ngModel)]="aboutUsVideoName" name="aboutVideoDisplay" [value]="aboutUsVideoName" readonly placeholder="Choisir une vidéo..." />
+                <button mat-icon-button matSuffix (click)="aboutUsFileInput.click()" type="button" [disabled]="isUploadingAboutUs">
+                  <mat-icon *ngIf="!isUploadingAboutUs">upload</mat-icon>
+                  <mat-icon *ngIf="isUploadingAboutUs" class="spinning">hourglass_empty</mat-icon>
+                </button>
+              </mat-form-field>
+              <input #aboutUsFileInput type="file" accept="video/*" (change)="onAboutUsVideoChange($event)" hidden />
+              
+              <div class="form-actions">
+                <button mat-raised-button color="primary" class="submit-btn" (click)="addAboutUs()" [disabled]="isUploadingAboutUs">
+                  <mat-icon *ngIf="!isUploadingAboutUs">add</mat-icon>
+                  <mat-icon *ngIf="isUploadingAboutUs" class="spinning">hourglass_empty</mat-icon>
+                  <span *ngIf="!isUploadingAboutUs">Ajouter</span>
+                  <span *ngIf="isUploadingAboutUs">Upload...</span>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Upload Progress -->
+            <div class="form-row" *ngIf="isUploadingAboutUs">
+              <div class="upload-progress">
+                <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+                <p class="upload-text">Téléchargement de la vidéo en cours... Veuillez patienter.</p>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- About Us List -->
+        <div class="items-list" *ngIf="aboutUsList.length > 0">
+          <h3 class="list-title">Sections existantes</h3>
+          <div class="item-card" *ngFor="let item of aboutUsList">
+            <div class="item-video-icon" *ngIf="item.videoUrl">
+              <mat-icon>play_circle</mat-icon>
+            </div>
+            <div class="item-content">
+              <div class="item-header">
+                <h4 class="item-title">{{ item.title }}</h4>
+                <mat-slide-toggle [(ngModel)]="item.isActive" (change)="toggleAboutUsActive(item)" color="primary" class="compact-toggle"></mat-slide-toggle>
+              </div>
+              <p class="item-description">{{ item.description }}</p>
+            </div>
+            <div class="item-actions">
+              <button mat-icon-button class="action-icon edit-icon" (click)="editAboutUs(item)" matTooltip="Modifier">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-icon delete-icon" (click)="item.id && deleteAboutUs(item.id)" matTooltip="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <!-- Videos Section -->
+    <mat-expansion-panel class="settings-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="section-icon">video_library</mat-icon>
+          <span class="section-title">Vidéos</span>
+          <span class="item-count">{{ videosList.length }}</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="panel-content">
+        <!-- Add Video Form -->
+        <div class="form-section">
+          <h3 class="form-title">Ajouter une vidéo</h3>
+          <form class="compact-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Nom de la vidéo</mat-label>
+                <input matInput [(ngModel)]="newVideo.name" name="videoName" placeholder="Titre de la vidéo" />
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Vidéo</mat-label>
+                <input matInput [(ngModel)]="videoFileName" name="videoDisplay" [value]="videoFileName" readonly placeholder="Choisir une vidéo..." />
+                <button mat-icon-button matSuffix (click)="videoFileInput.click()" type="button" [disabled]="isUploadingVideo">
+                  <mat-icon *ngIf="!isUploadingVideo">upload</mat-icon>
+                  <mat-icon *ngIf="isUploadingVideo" class="spinning">hourglass_empty</mat-icon>
+                </button>
+              </mat-form-field>
+              <input #videoFileInput type="file" accept="video/*" (change)="onVideoFileChange($event)" hidden />
+            </div>
+            
+            <!-- Upload Progress -->
+            <div class="form-row" *ngIf="isUploadingVideo">
+              <div class="upload-progress">
+                <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+                <p class="upload-text">Téléchargement de la vidéo en cours... Veuillez patienter.</p>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput [(ngModel)]="newVideo.description" name="videoDescription" rows="3" placeholder="Description de la vidéo"></textarea>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-actions">
+                <button mat-raised-button color="primary" class="submit-btn" (click)="addVideo()" [disabled]="isUploadingVideo">
+                  <mat-icon *ngIf="!isUploadingVideo">add</mat-icon>
+                  <mat-icon *ngIf="isUploadingVideo" class="spinning">hourglass_empty</mat-icon>
+                  <span *ngIf="!isUploadingVideo">Ajouter</span>
+                  <span *ngIf="isUploadingVideo">Upload...</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Videos List -->
+        <div class="items-list" *ngIf="videosList.length > 0">
+          <h3 class="list-title">Vidéos existantes</h3>
+          <div class="item-card" *ngFor="let video of videosList">
+            <div class="item-video-icon">
+              <mat-icon>play_circle</mat-icon>
+            </div>
+            <div class="item-content">
+              <div class="item-header">
+                <h4 class="item-title">{{ video.name }}</h4>
+                <mat-slide-toggle [(ngModel)]="video.isActive" (change)="toggleVideoActive(video)" color="primary" class="compact-toggle"></mat-slide-toggle>
+              </div>
+              <p class="item-description">{{ video.description }}</p>
+              <a [href]="video.link" target="_blank" class="video-link">
+                <mat-icon>link</mat-icon>
+                {{ video.link }}
+              </a>
+            </div>
+            <div class="item-actions">
+              <button mat-icon-button class="action-icon edit-icon" (click)="editVideo(video)" matTooltip="Modifier">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-icon delete-icon" (click)="video.id && deleteVideo(video.id)" matTooltip="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <!-- Password Update Section -->
+    <mat-expansion-panel class="settings-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="section-icon">lock</mat-icon>
+          <span class="section-title">Mot de passe</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="panel-content">
+        <div class="form-section">
+          <h3 class="form-title">Changer le mot de passe</h3>
+          <form class="compact-form password-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Mot de passe actuel</mat-label>
+                <input matInput [type]="hideCurrentPassword ? 'password' : 'text'" [(ngModel)]="passwordForm.currentPassword" name="currentPassword" />
+                <button mat-icon-button matSuffix (click)="hideCurrentPassword = !hideCurrentPassword" type="button">
+                  <mat-icon>{{ hideCurrentPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Nouveau mot de passe</mat-label>
+                <input matInput [type]="hideNewPassword ? 'password' : 'text'" [(ngModel)]="passwordForm.newPassword" name="newPassword" />
+                <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword" type="button">
+                  <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Confirmer le mot de passe</mat-label>
+                <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" [(ngModel)]="passwordForm.confirmPassword" name="confirmPassword" />
+                <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+                  <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-actions">
+                <button mat-raised-button color="primary" class="submit-btn" (click)="updatePassword()">
+                  <mat-icon>save</mat-icon>
+                  Mettre à jour
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <!-- Social Media Links Section -->
+    <mat-expansion-panel class="settings-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="section-icon">share</mat-icon>
+          <span class="section-title">Réseaux Sociaux</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="panel-content">
+        <div class="form-section">
+          <h3 class="form-title">Liens des réseaux sociaux</h3>
+          <form class="compact-form social-form">
+            <div class="form-row social-row">
+              <div class="social-icon facebook">
+                <mat-icon>facebook</mat-icon>
+              </div>
+              <mat-form-field appearance="outline" class="form-field flex-grow">
+                <mat-label>Facebook</mat-label>
+                <input matInput [(ngModel)]="socialLinks.facebook" name="facebook" placeholder="https://facebook.com/votre-page" />
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row social-row">
+              <div class="social-icon instagram">
+                <mat-icon>camera_alt</mat-icon>
+              </div>
+              <mat-form-field appearance="outline" class="form-field flex-grow">
+                <mat-label>Instagram</mat-label>
+                <input matInput [(ngModel)]="socialLinks.instagram" name="instagram" placeholder="https://instagram.com/votre-compte" />
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row social-row">
+              <div class="social-icon linkedin">
+                <mat-icon>business</mat-icon>
+              </div>
+              <mat-form-field appearance="outline" class="form-field flex-grow">
+                <mat-label>LinkedIn</mat-label>
+                <input matInput [(ngModel)]="socialLinks.linkedin" name="linkedin" placeholder="https://linkedin.com/company/votre-entreprise" />
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-actions">
+                <button mat-raised-button color="primary" class="submit-btn" (click)="updateSocialLinks()">
+                  <mat-icon>save</mat-icon>
+                  Enregistrer
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+</div>

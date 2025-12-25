@@ -1,0 +1,87 @@
+<div class="details-container">
+  <h2 mat-dialog-title class="details-title">
+    <mat-icon class="title-icon">info</mat-icon>
+    Détails de la Foire
+  </h2>
+
+  <mat-dialog-content class="details-content">
+    <div class="details-card">
+      <!-- Image Section -->
+      <div class="image-section">
+        <img [src]="data.image" [alt]="data.name" class="foire-image" />
+      </div>
+
+      <!-- Info Section -->
+      <div class="info-section">
+        <div class="info-row">
+          <div class="info-label">
+            <mat-icon>label</mat-icon>
+            Nom de la foire
+          </div>
+          <div class="info-value">{{ data.name }}</div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">
+            <mat-icon>link</mat-icon>
+            Référence
+          </div>
+          <div class="info-value">{{ data.url }}</div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">
+            <mat-icon>description</mat-icon>
+            Description
+          </div>
+          <div class="info-value">{{ data.description || 'Pas de description disponible.' }}</div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">
+            <mat-icon>event</mat-icon>
+            Date de la foire
+          </div>
+          <div class="info-value date-value">{{ data.date }}</div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">
+            <mat-icon>calendar_today</mat-icon>
+            Créée le
+          </div>
+          <div class="info-value">{{ data.createdAt }}</div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">
+            <mat-icon>people</mat-icon>
+            Réservations
+          </div>
+          <div class="info-value">
+            <mat-chip class="reservation-chip">{{ data.reservationCount }}</mat-chip>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">
+            <mat-icon>toggle_on</mat-icon>
+            Statut
+          </div>
+          <div class="info-value">
+            <mat-chip [class]="data.isActive ? 'active-chip' : 'inactive-chip'">
+              {{ data.isActive ? 'Active' : 'Inactive' }}
+            </mat-chip>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="details-actions">
+    <button mat-raised-button mat-dialog-close color="primary">
+      <mat-icon>close</mat-icon>
+      Fermer
+    </button>
+  </mat-dialog-actions>
+</div>

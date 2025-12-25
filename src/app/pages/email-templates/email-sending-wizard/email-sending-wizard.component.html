@@ -1,0 +1,359 @@
+<div class="wizard-container">
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>send</mat-icon>
+        Send Bulk Emails
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="wizard-description">Follow the steps below to send personalized emails to your invitations</p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="stepper-card">
+    <mat-stepper linear #stepper>
+      <!-- Step 1: Select Template -->
+      <mat-step [stepControl]="templateForm">
+        <form [formGroup]="templateForm">
+          <ng-template matStepLabel>Select Template</ng-template>
+          
+          <div class="step-content">
+            <h3>Choose an Email Template</h3>
+            <p class="step-hint">Select an active template to use for sending emails</p>
+
+            <div *ngIf="loading" class="loading-state">
+              <mat-spinner diameter="40"></mat-spinner>
+              <p>Loading templates...</p>
+            </div>
+
+            <div *ngIf="!loading && templates.length === 0" class="empty-state">
+              <mat-icon>inbox</mat-icon>
+              <p>No active templates found. Please create a template first.</p>
+            </div>
+
+            <mat-form-field *ngIf="!loading && templates.length > 0" appearance="outline" class="full-width">
+              <mat-label>Email Template</mat-label>
+              <mat-select formControlName="templateId" (selectionChange)="onTemplateSelected()">
+                <mat-option *ngFor="let template of templates" [value]="template.id">
+                  {{ template.name }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>email</mat-icon>
+            </mat-form-field>
+
+            <div *ngIf="selectedTemplate" class="template-preview">
+              <h4>Template Preview</h4>
+              <div class="preview-box">
+                <p><strong>Subject:</strong> {{ selectedTemplate.subject }}</p>
+                <p class="content-preview">{{ selectedTemplate.htmlContent.substring(0, 200) }}...</p>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button mat-raised-button (click)="cancel()">Cancel</button>
+              <button mat-raised-button color="primary" matStepperNext [disabled]="!templateForm.valid">
+                Next
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 2: Select Recipients -->
+      <mat-step [stepControl]="recipientsForm">
+        <form [formGroup]="recipientsForm">
+          <ng-template matStepLabel>Select Recipients</ng-template>
+          
+          <div class="step-content recipients-step">
+            <h3>Choose Recipients</h3>
+            <p class="step-hint">Filter and select recipients for your email campaign</p>
+
+            <!-- Advanced Filters -->
+            <mat-card class="filters-card">
+              <mat-card-content>
+                <div class="filters-header">
+                  <h4>
+                    <mat-icon>filter_list</mat-icon>
+                    Filters
+                  </h4>
+                  <button mat-button color="warn" (click)="clearFilters()">
+                    <mat-icon>clear</mat-icon>
+                    Clear All
+                  </button>
+                </div>
+
+                <form [formGroup]="filtersForm">
+                  <div class="filters-grid">
+                    <!-- Search -->
+                    <mat-form-field appearance="outline" class="filter-field">
+                      <mat-label>Search</mat-label>
+                      <input matInput formControlName="search" placeholder="Name, email, or code...">
+                      <mat-icon matPrefix>search</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Foire Filter -->
+                    <mat-form-field appearance="outline" class="filter-field">
+                      <mat-label>Fair/Event</mat-label>
+                      <mat-select formControlName="foireId">
+                        <mat-option [value]="''">All Fairs</mat-option>
+                        <mat-option *ngFor="let foire of foires" [value]="foire.id">
+                          {{ foire.name }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-icon matPrefix>event</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Source Filter -->
+                    <mat-form-field appearance="outline" class="filter-field">
+                      <mat-label>Source</mat-label>
+                      <mat-select formControlName="source">
+                        <mat-option [value]="''">All Sources</mat-option>
+                        <mat-option *ngFor="let source of sourceOptions" [value]="source.value">
+                          {{ source.label }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-icon matPrefix>source</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Date From -->
+                    <mat-form-field appearance="outline" class="filter-field">
+                      <mat-label>Date From</mat-label>
+                      <input matInput [matDatepicker]="pickerFrom" formControlName="dateFrom">
+                      <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerFrom></mat-datepicker>
+                      <mat-icon matPrefix>date_range</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Date To -->
+                    <mat-form-field appearance="outline" class="filter-field">
+                      <mat-label>Date To</mat-label>
+                      <input matInput [matDatepicker]="pickerTo" formControlName="dateTo">
+                      <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerTo></mat-datepicker>
+                      <mat-icon matPrefix>date_range</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Email Status -->
+                    <mat-form-field appearance="outline" class="filter-field">
+                      <mat-label>Email Status</mat-label>
+                      <mat-select formControlName="emailSent">
+                        <mat-option [value]="''">All</mat-option>
+                        <mat-option [value]="false">Not Sent</mat-option>
+                        <mat-option [value]="true">Already Sent</mat-option>
+                      </mat-select>
+                      <mat-icon matPrefix>mail_outline</mat-icon>
+                    </mat-form-field>
+                  </div>
+                </form>
+
+                <div class="filter-summary">
+                  <mat-chip-set>
+                    <mat-chip class="info-chip">
+                      <mat-icon>people</mat-icon>
+                      {{ totalRecipients }} Recipients Found
+                    </mat-chip>
+                    <mat-chip class="selected-chip" *ngIf="selectedInvitations.length > 0">
+                      <mat-icon>check_circle</mat-icon>
+                      {{ selectedInvitations.length }} Selected
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Selection Controls -->
+            <div class="selection-controls">
+              <mat-checkbox formControlName="selectAll" (change)="toggleSelectAll($event)">
+                Select All Filtered ({{ filteredInvitations.length }})
+              </mat-checkbox>
+              <button mat-stroked-button (click)="toggleSelectPage($event)" 
+                      [disabled]="displayedInvitations.length === 0">
+                <mat-icon>select_all</mat-icon>
+                Select Current Page
+              </button>
+            </div>
+
+            <div *ngIf="loading" class="loading-state">
+              <mat-spinner diameter="40"></mat-spinner>
+              <p>Loading recipients...</p>
+            </div>
+
+            <div *ngIf="!loading && filteredInvitations.length === 0" class="empty-state">
+              <mat-icon>inbox</mat-icon>
+              <p>No recipients match your filters. Try adjusting the filters above.</p>
+            </div>
+
+            <!-- Recipients List -->
+            <mat-selection-list *ngIf="!loading && displayedInvitations.length > 0" class="recipients-list">
+              <mat-list-option *ngFor="let invitation of displayedInvitations" 
+                               [selected]="isSelected(invitation)"
+                               (click)="toggleInvitation(invitation)">
+                <div class="recipient-item">
+                  <div class="recipient-info">
+                    <mat-icon>person</mat-icon>
+                    <div class="recipient-details">
+                      <span class="recipient-name">{{ invitation.nom }}</span>
+                      <span class="recipient-email">{{ invitation.email }}</span>
+                    </div>
+                  </div>
+                  <div class="recipient-meta">
+                    <mat-chip-set>
+                      <mat-chip *ngIf="invitation.foire" class="foire-chip">
+                        {{ invitation.foire.name }}
+                      </mat-chip>
+                      <mat-chip class="date-chip">{{ invitation.date }}</mat-chip>
+                      <mat-chip class="code-chip">{{ invitation.code }}</mat-chip>
+                      <mat-chip *ngIf="invitation.emailSent" class="sent-chip">
+                        <mat-icon>check</mat-icon>
+                        Sent
+                      </mat-chip>
+                    </mat-chip-set>
+                  </div>
+                </div>
+              </mat-list-option>
+            </mat-selection-list>
+
+            <!-- Pagination -->
+            <mat-paginator *ngIf="!loading && filteredInvitations.length > 0"
+                           [length]="totalRecipients"
+                           [pageSize]="pageSize"
+                           [pageIndex]="pageIndex"
+                           [pageSizeOptions]="pageSizeOptions"
+                           (page)="onPageChange($event)"
+                           showFirstLastButtons>
+            </mat-paginator>
+
+            <div class="step-actions">
+              <button mat-raised-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" matStepperNext [disabled]="selectedInvitations.length === 0">
+                <mat-icon>arrow_forward</mat-icon>
+                Next ({{ selectedInvitations.length }} selected)
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 3: Preview -->
+      <mat-step>
+        <ng-template matStepLabel>Preview Email</ng-template>
+        
+        <div class="step-content">
+          <h3>Preview Email</h3>
+          <p class="step-hint">See how the email will look with actual recipient data</p>
+
+          <div class="preview-selector">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Preview for recipient</mat-label>
+              <mat-select [(value)]="previewInvitation" (selectionChange)="setPreviewInvitation($event.value)">
+                <mat-option *ngFor="let invitation of selectedInvitations" [value]="invitation">
+                  {{ invitation.nom }} ({{ invitation.email }})
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="!previewInvitation" class="empty-state">
+            <mat-icon>visibility_off</mat-icon>
+            <p>Select a recipient to preview the email</p>
+          </div>
+
+          <div *ngIf="previewInvitation" class="email-preview-container">
+            <div class="preview-header">
+              <h4>Email Preview</h4>
+              <mat-chip-set>
+                <mat-chip>
+                  <mat-icon>person</mat-icon>
+                  {{ previewInvitation.nom }}
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+
+            <div class="email-preview-wrapper">
+              <div class="email-subject">
+                <strong>Subject:</strong> {{ getPreviewSubject() }}
+              </div>
+              <div class="email-body" [innerHTML]="getPreviewHtml()"></div>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button mat-raised-button matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" matStepperNext>
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-step>
+
+      <!-- Step 4: Send -->
+      <mat-step>
+        <ng-template matStepLabel>Send Emails</ng-template>
+        
+        <div class="step-content">
+          <h3>Ready to Send</h3>
+          <p class="step-hint">Review the summary and click send to start the email campaign</p>
+
+          <div class="send-summary">
+            <div class="summary-item">
+              <mat-icon>email</mat-icon>
+              <div class="summary-details">
+                <span class="summary-label">Template</span>
+                <span class="summary-value">{{ selectedTemplate?.name }}</span>
+              </div>
+            </div>
+
+            <div class="summary-item">
+              <mat-icon>people</mat-icon>
+              <div class="summary-details">
+                <span class="summary-label">Recipients</span>
+                <span class="summary-value">{{ selectedInvitations.length }} invitations</span>
+              </div>
+            </div>
+
+            <div class="summary-item">
+              <mat-icon>schedule</mat-icon>
+              <div class="summary-details">
+                <span class="summary-label">Estimated Time</span>
+                <span class="summary-value">~{{ selectedInvitations.length * 2 }} seconds</span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="sending" class="sending-progress">
+            <mat-spinner diameter="50"></mat-spinner>
+            <h4>Sending Emails...</h4>
+            <mat-progress-bar mode="determinate" [value]="sendProgress"></mat-progress-bar>
+            <p>{{ sendProgress }}% complete</p>
+          </div>
+
+          <div *ngIf="!sending && sendProgress === 100" class="success-message">
+            <mat-icon class="success-icon">check_circle</mat-icon>
+            <h4>Emails Sent Successfully!</h4>
+            <p>Redirecting to templates list...</p>
+          </div>
+
+          <div class="step-actions">
+            <button mat-raised-button matStepperPrevious [disabled]="sending">
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" (click)="sendEmails()" [disabled]="sending">
+              <mat-icon>{{ sending ? 'hourglass_empty' : 'send' }}</mat-icon>
+              {{ sending ? 'Sending...' : 'Send Emails' }}
+            </button>
+          </div>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </mat-card>
+</div>

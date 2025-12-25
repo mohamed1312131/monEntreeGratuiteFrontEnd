@@ -1,0 +1,185 @@
+<div class="editor-container">
+  <div *ngIf="loading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading template...</p>
+  </div>
+
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>{{ templateId ? 'edit' : 'add' }}</mat-icon>
+        {{ templateId ? (isViewMode ? 'View Template' : 'Edit Template') : 'Create New Template' }}
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="header-actions">
+        <button mat-raised-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Back to List
+        </button>
+        <button mat-raised-button color="primary" (click)="saveTemplate()" 
+                [disabled]="saving || isViewMode || templateForm.invalid">
+          <mat-icon>{{ saving ? 'hourglass_empty' : 'save' }}</mat-icon>
+          {{ saving ? 'Saving...' : (templateId ? 'Update' : 'Create') }}
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <form [formGroup]="templateForm" class="template-form">
+    <div class="form-layout">
+      <!-- Left Column: Form Fields -->
+      <div class="left-column">
+        <mat-card class="form-card">
+          <mat-card-content>
+            <h3>Template Details</h3>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Template Name</mat-label>
+              <input matInput formControlName="name" placeholder="e.g., Welcome Email">
+              <mat-icon matSuffix>label</mat-icon>
+              <mat-error *ngIf="templateForm.get('name')?.hasError('required')">
+                Template name is required
+              </mat-error>
+              <mat-error *ngIf="templateForm.get('name')?.hasError('minlength')">
+                Name must be at least 3 characters
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email Subject</mat-label>
+              <input matInput formControlName="subject" placeholder="e.g., Welcome to our event!">
+              <mat-icon matSuffix>subject</mat-icon>
+              <mat-hint>You can use dynamic fields like {{'{{'}}NOM{{'}}'}}</mat-hint>
+              <mat-error *ngIf="templateForm.get('subject')?.hasError('required')">
+                Subject is required
+              </mat-error>
+            </mat-form-field>
+
+            <div class="toggle-field">
+              <mat-slide-toggle formControlName="isActive" color="primary">
+                Active Template
+              </mat-slide-toggle>
+              <span class="toggle-hint">Only active templates can be used for sending emails</span>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <h3>Dynamic Fields</h3>
+            <p class="section-hint">Click a field to insert it at cursor position</p>
+            
+            <div class="dynamic-fields-grid">
+              <button *ngFor="let field of dynamicFields" 
+                      mat-stroked-button 
+                      type="button"
+                      class="field-button"
+                      (click)="insertDynamicField(field.key)"
+                      [matTooltip]="field.description"
+                      [disabled]="isViewMode">
+                <mat-icon>code</mat-icon>
+                {{ field.key }}
+              </button>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <h3>HTML Content</h3>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email HTML Content</mat-label>
+              <textarea matInput 
+                        #htmlEditor
+                        formControlName="htmlContent" 
+                        rows="15"
+                        placeholder="Enter your HTML email content here..."></textarea>
+              <mat-hint>Use HTML tags for formatting. Insert dynamic fields using the buttons above.</mat-hint>
+              <mat-error *ngIf="templateForm.get('htmlContent')?.hasError('required')">
+                HTML content is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-divider></mat-divider>
+
+            <h3>Image Management</h3>
+            <p class="section-hint" *ngIf="!templateId">Save the template first to upload images</p>
+            
+            <div class="image-upload-section" *ngIf="templateId">
+              <input type="file" 
+                     #fileInput 
+                     accept="image/*" 
+                     (change)="onFileSelected($event)"
+                     style="display: none;">
+              
+              <button mat-raised-button 
+                      type="button"
+                      (click)="fileInput.click()" 
+                      [disabled]="uploadingImage || isViewMode">
+                <mat-icon>{{ uploadingImage ? 'hourglass_empty' : 'cloud_upload' }}</mat-icon>
+                {{ uploadingImage ? 'Uploading...' : 'Upload Image' }}
+              </button>
+
+              <div class="uploaded-images" *ngIf="uploadedImages.length > 0">
+                <div *ngFor="let image of uploadedImages" class="image-item">
+                  <img [src]="image.imageUrl" [alt]="image.imageName">
+                  <div class="image-info">
+                    <span class="image-name">{{ image.imageName }}</span>
+                    <div class="image-actions">
+                      <button mat-icon-button 
+                              (click)="copyImageUrl(image.imageUrl)" 
+                              matTooltip="Copy URL">
+                        <mat-icon>content_copy</mat-icon>
+                      </button>
+                      <button mat-icon-button 
+                              color="warn"
+                              (click)="deleteImage(image.id)" 
+                              matTooltip="Delete"
+                              [disabled]="isViewMode">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="uploadedImages.length === 0" class="no-images">
+                <mat-icon>image</mat-icon>
+                <p>No images uploaded yet</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Right Column: Preview -->
+      <div class="right-column">
+        <mat-card class="preview-card">
+          <mat-card-content>
+            <mat-tab-group>
+              <mat-tab label="Preview">
+                <div class="preview-container">
+                  <div class="preview-header">
+                    <h4>Email Preview</h4>
+                    <p class="preview-hint">Dynamic fields are replaced with sample data</p>
+                  </div>
+                  
+                  <div class="email-preview">
+                    <div class="email-subject">
+                      <strong>Subject:</strong> {{ templateForm.get('subject')?.value || '(No subject)' }}
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="email-body" [innerHTML]="getPreviewHtml()"></div>
+                  </div>
+                </div>
+              </mat-tab>
+
+              <mat-tab label="HTML Source">
+                <div class="source-container">
+                  <pre class="html-source">{{ templateForm.get('htmlContent')?.value || '(No content)' }}</pre>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,38 @@
+<div mat-subheader *ngIf="item.navCap" class="nav-caption">
+  {{ item.navCap }}
+</div>
+
+<!-- Parent menu item (with or without children) -->
+<a
+  mat-list-item
+  (click)="onItemSelected(item)"
+  [ngClass]="{
+    'mat-toolbar mat-primary activeMenu': item.route
+      ? router.isActive(item.route, true)
+      : false,
+  }"
+  class="menu-list-item"
+  *ngIf="!item.navCap"
+>
+  <i-tabler
+    class="routeIcon"
+    name="{{ item.iconName }}"
+    matListItemIcon
+  ></i-tabler>
+  <span class="hide-menu">{{ item.displayName }}</span>
+  <i-tabler
+    *ngIf="item.children && item.children.length"
+    class="expand-icon"
+    [name]="expanded ? 'chevron-down' : 'chevron-right'"
+    matListItemIcon
+  ></i-tabler>
+</a>
+
+<!-- Children menu items -->
+<div *ngIf="expanded && item.children && item.children.length" class="submenu">
+  <app-nav-item 
+    *ngFor="let child of item.children" 
+    [item]="child"
+    [depth]="depth + 1">
+  </app-nav-item>
+</div>

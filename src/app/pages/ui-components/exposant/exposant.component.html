@@ -1,0 +1,127 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="flex flex-col">
+      <!-- Header with Title and Actions -->
+      <div class="header-section mb-6">
+        <div class="flex justify-between items-center mb-4">
+          <h1 class="mat-headline-5 m-0">
+            <mat-icon class="title-icon">business</mat-icon>
+            {{ exposantCount }} Exposants
+          </h1>
+        </div>
+
+        <!-- Action Toolbar -->
+        <div class="action-toolbar">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Rechercher</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Nom, email, ville..." #filterInput />
+            <mat-icon matPrefix>search</mat-icon>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="exportToExcel()">
+            <mat-icon>download</mat-icon>
+            Exporter Excel
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="mat-elevation-z8 overflow-x-auto">
+        <table mat-table [dataSource]="dataSource" matSort class="w-full">
+          
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="font-bold">N° Commande</th>
+            <td mat-cell *matCellDef="let row">
+              <span class="id-badge">{{ row.id }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Country Column -->
+          <ng-container matColumnDef="pays">
+            <th mat-header-cell *matHeaderCellDef class="font-bold">Pays</th>
+            <td mat-cell *matCellDef="let row">
+              <img [src]="row.iconUrl" [alt]="row.pays" class="country-flag" />
+            </td>
+          </ng-container>
+
+          <!-- Date Submission Column -->
+          <ng-container matColumnDef="datesub">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="font-bold">Date Soumission</th>
+            <td mat-cell *matCellDef="let row">{{ row.datesub }}</td>
+          </ng-container>
+
+          <!-- Foire Column -->
+          <ng-container matColumnDef="foire">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="font-bold">Foire</th>
+            <td mat-cell *matCellDef="let row">{{ row.foire }}</td>
+          </ng-container>
+
+          <!-- Personnes Column -->
+          <ng-container matColumnDef="personnes">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="font-bold">Personnes</th>
+            <td mat-cell *matCellDef="let row">
+              <mat-chip class="personnes-chip">{{ row.personnes }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Nom Column -->
+          <ng-container matColumnDef="nom">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="font-bold">Nom</th>
+            <td mat-cell *matCellDef="let row">{{ row.nom }}</td>
+          </ng-container>
+
+          <!-- Ville Column -->
+          <ng-container matColumnDef="ville">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="font-bold">Ville</th>
+            <td mat-cell *matCellDef="let row">{{ row.ville }}</td>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef class="font-bold">Email</th>
+            <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+          </ng-container>
+
+          <!-- Phone SMS Column -->
+          <ng-container matColumnDef="phonesms">
+            <th mat-header-cell *matHeaderCellDef class="font-bold">Phone SMS</th>
+            <td mat-cell *matCellDef="let row">{{ row.phonesms }}</td>
+          </ng-container>
+
+          <!-- Age Column -->
+          <ng-container matColumnDef="age">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="font-bold">Âge</th>
+            <td mat-cell *matCellDef="let row">
+              <mat-chip class="age-chip">{{ row.age }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Phone Column -->
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef class="font-bold">Téléphone</th>
+            <td mat-cell *matCellDef="let row">{{ row.phone }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center py-8" [attr.colspan]="displayedColumns.length">
+              <div class="flex flex-col items-center gap-2">
+                <mat-icon class="text-gray-400 text-5xl">inbox</mat-icon>
+                <span class="text-gray-500">Aucun exposant trouvé</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 25, 50]"
+          [pageSize]="10"
+          showFirstLastButtons
+          aria-label="Sélectionner la page"
+        ></mat-paginator>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

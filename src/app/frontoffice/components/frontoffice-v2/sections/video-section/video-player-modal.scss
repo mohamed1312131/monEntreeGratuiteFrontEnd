@@ -1,0 +1,128 @@
+/* ===== INLINE VIDEO PLAYER ===== */
+
+.video-short-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.playing {
+    z-index: 10;
+    
+    .video-short-thumbnail {
+      display: none;
+    }
+  }
+}
+
+.video-player-inline {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  background: #000;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease-out;
+
+  .close-video-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+
+    svg {
+      color: white;
+    }
+
+    &:hover {
+      background: rgba(239, 68, 68, 0.9);
+      border-color: rgba(239, 68, 68, 1);
+      transform: rotate(90deg) scale(1.1);
+    }
+  }
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .video-player-modal {
+    width: 95%;
+    padding: 16px;
+  }
+
+  .video-close-btn {
+    top: -45px;
+    width: 40px;
+    height: 40px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .video-player-header h3 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .video-player-modal {
+    width: 98%;
+    padding: 12px;
+  }
+
+  .video-close-btn {
+    top: -40px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .video-player-header h3 {
+    font-size: 1rem;
+  }
+}

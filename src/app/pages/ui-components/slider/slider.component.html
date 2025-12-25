@@ -1,0 +1,102 @@
+<div class="slider-container">
+  <!-- Compact Header Bar -->
+  <div class="header-bar">
+    <div class="header-left">
+      <div class="title-section">
+        <mat-icon class="header-icon">view_carousel</mat-icon>
+        <h1 class="header-title">Carrousel</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <div class="action-left">
+      <mat-form-field appearance="outline" class="compact-search">
+        <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher..." #filterInput />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="action-right">
+      <button mat-stroked-button class="compact-btn add-btn" (click)="openAddDialog()">
+        <mat-icon>add</mat-icon>
+        <span class="btn-text">Ajouter</span>
+      </button>
+      <button mat-stroked-button class="compact-btn save-btn" (click)="onSave()">
+        <mat-icon>save</mat-icon>
+        <span class="btn-text">Enregistrer</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- High-Density Table -->
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort class="compact-table">
+          
+      <!-- Image Column -->
+      <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef class="col-image">IMG</th>
+        <td mat-cell *matCellDef="let element" class="col-image">
+          <img [src]="element.imageUrl" alt="Slider" class="slider-thumb" />
+        </td>
+      </ng-container>
+
+      <!-- Reference Column -->
+      <ng-container matColumnDef="reference">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-ref">REF</th>
+        <td mat-cell *matCellDef="let element" class="col-ref">
+          <span class="ref-text">{{ element.reference }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Order Column -->
+      <ng-container matColumnDef="order">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-order">Ordre</th>
+        <td mat-cell *matCellDef="let element" class="col-order">
+          <mat-form-field appearance="outline" class="order-select">
+            <mat-select [(ngModel)]="element.order" placeholder="Position">
+              <mat-option *ngFor="let option of orderOptions" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <!-- Active Status Column -->
+      <ng-container matColumnDef="isActive">
+        <th mat-header-cell *matHeaderCellDef class="col-status">Statut</th>
+        <td mat-cell *matCellDef="let element" class="col-status">
+          <mat-slide-toggle [checked]="element.isActive" (change)="toggleActive(element)" color="primary" class="compact-toggle"></mat-slide-toggle>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="col-actions">Actions</th>
+        <td mat-cell *matCellDef="let element" class="col-actions">
+          <button mat-icon-button class="action-icon delete-icon" (click)="deleteRow(element.id)" matTooltip="Supprimer">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="compact-header"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="compact-row"></tr>
+
+      <tr class="mat-row no-data-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <div class="no-data">
+            <mat-icon>inbox</mat-icon>
+            <span>Aucune donnée trouvée</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Compact Paginator -->
+  <div class="paginator-wrapper">
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" showFirstLastButtons class="compact-paginator"></mat-paginator>
+  </div>
+</div>

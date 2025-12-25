@@ -1,0 +1,69 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>Modifier la vidéo</h2>
+    <button mat-icon-button (click)="onCancel()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <form class="edit-form">
+      <!-- Name -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nom de la vidéo</mat-label>
+        <input matInput [(ngModel)]="video.name" name="name" required placeholder="Titre de la vidéo" />
+      </mat-form-field>
+
+      <!-- Video Upload -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Vidéo</mat-label>
+        <input matInput [(ngModel)]="videoFileName" name="videoDisplay" [value]="videoFileName" readonly placeholder="Choisir une nouvelle vidéo..." />
+        <button mat-icon-button matSuffix (click)="fileInput.click()" type="button" [disabled]="isUploading">
+          <mat-icon *ngIf="!isUploading">upload</mat-icon>
+          <mat-icon *ngIf="isUploading" class="spinning">hourglass_empty</mat-icon>
+        </button>
+      </mat-form-field>
+      <input #fileInput type="file" accept="video/*" (change)="onVideoChange($event)" hidden />
+
+      <!-- Current Video Link -->
+      <div class="video-info" *ngIf="video.link && !isUploading">
+        <p class="info-label">Vidéo actuelle:</p>
+        <a [href]="video.link" target="_blank" class="video-link">
+          <mat-icon>play_circle</mat-icon>
+          {{ video.link }}
+        </a>
+      </div>
+
+      <!-- Upload Progress -->
+      <div class="upload-progress" *ngIf="isUploading">
+        <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+        <p class="upload-text">Téléchargement de la vidéo en cours... Cela peut prendre quelques minutes.</p>
+      </div>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput [(ngModel)]="video.description" name="description" rows="4" placeholder="Description de la vidéo"></textarea>
+      </mat-form-field>
+
+      <!-- Active Status -->
+      <div class="status-toggle">
+        <mat-slide-toggle [(ngModel)]="video.isActive" name="isActive" color="primary">
+          Vidéo active
+        </mat-slide-toggle>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-stroked-button (click)="onCancel()" [disabled]="isUploading">
+      Annuler
+    </button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="isUploading">
+      <mat-icon *ngIf="!isUploading">save</mat-icon>
+      <mat-icon *ngIf="isUploading" class="spinning">hourglass_empty</mat-icon>
+      <span *ngIf="!isUploading">Enregistrer</span>
+      <span *ngIf="isUploading">Enregistrement...</span>
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,80 @@
+<mat-card class="cardWithShadow latest-rev-card">
+  <mat-card-content class="p-24">
+    <!-- Header -->
+    <div class="card-header">
+      <div class="d-flex align-items-center">
+        <div class="icon-wrapper">
+          <mat-icon>event_available</mat-icon>
+        </div>
+        <div>
+          <h3 class="card-title">Réservations Récentes</h3>
+          <p class="card-subtitle">Activité en temps réel</p>
+        </div>
+      </div>
+      <div class="badge-count">
+        <span>{{ reservations.length }}</span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Chargement des réservations...</p>
+    </div>
+
+    <!-- Reservations List -->
+    <div class="reservations-list" *ngIf="!isLoading && reservations.length > 0">
+      <div
+        class="reservation-card"
+        *ngFor="let reservation of reservations; let i = index"
+        [class.animate-in]="true"
+        [style.animation-delay.ms]="i * 50"
+      >
+        <!-- Status Indicator -->
+        <div class="status-indicator" [class]="getStatusClass(reservation.status)"></div>
+        
+        <div class="reservation-content">
+          <!-- Header Row -->
+          <div class="reservation-header">
+            <div class="d-flex align-items-center">
+              <mat-icon class="person-icon">person</mat-icon>
+              <h4 class="reservation-name">{{ reservation.name }}</h4>
+            </div>
+            <span class="status-badge" [class]="getStatusClass(reservation.status)">
+              {{ getStatusLabel(reservation.status) }}
+            </span>
+          </div>
+
+          <!-- Details Grid -->
+          <div class="details-grid">
+            <div class="detail-item">
+              <mat-icon class="detail-icon">location_city</mat-icon>
+              <span class="detail-text">{{ reservation.city }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon class="detail-icon">email</mat-icon>
+              <span class="detail-text">{{ reservation.email }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon class="detail-icon">phone</mat-icon>
+              <span class="detail-text">{{ reservation.phone }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon class="detail-icon">access_time</mat-icon>
+              <span class="detail-text">{{ reservation.reservationDate | date: 'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Data State -->
+    <div *ngIf="!isLoading && reservations.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <mat-icon>event_busy</mat-icon>
+      </div>
+      <h4>Aucune réservation récente</h4>
+      <p>Les nouvelles réservations apparaîtront ici</p>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,98 @@
+<div class="meg-login-page">
+  <div class="login-container">
+    <div class="login-wrapper">
+      <div class="login-card">
+      <div class="login-header">
+        <div class="logo-container">
+          <h1 class="logo-text">MonEntréeGratuite</h1>
+          <p class="logo-subtitle">Espace Administration</p>
+        </div>
+      </div>
+
+      <div class="login-content">
+        <h2 class="login-title">Connexion</h2>
+        <p class="login-description">Connectez-vous à votre compte administrateur</p>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+          <!-- Email Field -->
+          <div class="form-group">
+            <mat-label class="form-label">Adresse Email</mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input 
+                matInput 
+                type="email" 
+                formControlName="email"
+                placeholder="admin@monentreegratuite.com"
+                autocomplete="email"
+              />
+              <mat-icon matPrefix class="input-icon">email</mat-icon>
+              <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+                L'email est requis
+              </mat-error>
+              <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+                Email invalide
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <mat-label class="form-label">Mot de passe</mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <input 
+                matInput 
+                [type]="hidePassword ? 'password' : 'text'"
+                formControlName="password"
+                placeholder="••••••••"
+                autocomplete="current-password"
+              />
+              <mat-icon matPrefix class="input-icon">lock</mat-icon>
+              <button 
+                mat-icon-button 
+                matSuffix 
+                type="button"
+                (click)="hidePassword = !hidePassword"
+                [attr.aria-label]="'Hide password'"
+              >
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+              <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+                Le mot de passe est requis
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Remember Me -->
+          <div class="form-options">
+            <mat-checkbox formControlName="rememberMe" color="primary">
+              Se souvenir de moi
+            </mat-checkbox>
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="errorMessage" class="error-alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            mat-flat-button 
+            color="primary" 
+            class="login-button"
+            type="submit"
+            [disabled]="loginForm.invalid || isLoading"
+          >
+            <span *ngIf="!isLoading">Se connecter</span>
+            <mat-spinner *ngIf="isLoading" diameter="20" class="button-spinner"></mat-spinner>
+          </button>
+        </form>
+      </div>
+
+      <div class="login-footer">
+        <p class="footer-text">© 2024 MonEntréeGratuite - Tous droits réservés</p>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

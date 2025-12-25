@@ -1,0 +1,614 @@
+// Wrapper to isolate from global backoffice styles
+.meg-login-page {
+  // Reset any global styles that might interfere
+  * {
+    box-sizing: border-box;
+  }
+
+  // Override any conflicting global styles
+  .blank-layout-container,
+  .boxed-auth,
+  .or-border,
+  .custom-row {
+    all: unset;
+  }
+}
+
+// Login Container
+.meg-login-page .login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0e27;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+
+  // Animated gradient background
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #01B3A7 0%, #008C82 25%, #00FFB0 50%, #01B3A7 75%, #008C82 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    opacity: 0.9;
+  }
+
+  // Floating particles
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(0, 255, 176, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(1, 179, 167, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(0, 255, 176, 0.1) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  33% {
+    transform: translateY(-20px) scale(1.1);
+  }
+  66% {
+    transform: translateY(20px) scale(0.9);
+  }
+}
+
+// Login Wrapper
+.meg-login-page .login-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+}
+
+// Login Card
+.meg-login-page .login-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  overflow: hidden;
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+      0 12px 48px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Login Header
+.meg-login-page .login-header {
+  background: linear-gradient(135deg, #01B3A7 0%, #00FFB0 100%);
+  padding: 50px 30px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      #00FFB0 25%, 
+      #ffffff 50%, 
+      #00FFB0 75%, 
+      transparent 100%);
+    animation: shimmer 3s ease-in-out infinite;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+}
+
+.meg-login-page .logo-container {
+  position: relative;
+  z-index: 1;
+  animation: fadeInDown 1s ease-out;
+
+  .logo-text {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .logo-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 10px 0 0;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: fadeIn 1.5s ease-out;
+  }
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  to {
+    text-shadow: 0 2px 20px rgba(255, 255, 255, 0.4);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Login Content
+.meg-login-page .login-content {
+  padding: 40px 30px;
+}
+
+.meg-login-page .login-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.meg-login-page .login-description {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0 0 30px;
+  text-align: center;
+}
+
+// Login Form
+.meg-login-page .login-form {
+  .form-group {
+    margin-bottom: 24px;
+
+    &:last-of-type {
+      margin-bottom: 20px;
+    }
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  ::ng-deep {
+    .mat-mdc-form-field {
+      width: 100%;
+      transition: all 0.3s ease;
+
+      .mat-mdc-form-field-icon-prefix {
+        padding-left: 12px;
+        padding-right: 8px;
+        display: flex;
+        align-items: center;
+      }
+
+      .mat-mdc-form-field-icon-suffix {
+        padding-right: 8px;
+        display: flex;
+        align-items: center;
+      }
+
+      .mat-mdc-text-field-wrapper {
+        background-color: rgba(248, 249, 250, 0.8);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+      }
+
+      .mat-mdc-form-field-focus-overlay {
+        background-color: transparent;
+      }
+
+      .mdc-text-field--outlined {
+        .mdc-notched-outline {
+          .mdc-notched-outline__leading,
+          .mdc-notched-outline__notch,
+          .mdc-notched-outline__trailing {
+            border-color: rgba(224, 224, 224, 0.6);
+            transition: all 0.3s ease;
+          }
+        }
+
+        &:hover .mdc-notched-outline {
+          .mdc-notched-outline__leading,
+          .mdc-notched-outline__notch,
+          .mdc-notched-outline__trailing {
+            border-color: #01B3A7;
+            box-shadow: 0 0 0 3px rgba(1, 179, 167, 0.1);
+          }
+        }
+
+        &.mdc-text-field--focused .mdc-notched-outline {
+          .mdc-notched-outline__leading,
+          .mdc-notched-outline__notch,
+          .mdc-notched-outline__trailing {
+            border-color: #01B3A7;
+            border-width: 2px;
+            box-shadow: 0 0 0 4px rgba(1, 179, 167, 0.15);
+          }
+        }
+      }
+
+      input {
+        font-size: 0.95rem;
+        color: #333;
+        padding: 14px 16px 14px 0;
+        transition: all 0.3s ease;
+
+        &::placeholder {
+          color: #999;
+          transition: color 0.3s ease;
+        }
+
+        &:focus::placeholder {
+          color: #bbb;
+        }
+      }
+
+      .mat-icon {
+        color: #666;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .input-icon {
+        margin-right: 8px;
+      }
+
+      &:hover .mat-icon {
+        color: #01B3A7;
+      }
+    }
+
+    .mat-mdc-checkbox {
+      transition: all 0.3s ease;
+
+      .mdc-checkbox__background {
+        border-color: #01B3A7;
+        transition: all 0.3s ease;
+      }
+
+      .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background {
+        background-color: #01B3A7;
+        border-color: #01B3A7;
+        animation: checkboxPop 0.3s ease;
+      }
+
+      .mdc-label {
+        font-size: 0.9rem;
+        color: #555;
+        transition: color 0.3s ease;
+      }
+
+      &:hover .mdc-label {
+        color: #01B3A7;
+      }
+    }
+  }
+
+  @keyframes checkboxPop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
+
+// Form Options
+.meg-login-page .form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+// Error Alert
+.meg-login-page .error-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #ffebee;
+  border: 1px solid #ef5350;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  animation: shake 0.5s ease-in-out;
+
+  mat-icon {
+    color: #ef5350;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  span {
+    font-size: 0.9rem;
+    color: #c62828;
+    font-weight: 500;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+// Login Button
+.meg-login-page .login-button {
+  width: 100%;
+  height: 52px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #01B3A7 0%, #00FFB0 100%);
+  color: #ffffff;
+  box-shadow: 
+    0 4px 15px rgba(1, 179, 167, 0.4),
+    0 0 0 0 rgba(0, 255, 176, 0.5);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 
+      0 8px 25px rgba(1, 179, 167, 0.5),
+      0 0 0 8px rgba(0, 255, 176, 0.1);
+    background: linear-gradient(135deg, #00FFB0 0%, #01B3A7 100%);
+
+    &::before {
+      left: 100%;
+    }
+
+    &::after {
+      width: 300px;
+      height: 300px;
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 
+      0 4px 15px rgba(1, 179, 167, 0.4),
+      0 0 0 4px rgba(0, 255, 176, 0.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .button-spinner {
+    ::ng-deep circle {
+      stroke: #ffffff;
+    }
+  }
+}
+
+// Login Footer
+.meg-login-page .login-footer {
+  padding: 20px 30px;
+  background: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+
+  .footer-text {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .login-container {
+    padding: 15px;
+  }
+
+  .login-card {
+    border-radius: 15px;
+  }
+
+  .login-header {
+    padding: 30px 20px;
+
+    .logo-text {
+      font-size: 1.75rem;
+    }
+
+    .logo-subtitle {
+      font-size: 0.9rem;
+    }
+  }
+
+  .login-content {
+    padding: 30px 20px;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+
+  .login-description {
+    font-size: 0.9rem;
+  }
+
+  .login-footer {
+    padding: 15px 20px;
+
+    .footer-text {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .login-header {
+    padding: 25px 15px;
+
+    .logo-text {
+      font-size: 1.5rem;
+    }
+
+    .logo-subtitle {
+      font-size: 0.85rem;
+    }
+  }
+
+  .login-content {
+    padding: 25px 15px;
+  }
+
+  .login-title {
+    font-size: 1.3rem;
+  }
+
+  .login-description {
+    font-size: 0.85rem;
+    margin-bottom: 25px;
+  }
+
+  .login-form {
+    .form-group {
+      margin-bottom: 20px;
+    }
+  }
+
+  .login-button {
+    height: 44px;
+    font-size: 0.95rem;
+  }
+}
+
+// Utility Classes
+.w-100 {
+  width: 100%;
+}

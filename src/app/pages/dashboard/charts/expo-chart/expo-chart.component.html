@@ -1,0 +1,53 @@
+<mat-card class="cardWithShadow chart-card">
+  <mat-card-content class="p-24">
+    <!-- Header -->
+    <div class="card-header">
+      <div class="d-flex align-items-center">
+        <div class="icon-wrapper">
+          <mat-icon>business_center</mat-icon>
+        </div>
+        <div>
+          <h3 class="card-title">Exposants par Pays</h3>
+          <p class="card-subtitle">Répartition par sexe et secteur d'activité</p>
+        </div>
+      </div>
+      <mat-form-field class="filter-select" appearance="outline">
+        <mat-label>Filtrer</mat-label>
+        <mat-select
+          [(value)]="selectedSeries"
+          (selectionChange)="updateSeries()"
+          multiple
+        >
+          <mat-option *ngFor="let series of allSeries" [value]="series">
+            {{ series.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Chargement des données...</p>
+    </div>
+
+    <!-- Chart Content -->
+    <div *ngIf="!isLoading" class="chart-content">
+      <div id="chart">
+        <apx-chart
+          [series]="chartOptions.series!"
+          [chart]="chartOptions.chart!"
+          [dataLabels]="chartOptions.dataLabels!"
+          [plotOptions]="chartOptions.plotOptions!"
+          [xaxis]="chartOptions.xaxis!"
+          [stroke]="chartOptions.stroke!"
+          [fill]="chartOptions.fill!"
+          [yaxis]="chartOptions.yaxis!"
+          [tooltip]="chartOptions.tooltip!"
+          [legend]="chartOptions.legend!"
+          [title]="chartOptions.title!"
+        ></apx-chart>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

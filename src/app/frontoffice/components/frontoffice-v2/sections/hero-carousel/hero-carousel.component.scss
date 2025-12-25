@@ -1,0 +1,215 @@
+/* ================================
+   HERO CAROUSEL – CORRECT & CLEAN
+   ================================ */
+
+.carousel-section {
+  position: relative;
+  width: 100%;
+  height: min(75vh, 700px); /* THIS IS THE KEY */
+  overflow: hidden;
+  margin-top: 96px;
+  background: #000;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .carousel-section {
+    height: 60vh;
+    max-height: 520px;
+    margin-top: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-section {
+    /* Remove forced aspect ratio that might cause layout issues */
+    height: 55vh;
+  }
+}
+
+/* ================================
+   IMAGE WRAPPER
+   ================================ */
+
+.carousel-image-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ================================
+   IMAGE ITSELF
+   ================================ */
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Fill the space on all screens */
+  object-position: center;
+  background-color: #000;
+  display: block;
+}
+
+/* ================================
+   CAROUSEL CONTROLS
+   ================================ */
+
+.hero-carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  z-index: 10;
+  cursor: pointer;
+  
+  /* Visuals */
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  backdrop-filter: blur(4px);
+  
+  /* Layout */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  transition: all 0.25s ease;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+    stroke-width: 2.5;
+  }
+
+  &:hover {
+    transform: translateY(-50%) scale(1.1);
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  &.prev {
+    left: 24px;
+  }
+
+  &.next {
+    right: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-carousel-control {
+    width: 40px;
+    height: 40px;
+    
+    &.prev {
+      left: 12px;
+    }
+
+    &.next {
+      right: 12px;
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+/* ================================
+   DOTS
+   ================================ */
+
+.hero-carousel-dots {
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+
+  .hero-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &.active {
+      width: 28px;
+      background: linear-gradient(90deg, #f59e0b, #d97706);
+    }
+  }
+}
+
+/* ================================
+   CTA
+   ================================ */
+
+.hero-cta-container {
+  position: absolute;
+  bottom: 4rem;
+  left: 2rem;
+  z-index: 20;
+}
+
+@media (max-width: 768px) {
+  .hero-cta-container {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 3rem;
+    width: 90%;
+    max-width: 320px;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.hero-cta-button-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 32px;
+
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #b88917, #b88917);
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.35);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 40px rgba(245, 158, 11, 0.45);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-cta-button-inline {
+    padding: 14px 20px;
+    font-size: 0.9rem;
+  }
+}

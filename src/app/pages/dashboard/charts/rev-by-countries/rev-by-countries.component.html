@@ -1,0 +1,50 @@
+<mat-card class="cardWithShadow chart-card">
+  <mat-card-content class="p-24">
+    <!-- Header -->
+    <div class="card-header">
+      <div class="d-flex align-items-center">
+        <div class="icon-wrapper">
+          <mat-icon>public</mat-icon>
+        </div>
+        <div>
+          <h3 class="card-title">Réservations par Pays</h3>
+          <p class="card-subtitle">Distribution géographique des réservations</p>
+        </div>
+      </div>
+      <mat-form-field class="filter-select" appearance="outline">
+        <mat-label>Année</mat-label>
+        <mat-select [value]="selectedYear" (selectionChange)="onYearChange($event.value)">
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Chargement...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <!-- Chart -->
+    <div *ngIf="!isLoading && !errorMessage && chartOptions" class="chart-content">
+      <apx-chart
+        [series]="chartOptions.series!"
+        [chart]="chartOptions.chart!"
+        [dataLabels]="chartOptions.dataLabels!"
+        [plotOptions]="chartOptions.plotOptions!"
+        [yaxis]="chartOptions.yaxis!"
+        [xaxis]="chartOptions.xaxis!"
+        [fill]="chartOptions.fill!"
+        [title]="chartOptions.title!"
+      ></apx-chart>
+    </div>
+  </mat-card-content>
+</mat-card>

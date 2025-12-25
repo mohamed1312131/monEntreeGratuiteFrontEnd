@@ -1,0 +1,97 @@
+import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SettingsService, SocialLinks } from 'src/app/services/settings.service';
+import { NewsletterSubscriberService } from 'src/app/services/newsletter-subscriber.service';
+
+@Component({
+  selector: 'app-footer-section',
+  templateUrl: './footer-section.component.html',
+  styleUrls: ['./footer-section.component.scss'],
+  encapsulation: ViewEncapsulation.None
+})
+export class FooterSectionComponent implements OnInit {
+  @Output() countrySelect = new EventEmitter<'france' | 'belgique' | 'suisse'>();
+  @Output() sectionScroll = new EventEmitter<string>();
+  
+  socialLinks: SocialLinks | null = null;
+  newsletterForm!: FormGroup;
+  subscribeLoading = false;
+  subscribeSuccess = false;
+  subscribeError = '';
+
+  constructor(
+    private settingsService: SettingsService,
+    private newsletterService: NewsletterSubscriberService,
+    private fb: FormBuilder
+  ) {
+    this.newsletterForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      name: ['Abonné Newsletter', Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadSocialLinks();
+  }
+
+  loadSocialLinks(): void {
+    this.settingsService.getSocialLinks().subscribe({
+      next: (data: SocialLinks) => {
+        this.socialLinks = data;
+      },
+      error: (error) => {
+        console.error('Error loading social links:', error);
+      }
+    });
+  }
+
+  selectCountry(country: 'france' | 'belgique' | 'suisse'): void {
+    this.countrySelect.emit(country);
+  }
+
+  scrollToSection(section: string): void {
+    this.sectionScroll.emit(section);
+  }
+
+  subscribeToNewsletter(): void {
+    if (this.newsletterForm.invalid) {
+      this.subscribeError = 'Veuillez entrer une adresse email valide';
+      return;
+    }
+
+    this.subscribeLoading = true;
+    this.subscribeError = '';
+    this.subscribeSuccess = false;
+
+    const email = this.newsletterForm.get('email')?.value;
+    const name = this.newsletterForm.get('name')?.value;
+
+    this.newsletterService.subscribe(email, name, undefined, 'website').subscribe({
+      next: () => {
+        this.subscribeSuccess = true;
+        this.subscribeLoading = false;
+        this.newsletterForm.reset();
+        
+        // Hide success message after 5 seconds
+        setTimeout(() => {
+          this.subscribeSuccess = false;
+        }, 5000);
+      },
+      error: (error) => {
+        this.subscribeLoading = false;
+        
+        // Check if email already exists
+        if (error.error?.error && error.error.error.includes('already')) {
+          this.subscribeError = 'Cette adresse email est déjà inscrite à notre newsletter';
+        } else {
+          this.subscribeError = 'Une erreur est survenue. Veuillez réessayer plus tard.';
+        }
+        
+        // Hide error message after 5 seconds
+        setTimeout(() => {
+          this.subscribeError = '';
+        }, 5000);
+      }
+    });
+  }
+}

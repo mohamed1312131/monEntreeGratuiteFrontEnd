@@ -1,0 +1,21 @@
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+
+  .username {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+  }
+}
+
+button[aria-label="Logout"] {
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
