@@ -42,9 +42,7 @@
               "src/assets/css/responsive.css"
             ],
             "scripts": [
-              "src/assets/js/jquery.min.js",
-              "src/assets/js/plugins.js",
-              "src/assets/js/script.js"
+              "src/assets/js/jquery.min.js"
             ]
           },
           "configurations": {
