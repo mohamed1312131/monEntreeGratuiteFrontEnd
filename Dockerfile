@@ -24,8 +24,12 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copy built application from build stage
 COPY --from=build /app/dist/modernize /usr/share/nginx/html
 
-# Expose port 80
-EXPOSE 80
+# Copy startup script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Expose port 8080
+EXPOSE 8080
+
+# Start Nginx with startup script
+CMD ["/start.sh"]
