@@ -91,39 +91,44 @@
             class="foires-carousel"
             [style.transform]="getTransformStyle()">
             <div *ngFor="let foire of currentFoires" class="foire-card">
-              <div class="foire-card-image">
-                <img [src]="foire.image" [alt]="foire.name" />
-                <div class="foire-card-overlay"></div>
-                <div class="foire-card-shine"></div>
-              </div>
-              <div class="foire-card-content">
-                <h3 class="foire-card-title">{{ foire.name }}</h3>
-                <p class="foire-card-location">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  <span>Paris</span>
-                </p>
-                <p class="foire-card-date">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                  </svg>
-                  <span>{{ foire.date }}</span>
-                </p>
-                <button 
-                  (click)="onReserve(foire, selectedCountry === 'france' ? 'France' : selectedCountry === 'belgique' ? 'Belgique' : 'Suisse')"
-                  class="foire-card-button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 12h14"></path>
-                    <path d="m12 5 7 7-7 7"></path>
-                  </svg>
-                  <span>Réserver Maintenant</span>
-                  <div class="button-glow"></div>
-                </button>
+              <div class="foire-card-inner">
+                <div class="foire-card-image">
+                  <img [src]="foire.image" [alt]="foire.name" />
+                  <div class="foire-card-overlay"></div>
+                  <div class="foire-card-shine"></div>
+                </div>
+                <div class="foire-card-content">
+                  <h3 class="foire-card-title">{{ foire.name }}</h3>
+                  <p class="foire-card-location">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span>{{ foire.location }}</span>
+                  </p>
+                  <div class="foire-card-dates">
+                    <div *ngFor="let dateRange of foire.dateRanges" class="foire-card-date">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <span>{{ dateRange }}</span>
+                    </div>
+                  </div>
+                  <p *ngIf="foire.description" class="foire-card-description">{{ foire.description }}</p>
+                  <button 
+                    (click)="onReserve(foire, selectedCountry === 'france' ? 'France' : selectedCountry === 'belgique' ? 'Belgique' : 'Suisse')"
+                    class="foire-card-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M5 12h14"></path>
+                      <path d="m12 5 7 7-7 7"></path>
+                    </svg>
+                    <span>Réserver Maintenant</span>
+                    <div class="button-glow"></div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

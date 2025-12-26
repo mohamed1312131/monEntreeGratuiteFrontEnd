@@ -14,7 +14,7 @@ interface HeroSlide {
 interface Foire {
   id: number;
   name: string;
-  date: string;
+  dateRanges: string[];
   location: string;
   image: string;
   description: string;
@@ -120,7 +120,7 @@ export class FrontofficeV2Component implements OnInit {
     this.selectedFoire = {
       id: foire.id,
       name: foire.name,
-      date: foire.date,
+      date: foire.dateRanges.join(' • '),
       image: foire.image,
       location: foire.location,
       pays: countryName,
@@ -354,13 +354,12 @@ export class FrontofficeV2Component implements OnInit {
 
   openHeroReservation(heroSlide: HeroSlide): void {
     // Create a generic foire object for hero carousel reservations
-    const heroFoire: FoireDetails = {
+    const heroFoire: Foire = {
       id: heroSlide.id,
       name: heroSlide.title,
-      date: 'À venir',
+      dateRanges: ['À venir'],
       image: heroSlide.image,
       location: heroSlide.location,
-      pays: 'France',
       description: heroSlide.description
     };
     this.onReserve(heroFoire, 'France');

@@ -155,7 +155,7 @@
         <!-- Marketing consent -->
         <div class="form-group checkbox-group">
           <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing">
+            <input type="checkbox" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing" required>
             <span class="checkbox-text">
               En cochant cette case, j'autorise VIPLUX détenteur de monentreegratuite, à utiliser mon email et/ou mon téléphone pour m'adresser mon invitation, des offres, actualités et relances liées à ses offres. Je peux retirer mon consentement à tout moment via le lien de désinscription (emails) ou en répondant STOP (SMS).
             </span>
@@ -163,7 +163,7 @@
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" class="btn-submit" [disabled]="!reservationForm.acceptConditions || isSubmitting">
+        <button type="submit" class="btn-submit" [disabled]="!reservationForm.acceptConditions || !reservationForm.acceptMarketing || isSubmitting">
           <span *ngIf="!isSubmitting">Confirmer ma réservation</span>
           <span *ngIf="isSubmitting">
             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
