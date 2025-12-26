@@ -1,18 +1,21 @@
-<mat-card class="cardWithShadow latest-rev-card">
+<mat-card class="cardWithShadow">
   <mat-card-content class="p-24">
     <!-- Header -->
     <div class="card-header">
-      <div class="d-flex align-items-center">
+      <div class="header-content">
         <div class="icon-wrapper">
           <mat-icon>event_available</mat-icon>
         </div>
-        <div>
+        <div class="title-content">
           <h3 class="card-title">Réservations Récentes</h3>
           <p class="card-subtitle">Activité en temps réel</p>
         </div>
       </div>
-      <div class="badge-count">
-        <span>{{ reservations.length }}</span>
+      
+      <div class="actions-wrapper">
+        <div class="badge-count">
+          <span>{{ reservations.length }}</span>
+        </div>
       </div>
     </div>
 
@@ -36,13 +39,22 @@
         <div class="reservation-content">
           <!-- Header Row -->
           <div class="reservation-header">
-            <div class="d-flex align-items-center">
-              <mat-icon class="person-icon">person</mat-icon>
-              <h4 class="reservation-name">{{ reservation.name }}</h4>
+            <div class="d-flex align-items-center gap-12">
+              <div class="avatar-placeholder">
+                <mat-icon>person</mat-icon>
+              </div>
+              <div>
+                <h4 class="reservation-name">{{ reservation.name }}</h4>
+                <div class="d-flex align-items-center gap-8 mt-4">
+                  <span class="status-badge" [class]="getStatusClass(reservation.status)">
+                    {{ getStatusLabel(reservation.status) }}
+                  </span>
+                  <span class="time-badge">
+                    {{ reservation.reservationDate | date: 'HH:mm' }}
+                  </span>
+                </div>
+              </div>
             </div>
-            <span class="status-badge" [class]="getStatusClass(reservation.status)">
-              {{ getStatusLabel(reservation.status) }}
-            </span>
           </div>
 
           <!-- Details Grid -->
@@ -52,16 +64,8 @@
               <span class="detail-text">{{ reservation.city }}</span>
             </div>
             <div class="detail-item">
-              <mat-icon class="detail-icon">email</mat-icon>
-              <span class="detail-text">{{ reservation.email }}</span>
-            </div>
-            <div class="detail-item">
-              <mat-icon class="detail-icon">phone</mat-icon>
-              <span class="detail-text">{{ reservation.phone }}</span>
-            </div>
-            <div class="detail-item">
-              <mat-icon class="detail-icon">access_time</mat-icon>
-              <span class="detail-text">{{ reservation.reservationDate | date: 'dd/MM/yyyy HH:mm' }}</span>
+              <mat-icon class="detail-icon">calendar_today</mat-icon>
+              <span class="detail-text">{{ reservation.reservationDate | date: 'dd/MM/yyyy' }}</span>
             </div>
           </div>
         </div>
@@ -70,9 +74,7 @@
 
     <!-- No Data State -->
     <div *ngIf="!isLoading && reservations.length === 0" class="empty-state">
-      <div class="empty-icon">
-        <mat-icon>event_busy</mat-icon>
-      </div>
+      <mat-icon>event_busy</mat-icon>
       <h4>Aucune réservation récente</h4>
       <p>Les nouvelles réservations apparaîtront ici</p>
     </div>

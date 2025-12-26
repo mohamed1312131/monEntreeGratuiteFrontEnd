@@ -3,10 +3,15 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export interface DateRange {
+  startDate: string;
+  endDate: string;
+}
+
 export interface ReservationData {
   id: number;
   foireId: number;
-  foireDate: string;
+  foireDateRanges: DateRange[];
   foireName: string;
   name: string;
   city: string;

@@ -15,9 +15,10 @@ import { LatestRevComponent } from './dashboard/charts/latest-rev/latest-rev.com
 import { MainChartComponent } from './dashboard/charts/main-chart/main-chart.component';
 import { RevByAgeComponent } from './dashboard/charts/rev-by-age/rev-by-age.component';
 import { RevByCountriesComponent } from './dashboard/charts/rev-by-countries/rev-by-countries.component';
+import { TrackByCountriesComponent } from './dashboard/charts/track-by-countries/track-by-countries.component';
 
 @NgModule({
-  declarations: [AppDashboardComponent,RevByCountriesComponent, ExposantRequestsComponent,MainChartComponent,RevByAgeComponent,ExpoChartComponent,LatestRevComponent],
+  declarations: [AppDashboardComponent,RevByCountriesComponent, ExposantRequestsComponent,MainChartComponent,TrackByCountriesComponent,RevByAgeComponent,ExpoChartComponent,LatestRevComponent],
   imports: [
     CommonModule,
     MaterialModule,

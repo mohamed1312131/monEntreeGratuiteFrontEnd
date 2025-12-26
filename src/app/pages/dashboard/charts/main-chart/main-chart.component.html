@@ -1,24 +1,26 @@
-<mat-card class="cardWithShadow chart-card">
+<mat-card class="cardWithShadow">
   <mat-card-content class="p-24">
     <!-- Header -->
     <div class="card-header">
-      <div class="d-flex align-items-center">
+      <div class="header-content">
         <div class="icon-wrapper">
           <mat-icon>analytics</mat-icon>
         </div>
-        <div>
+        <div class="title-content">
           <h3 class="card-title">Vue d'Ensemble Annuelle</h3>
           <p class="card-subtitle">Entrées utilisateurs et réservations mensuelles</p>
         </div>
       </div>
-      <mat-form-field class="filter-select" appearance="outline">
-        <mat-label>Année</mat-label>
-        <mat-select [value]="selectedYear" (selectionChange)="onYearChange($event.value)">
-          <mat-option *ngFor="let year of years" [value]="year">
-            {{ year }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      
+      <div class="actions-wrapper">
+        <mat-form-field class="filter-select" appearance="outline">
+          <mat-select [value]="selectedYear" (selectionChange)="onYearChange($event.value)">
+            <mat-option *ngFor="let year of years" [value]="year">
+              {{ year }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
 
     <!-- Loading State -->

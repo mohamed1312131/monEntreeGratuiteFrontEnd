@@ -36,7 +36,7 @@ export class ExcelExportService {
       'ID': r.id,
       'Pays': r.country,
       'Date Réservation': r.reservationDate,
-      'Date Foire': r.foireDate,
+      'Date Foire': this.formatDateRanges(r.foireDateRanges),
       'Nom Foire': r.foireName,
       'Nom': r.name,
       'Ville': r.city,
@@ -47,6 +47,16 @@ export class ExcelExportService {
     }));
 
     this.exportToExcel(formattedData, `Reservations_${this.getDateString()}`, 'Réservations');
+  }
+
+  /**
+   * Format date ranges for display
+   */
+  private formatDateRanges(dateRanges: any[]): string {
+    if (!dateRanges || dateRanges.length === 0) {
+      return 'N/A';
+    }
+    return dateRanges.map(range => `${range.startDate} - ${range.endDate}`).join(', ');
   }
 
   /**

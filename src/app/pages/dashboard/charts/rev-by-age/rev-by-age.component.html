@@ -1,19 +1,19 @@
-<mat-card class="cardWithShadow chart-card">
+<mat-card class="cardWithShadow">
   <mat-card-content class="p-24">
     <!-- Header -->
     <div class="card-header">
-      <div class="d-flex align-items-center">
+      <div class="header-content">
         <div class="icon-wrapper">
           <mat-icon>people</mat-icon>
         </div>
-        <div>
+        <div class="title-content">
           <h3 class="card-title">Réservations par Âge</h3>
           <p class="card-subtitle">Distribution par tranche d'âge</p>
         </div>
       </div>
-      <div class="d-flex gap-8">
+      
+      <div class="actions-wrapper">
         <mat-form-field class="filter-select" appearance="outline">
-          <mat-label>Année</mat-label>
           <mat-select 
             [(ngModel)]="selectedYear" 
             (selectionChange)="updateChart()"
@@ -24,7 +24,6 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="filter-select" appearance="outline">
-          <mat-label>Pays</mat-label>
           <mat-select 
             [(ngModel)]="selectedCountry" 
             (selectionChange)="updateChart()"
@@ -54,8 +53,9 @@
     </div>
 
     <!-- No Data -->
-    <div *ngIf="!loading && !chartOptions" class="no-data">
+    <div *ngIf="!loading && !chartOptions" class="empty-state">
       <mat-icon>inbox</mat-icon>
+      <h4>Aucune donnée</h4>
       <p>Aucune donnée disponible pour cette sélection</p>
     </div>
   </mat-card-content>

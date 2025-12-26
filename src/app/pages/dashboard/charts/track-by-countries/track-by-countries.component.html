@@ -4,29 +4,35 @@
     <div class="card-header">
       <div class="header-content">
         <div class="icon-wrapper">
-          <mat-icon>public</mat-icon>
+          <mat-icon>travel_explore</mat-icon>
         </div>
         <div class="title-content">
-          <h3 class="card-title">Réservations par Pays</h3>
-          <p class="card-subtitle">Distribution géographique des réservations</p>
+          <h3 class="card-title">Visiteurs par Pays</h3>
+          <p class="card-subtitle">Distribution géographique des visiteurs du site</p>
         </div>
       </div>
       
       <div class="actions-wrapper">
-        <mat-form-field class="filter-select" appearance="outline">
-          <mat-select [value]="selectedYear" (selectionChange)="onYearChange($event.value)">
-            <mat-option *ngFor="let year of years" [value]="year">
-              {{ year }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div class="d-flex align-items-center gap-12">
+          <div class="total-badge" *ngIf="!isLoading && totalVisits > 0">
+            <span class="badge-label">Total:</span>
+            <span class="badge-value">{{ totalVisits }}</span>
+          </div>
+          <mat-form-field class="filter-select" appearance="outline">
+            <mat-select [value]="selectedYear" (selectionChange)="onYearChange($event.value)">
+              <mat-option *ngFor="let year of years" [value]="year">
+                {{ year }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
     </div>
 
     <!-- Loading Indicator -->
     <div *ngIf="isLoading" class="loading-container">
       <mat-spinner diameter="40"></mat-spinner>
-      <p>Chargement...</p>
+      <p>Chargement des données...</p>
     </div>
 
     <!-- Error Message -->
@@ -46,7 +52,15 @@
         [xaxis]="chartOptions.xaxis!"
         [fill]="chartOptions.fill!"
         [title]="chartOptions.title!"
+        [colors]="chartOptions.colors!"
       ></apx-chart>
+    </div>
+
+    <!-- No Data Message -->
+    <div *ngIf="!isLoading && !errorMessage && totalVisits === 0" class="empty-state">
+      <mat-icon>info</mat-icon>
+      <h4>Aucune visite</h4>
+      <p>Aucune visite enregistrée pour {{ selectedYear }}</p>
     </div>
   </mat-card-content>
 </mat-card>

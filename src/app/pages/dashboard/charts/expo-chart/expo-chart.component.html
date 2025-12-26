@@ -1,28 +1,30 @@
-<mat-card class="cardWithShadow chart-card">
+<mat-card class="cardWithShadow">
   <mat-card-content class="p-24">
     <!-- Header -->
     <div class="card-header">
-      <div class="d-flex align-items-center">
+      <div class="header-content">
         <div class="icon-wrapper">
           <mat-icon>business_center</mat-icon>
         </div>
-        <div>
+        <div class="title-content">
           <h3 class="card-title">Exposants par Pays</h3>
           <p class="card-subtitle">Répartition par sexe et secteur d'activité</p>
         </div>
       </div>
-      <mat-form-field class="filter-select" appearance="outline">
-        <mat-label>Filtrer</mat-label>
-        <mat-select
-          [(value)]="selectedSeries"
-          (selectionChange)="updateSeries()"
-          multiple
-        >
-          <mat-option *ngFor="let series of allSeries" [value]="series">
-            {{ series.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      
+      <div class="actions-wrapper">
+        <mat-form-field class="filter-select" appearance="outline">
+          <mat-select
+            [(value)]="selectedSeries"
+            (selectionChange)="updateSeries()"
+            multiple
+          >
+            <mat-option *ngFor="let series of allSeries" [value]="series">
+              {{ series.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
 
     <!-- Loading State -->

@@ -7,11 +7,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReservationService, ReservationData } from '../../../services/reservation.service';
 import { ExcelExportService } from '../../../services/excel-export.service';
 
+interface DateRange {
+  startDate: string;
+  endDate: string;
+}
+
 interface Reservation {
   id: number;
   country: string;
   reservationDate: string;
-  foireDate: string;
+  foireDateRanges: DateRange[];
   foireName: string;
   name: string;
   city: string;
@@ -56,7 +61,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       id: 1,
       country: 'FR',
       reservationDate: '2024-12-01',
-      foireDate: '2025-02-22',
+      foireDateRanges: [{startDate: '2025-02-22', endDate: '2025-02-25'}],
       foireName: 'Salon de l\'Agriculture',
       name: 'Jean Dupont',
       city: 'Paris',
@@ -69,7 +74,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       id: 2,
       country: 'FR',
       reservationDate: '2024-12-02',
-      foireDate: '2025-04-28',
+      foireDateRanges: [{startDate: '2025-04-28', endDate: '2025-05-02'}],
       foireName: 'Foire de Paris',
       name: 'Marie Martin',
       city: 'Lyon',
@@ -82,7 +87,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       id: 3,
       country: 'BL',
       reservationDate: '2024-12-03',
-      foireDate: '2025-03-15',
+      foireDateRanges: [{startDate: '2025-03-15', endDate: '2025-03-18'}],
       foireName: 'Foire de Bruxelles',
       name: 'Pierre Dubois',
       city: 'Bruxelles',
@@ -95,7 +100,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       id: 4,
       country: 'FR',
       reservationDate: '2024-12-04',
-      foireDate: '2025-10-28',
+      foireDateRanges: [{startDate: '2025-10-28', endDate: '2025-11-01'}],
       foireName: 'Salon du Chocolat',
       name: 'Sophie Laurent',
       city: 'Marseille',
@@ -108,7 +113,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       id: 5,
       country: 'SU',
       reservationDate: '2024-12-05',
-      foireDate: '2025-06-10',
+      foireDateRanges: [{startDate: '2025-06-10', endDate: '2025-06-14'}],
       foireName: 'Foire de Genève',
       name: 'Luc Bernard',
       city: 'Genève',
@@ -121,7 +126,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       id: 6,
       country: 'FR',
       reservationDate: '2024-12-06',
-      foireDate: '2025-02-22',
+      foireDateRanges: [{startDate: '2025-02-22', endDate: '2025-02-25'}],
       foireName: 'Salon de l\'Agriculture',
       name: 'Claire Petit',
       city: 'Toulouse',
@@ -134,7 +139,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       id: 7,
       country: 'BL',
       reservationDate: '2024-12-07',
-      foireDate: '2025-05-20',
+      foireDateRanges: [{startDate: '2025-05-20', endDate: '2025-05-23'}],
       foireName: 'Salon du Livre Bruxelles',
       name: 'Thomas Moreau',
       city: 'Liège',
@@ -175,7 +180,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
           id: r.id,
           country: r.country,
           reservationDate: r.reservationDate,
-          foireDate: r.foireDate,
+          foireDateRanges: r.foireDateRanges || [],
           foireName: r.foireName,
           name: r.name,
           city: r.city,
@@ -380,9 +385,9 @@ export class ReservationComponent implements OnInit, AfterViewInit {
 
   getCountryImage(countryCode: string): string {
     const images: { [key: string]: string } = {
-      'BE': 'assets/images/country/Belgium-logo-BEC81AA6BF-seeklogo.com.png',
-      'FR': 'assets/images/country/france.png',
-      'CH': 'assets/images/country/pngegg.png'
+      'BE': 'assets/images/flags/Belgium.png',
+      'FR': 'assets/images/flags/France.png',
+      'CH': 'assets/images/flags/Switzerland.png'
     };
     return images[countryCode] || '';
   }
@@ -414,6 +419,13 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       'PLUS': '> 60 ans'
     };
     return labels[ageCategory] || ageCategory;
+  }
+
+  formatFoireDateRanges(dateRanges: DateRange[]): string {
+    if (!dateRanges || dateRanges.length === 0) {
+      return 'N/A';
+    }
+    return dateRanges.map(range => `${range.startDate} - ${range.endDate}`).join(', ');
   }
 
   showSnackBar(message: string, type: 'success' | 'error'): void {

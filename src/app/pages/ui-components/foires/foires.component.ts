@@ -28,7 +28,7 @@ export class FoiresComponent implements OnInit {
   countries: Country[] = [
     {
       name: 'France',
-      image: 'assets/images/country/france.png',
+      image: 'assets/images/flags/France.png',
       apiKey: 'FR',
       pageIndex: 0,
       pageSize: 5,
@@ -36,7 +36,7 @@ export class FoiresComponent implements OnInit {
     },
     {
       name: 'Belgique',
-      image: 'assets/images/country/Belgium-logo-BEC81AA6BF-seeklogo.com.png',
+      image: 'assets/images/flags/Belgium.png',
       apiKey: 'BE',
       pageIndex: 0,
       pageSize: 5,
@@ -44,7 +44,7 @@ export class FoiresComponent implements OnInit {
     },
     {
       name: 'Suisse',
-      image: 'assets/images/country/pngegg.png',
+      image: 'assets/images/flags/Switzerland.png',
       apiKey: 'CH',
       pageIndex: 0,
       pageSize: 5,
