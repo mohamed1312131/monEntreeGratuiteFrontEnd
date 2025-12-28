@@ -13,6 +13,7 @@ export class EditVideoComponent implements OnInit {
   videoFile: File | null = null;
   videoFileName = '';
   isUploading = false;
+  hasManualLink = false;
 
   constructor(
     public dialogRef: MatDialogRef<EditVideoComponent>,
@@ -34,6 +35,17 @@ export class EditVideoComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       this.videoFile = input.files[0];
       this.videoFileName = input.files[0].name;
+      this.hasManualLink = false;
+    }
+  }
+
+  onVideoLinkChange(): void {
+    if (this.video.link && this.video.link.trim() !== '') {
+      this.videoFile = null;
+      this.videoFileName = '';
+      this.hasManualLink = true;
+    } else {
+      this.hasManualLink = false;
     }
   }
 

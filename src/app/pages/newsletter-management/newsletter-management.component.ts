@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,7 +17,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NewsletterSubscriberService, NewsletterSubscriber, NewsletterStatistics } from '../../services/newsletter-subscriber.service';
+import { EmailTemplateService, EmailTemplate } from '../../services/email-template.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
@@ -26,6 +28,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -41,14 +44,20 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
     MatDatepickerModule,
     MatNativeDateModule,
     MatTooltipModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatCheckboxModule
   ],
   templateUrl: './newsletter-management.component.html',
   styleUrl: './newsletter-management.component.scss'
 })
 export class NewsletterManagementComponent implements OnInit {
   subscribers: NewsletterSubscriber[] = [];
-  displayedColumns: string[] = ['email', 'name', 'status', 'subscribedAt', 'totalEmailsSent', 'actions'];
+  displayedColumns: string[] = ['select', 'email', 'name', 'status', 'subscribedAt', 'totalEmailsSent', 'actions'];
+  
+  selectedSubscribers = new Set<number>();
+  emailTemplates: EmailTemplate[] = [];
+  selectedTemplateId: number | null = null;
+  sendingBulkEmail = false;
   
   filtersForm!: FormGroup;
   addSubscriberForm!: FormGroup;
@@ -65,22 +74,19 @@ export class NewsletterManagementComponent implements OnInit {
   // Statistics
   statistics: NewsletterStatistics = {
     active: 0,
-    unsubscribed: 0,
-    bounced: 0,
-    complained: 0
+    unsubscribed: 0
   };
   
   statusOptions = [
     { value: '', label: 'All Statuses' },
     { value: 'ACTIVE', label: 'Active' },
-    { value: 'UNSUBSCRIBED', label: 'Unsubscribed' },
-    { value: 'BOUNCED', label: 'Bounced' },
-    { value: 'COMPLAINED', label: 'Complained' }
+    { value: 'UNSUBSCRIBED', label: 'Unsubscribed' }
   ];
 
   constructor(
     private fb: FormBuilder,
     private subscriberService: NewsletterSubscriberService,
+    private emailTemplateService: EmailTemplateService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {
@@ -90,15 +96,14 @@ export class NewsletterManagementComponent implements OnInit {
   ngOnInit(): void {
     this.loadStatistics();
     this.loadSubscribers();
+    this.loadEmailTemplates();
     this.setupFilters();
   }
 
   initForms(): void {
     this.filtersForm = this.fb.group({
       search: [''],
-      status: [''],
-      dateFrom: [''],
-      dateTo: ['']
+      status: ['']
     });
 
     this.addSubscriberForm = this.fb.group({
@@ -138,8 +143,6 @@ export class NewsletterManagementComponent implements OnInit {
     this.subscriberService.searchSubscribers(
       filters.status || undefined,
       filters.search || undefined,
-      filters.dateFrom ? new Date(filters.dateFrom).toISOString() : undefined,
-      filters.dateTo ? new Date(filters.dateTo).toISOString() : undefined,
       this.pageIndex,
       this.pageSize
     ).subscribe({
@@ -156,6 +159,17 @@ export class NewsletterManagementComponent implements OnInit {
     });
   }
 
+  loadEmailTemplates(): void {
+    this.emailTemplateService.getActiveTemplates().subscribe({
+      next: (templates) => {
+        this.emailTemplates = templates;
+      },
+      error: (error) => {
+        console.error('Error loading email templates:', error);
+      }
+    });
+  }
+
   onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -165,9 +179,7 @@ export class NewsletterManagementComponent implements OnInit {
   clearFilters(): void {
     this.filtersForm.reset({
       search: '',
-      status: '',
-      dateFrom: '',
-      dateTo: ''
+      status: ''
     });
   }
 
@@ -235,13 +247,91 @@ export class NewsletterManagementComponent implements OnInit {
     switch (status) {
       case 'ACTIVE': return 'primary';
       case 'UNSUBSCRIBED': return 'warn';
-      case 'BOUNCED': return 'accent';
-      case 'COMPLAINED': return 'warn';
       default: return '';
     }
   }
 
   formatDate(date: string): string {
     return new Date(date).toLocaleDateString();
+  }
+
+  // Bulk selection methods
+  isAllSelected(): boolean {
+    return this.subscribers.length > 0 && this.subscribers.every(s => this.selectedSubscribers.has(s.id));
+  }
+
+  toggleAllSelection(): void {
+    if (this.isAllSelected()) {
+      this.selectedSubscribers.clear();
+    } else {
+      this.subscribers.forEach(s => this.selectedSubscribers.add(s.id));
+    }
+  }
+
+  toggleSubscriberSelection(subscriberId: number): void {
+    if (this.selectedSubscribers.has(subscriberId)) {
+      this.selectedSubscribers.delete(subscriberId);
+    } else {
+      this.selectedSubscribers.add(subscriberId);
+    }
+  }
+
+  isSelected(subscriberId: number): boolean {
+    return this.selectedSubscribers.has(subscriberId);
+  }
+
+  getSelectedCount(): number {
+    return this.selectedSubscribers.size;
+  }
+
+  clearSelection(): void {
+    this.selectedSubscribers.clear();
+  }
+
+  sendBulkEmail(): void {
+    if (this.selectedSubscribers.size === 0) {
+      this.snackBar.open('Please select at least one subscriber', 'Close', { duration: 3000 });
+      return;
+    }
+
+    if (!this.selectedTemplateId) {
+      this.snackBar.open('Please select an email template', 'Close', { duration: 3000 });
+      return;
+    }
+
+    const selectedIds = Array.from(this.selectedSubscribers);
+    const activeCount = this.subscribers.filter(s => 
+      selectedIds.includes(s.id) && s.status === 'ACTIVE'
+    ).length;
+    const unsubscribedCount = this.subscribers.filter(s => 
+      selectedIds.includes(s.id) && s.status === 'UNSUBSCRIBED'
+    ).length;
+
+    let message = `Send email to ${activeCount} active subscriber(s)?`;
+    if (unsubscribedCount > 0) {
+      message += `\n\nNote: ${unsubscribedCount} unsubscribed user(s) will be automatically excluded.`;
+    }
+
+    if (!confirm(message)) return;
+
+    this.sendingBulkEmail = true;
+    this.subscriberService.sendBulkEmail(selectedIds, this.selectedTemplateId).subscribe({
+      next: (result) => {
+        const msg = `Email sent successfully!\n` +
+          `Active: ${result.activeSubscribers}\n` +
+          `Success: ${result.successCount}\n` +
+          `Failed: ${result.failedCount}\n` +
+          `Unsubscribed (filtered): ${result.unsubscribedFiltered}`;
+        this.snackBar.open(msg, 'Close', { duration: 5000 });
+        this.clearSelection();
+        this.selectedTemplateId = null;
+        this.loadSubscribers();
+        this.sendingBulkEmail = false;
+      },
+      error: (error) => {
+        this.snackBar.open('Error sending bulk email: ' + error.error?.error, 'Close', { duration: 5000 });
+        this.sendingBulkEmail = false;
+      }
+    });
   }
 }

@@ -16,23 +16,26 @@
 
       <!-- Video Upload -->
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Vidéo</mat-label>
-        <input matInput [(ngModel)]="videoFileName" name="videoDisplay" [value]="videoFileName" readonly placeholder="Choisir une nouvelle vidéo..." />
-        <button mat-icon-button matSuffix (click)="fileInput.click()" type="button" [disabled]="isUploading">
+        <mat-label>Télécharger une nouvelle vidéo</mat-label>
+        <input matInput [(ngModel)]="videoFileName" name="videoDisplay" [value]="videoFileName" readonly placeholder="Choisir un fichier vidéo..." />
+        <button mat-icon-button matSuffix (click)="fileInput.click()" type="button" [disabled]="isUploading || hasManualLink">
           <mat-icon *ngIf="!isUploading">upload</mat-icon>
           <mat-icon *ngIf="isUploading" class="spinning">hourglass_empty</mat-icon>
         </button>
       </mat-form-field>
       <input #fileInput type="file" accept="video/*" (change)="onVideoChange($event)" hidden />
 
-      <!-- Current Video Link -->
-      <div class="video-info" *ngIf="video.link && !isUploading">
-        <p class="info-label">Vidéo actuelle:</p>
-        <a [href]="video.link" target="_blank" class="video-link">
-          <mat-icon>play_circle</mat-icon>
-          {{ video.link }}
-        </a>
+      <!-- OR Divider -->
+      <div style="text-align: center; margin: 12px 0;">
+        <span style="color: #666; font-size: 14px; font-weight: 500;">OU</span>
       </div>
+
+      <!-- Video Link -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Lien de la vidéo (YouTube, Vimeo, etc.)</mat-label>
+        <input matInput [(ngModel)]="video.link" name="videoLink" placeholder="https://www.youtube.com/watch?v=..." [disabled]="!!videoFile" (ngModelChange)="onVideoLinkChange()" />
+        <mat-icon matSuffix>link</mat-icon>
+      </mat-form-field>
 
       <!-- Upload Progress -->
       <div class="upload-progress" *ngIf="isUploading">

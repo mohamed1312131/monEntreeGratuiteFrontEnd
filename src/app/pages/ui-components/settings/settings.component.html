@@ -82,7 +82,7 @@
                 <h4 class="item-title">{{ item.title }}</h4>
                 <mat-slide-toggle [(ngModel)]="item.isActive" (change)="toggleAboutUsActive(item)" color="primary" class="compact-toggle"></mat-slide-toggle>
               </div>
-              <p class="item-description">{{ item.description }}</p>
+              <p class="item-description" [innerHTML]="formatDescription(item.description)"></p>
             </div>
             <div class="item-actions">
               <button mat-icon-button class="action-icon edit-icon" (click)="editAboutUs(item)" matTooltip="Modifier">
@@ -119,16 +119,31 @@
               </mat-form-field>
             </div>
             
+            <!-- Video Upload Option -->
             <div class="form-row">
               <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Vidéo</mat-label>
-                <input matInput [(ngModel)]="videoFileName" name="videoDisplay" [value]="videoFileName" readonly placeholder="Choisir une vidéo..." />
-                <button mat-icon-button matSuffix (click)="videoFileInput.click()" type="button" [disabled]="isUploadingVideo">
+                <mat-label>Télécharger une vidéo</mat-label>
+                <input matInput [(ngModel)]="videoFileName" name="videoDisplay" [value]="videoFileName" readonly placeholder="Choisir un fichier vidéo..." />
+                <button mat-icon-button matSuffix (click)="videoFileInput.click()" type="button" [disabled]="isUploadingVideo || !!newVideo.link">
                   <mat-icon *ngIf="!isUploadingVideo">upload</mat-icon>
                   <mat-icon *ngIf="isUploadingVideo" class="spinning">hourglass_empty</mat-icon>
                 </button>
               </mat-form-field>
               <input #videoFileInput type="file" accept="video/*" (change)="onVideoFileChange($event)" hidden />
+            </div>
+            
+            <!-- OR Divider -->
+            <div class="form-row" style="text-align: center; margin: 8px 0;">
+              <span style="color: #666; font-size: 14px; font-weight: 500;">OU</span>
+            </div>
+            
+            <!-- Video Link Option -->
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field full-width">
+                <mat-label>Lien de la vidéo (YouTube, Vimeo, etc.)</mat-label>
+                <input matInput [(ngModel)]="newVideo.link" name="videoLink" placeholder="https://www.youtube.com/watch?v=..." [disabled]="!!videoFileName" (ngModelChange)="onVideoLinkChange()" />
+                <mat-icon matSuffix>link</mat-icon>
+              </mat-form-field>
             </div>
             
             <!-- Upload Progress -->
@@ -286,6 +301,26 @@
               <mat-form-field appearance="outline" class="form-field flex-grow">
                 <mat-label>LinkedIn</mat-label>
                 <input matInput [(ngModel)]="socialLinks.linkedin" name="linkedin" placeholder="https://linkedin.com/company/votre-entreprise" />
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row social-row">
+              <div class="social-icon twitter">
+                <mat-icon>alternate_email</mat-icon>
+              </div>
+              <mat-form-field appearance="outline" class="form-field flex-grow">
+                <mat-label>Twitter</mat-label>
+                <input matInput [(ngModel)]="socialLinks.twitter" name="twitter" placeholder="https://twitter.com/votre-compte" />
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row social-row">
+              <div class="social-icon youtube">
+                <mat-icon>play_circle</mat-icon>
+              </div>
+              <mat-form-field appearance="outline" class="form-field flex-grow">
+                <mat-label>YouTube</mat-label>
+                <input matInput [(ngModel)]="socialLinks.youtube" name="youtube" placeholder="https://youtube.com/@votre-chaine" />
               </mat-form-field>
             </div>
             

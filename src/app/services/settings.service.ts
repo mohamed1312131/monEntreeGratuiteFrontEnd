@@ -110,10 +110,10 @@ export class SettingsService {
 
   // File upload methods
   uploadImage(formData: FormData): Observable<any> {
-    return this.http.post('http://localhost:8080/api/upload/image', formData);
+    return this.http.post(`${environment.apiUrl}/api/upload/image`, formData);
   }
 
   uploadVideo(formData: FormData): Observable<any> {
-    return this.http.post('http://localhost:8080/api/upload/video', formData);
+    return this.http.post(`${environment.apiUrl}/api/upload/video`, formData);
   }
 }

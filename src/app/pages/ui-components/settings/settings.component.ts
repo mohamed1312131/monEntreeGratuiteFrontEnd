@@ -131,6 +131,14 @@ export class SettingsComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       this.videoFile = input.files[0];
       this.videoFileName = input.files[0].name;
+      this.newVideo.link = '';
+    }
+  }
+
+  onVideoLinkChange(): void {
+    if (this.newVideo.link && this.newVideo.link.trim() !== '') {
+      this.videoFile = null;
+      this.videoFileName = '';
     }
   }
 
@@ -439,6 +447,11 @@ export class SettingsComponent implements OnInit {
   }
 
   // Utility Methods
+  formatDescription(description: string): string {
+    if (!description) return '';
+    return description.replace(/\n/g, '<br>');
+  }
+
   showSnackBar(message: string, type: 'success' | 'error'): void {
     this.snackBar.open(message, 'Fermer', {
       duration: 3000,

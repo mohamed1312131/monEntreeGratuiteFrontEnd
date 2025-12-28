@@ -72,7 +72,7 @@
             <h3 class="about-title">{{ aboutData.title }}</h3>
             
             <div class="about-description">
-              <p class="about-text">{{ aboutData.description }}</p>
+              <p class="about-text" [innerHTML]="formatDescription(aboutData.description)"></p>
             </div>
           </div>
         </div>

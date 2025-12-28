@@ -8,7 +8,7 @@ export interface NewsletterSubscriber {
   email: string;
   name: string;
   phone?: string;
-  status: 'ACTIVE' | 'UNSUBSCRIBED' | 'BOUNCED' | 'COMPLAINED';
+  status: 'ACTIVE' | 'UNSUBSCRIBED';
   subscribedAt: string;
   unsubscribedAt?: string;
   unsubscribeReason?: string;
@@ -39,8 +39,6 @@ export interface SubscriptionAuditLog {
 export interface NewsletterStatistics {
   active: number;
   unsubscribed: number;
-  bounced: number;
-  complained: number;
 }
 
 @Injectable({
@@ -70,8 +68,6 @@ export class NewsletterSubscriberService {
   searchSubscribers(
     status?: string,
     search?: string,
-    dateFrom?: string,
-    dateTo?: string,
     page: number = 0,
     size: number = 50
   ): Observable<any> {
@@ -81,8 +77,6 @@ export class NewsletterSubscriberService {
 
     if (status) params = params.set('status', status);
     if (search) params = params.set('search', search);
-    if (dateFrom) params = params.set('dateFrom', dateFrom);
-    if (dateTo) params = params.set('dateTo', dateTo);
 
     return this.http.get<any>(`${this.apiUrl}/search`, { params });
   }
@@ -121,5 +115,12 @@ export class NewsletterSubscriberService {
 
   getStatistics(): Observable<NewsletterStatistics> {
     return this.http.get<NewsletterStatistics>(`${this.apiUrl}/statistics`);
+  }
+
+  sendBulkEmail(subscriberIds: number[], templateId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/send-bulk-email`, {
+      subscriberIds,
+      templateId
+    });
   }
 }

@@ -54,6 +54,11 @@ export class AboutSectionComponent implements OnInit {
     }
   }
 
+  formatDescription(description: string): string {
+    if (!description) return '';
+    return description.replace(/\n/g, '<br>');
+  }
+
   private loadFallbackData(): void {
     this.aboutData = {
       id: 0,

@@ -111,12 +111,65 @@
         }
       }
 
-      &.complained {
+      &.selected {
         mat-icon {
-          color: #9c27b0;
+          color: #2196f3;
         }
         .stat-value {
-          color: #9c27b0;
+          color: #2196f3;
+        }
+      }
+    }
+  }
+
+  .bulk-actions-card {
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    .bulk-actions-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+
+      .bulk-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 16px;
+        font-weight: 500;
+
+        mat-icon {
+          font-size: 28px;
+          width: 28px;
+          height: 28px;
+        }
+      }
+
+      .bulk-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+
+        .template-selector {
+          min-width: 250px;
+          
+          ::ng-deep {
+            .mat-mdc-text-field-wrapper {
+              background-color: white;
+              border-radius: 4px;
+            }
+          }
+        }
+
+        button {
+          mat-icon {
+            margin-right: 8px;
+          }
         }
       }
     }
@@ -279,15 +332,6 @@
             color: white;
           }
 
-          &.bounced {
-            background-color: #f44336;
-            color: white;
-          }
-
-          &.complained {
-            background-color: #9c27b0;
-            color: white;
-          }
         }
 
         .count-chip {
