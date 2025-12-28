@@ -17,30 +17,91 @@
       <!-- Description -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
-        <textarea matInput [(ngModel)]="aboutUs.description" name="description" rows="5" required placeholder="Description détaillée"></textarea>
+        <textarea matInput [(ngModel)]="aboutUs.description" name="description" rows="5" placeholder="Description détaillée (optionnel)"></textarea>
       </mat-form-field>
 
-      <!-- Image Upload -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Image</mat-label>
-        <input matInput [(ngModel)]="imageFileName" name="imageDisplay" [value]="imageFileName" readonly placeholder="Choisir une nouvelle image..." />
-        <button mat-icon-button matSuffix (click)="fileInput.click()" type="button" [disabled]="isUploading">
-          <mat-icon *ngIf="!isUploading">upload</mat-icon>
-          <mat-icon *ngIf="isUploading" class="spinning">hourglass_empty</mat-icon>
-        </button>
-      </mat-form-field>
-      <input #fileInput type="file" accept="image/*" (change)="onImageChange($event)" hidden />
+      <!-- Q&A Section -->
+      <div class="qa-section">
+        <h3 class="section-title">Questions et Réponses</h3>
+        
+        <!-- Add Q&A Form -->
+        <div class="qa-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Question</mat-label>
+            <input matInput [(ngModel)]="newQuestion" name="newQuestion" placeholder="Entrez une question" />
+          </mat-form-field>
 
-      <!-- Current Image Preview -->
-      <div class="image-preview" *ngIf="aboutUs.imageUrl && !isUploading">
-        <p class="preview-label">Image actuelle:</p>
-        <img [src]="aboutUs.imageUrl" [alt]="aboutUs.title" class="preview-img" />
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Réponse</mat-label>
+            <textarea matInput [(ngModel)]="newResponse" name="newResponse" rows="3" placeholder="Entrez la réponse"></textarea>
+          </mat-form-field>
+
+          <button mat-raised-button color="accent" (click)="addQA()" type="button" class="add-qa-btn">
+            <mat-icon>add</mat-icon>
+            Ajouter Q&A
+          </button>
+        </div>
+
+        <!-- Q&A List -->
+        <div class="qa-list" *ngIf="aboutUs.qaList && aboutUs.qaList.length > 0">
+          <div class="qa-item" *ngFor="let qa of aboutUs.qaList; let i = index">
+            <div class="qa-content">
+              <div class="qa-question">
+                <strong>Q:</strong> {{ qa.question }}
+              </div>
+              <div class="qa-response">
+                <strong>R:</strong> {{ qa.response }}
+              </div>
+            </div>
+            <div class="qa-actions">
+              <button mat-icon-button (click)="moveQAUp(i)" [disabled]="i === 0" matTooltip="Monter">
+                <mat-icon>arrow_upward</mat-icon>
+              </button>
+              <button mat-icon-button (click)="moveQADown(i)" [disabled]="i === aboutUs.qaList!.length - 1" matTooltip="Descendre">
+                <mat-icon>arrow_downward</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="removeQA(i)" matTooltip="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Upload Progress -->
-      <div class="upload-progress" *ngIf="isUploading">
-        <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
-        <p class="upload-text">Téléchargement en cours...</p>
+      <!-- Video Section -->
+      <div class="video-section">
+        <h3 class="section-title">Vidéo</h3>
+        
+        <!-- YouTube Link -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Lien YouTube</mat-label>
+          <input matInput [(ngModel)]="aboutUs.videoUrl" name="videoUrl" placeholder="https://www.youtube.com/watch?v=..." (ngModelChange)="onVideoUrlChange()" />
+          <mat-icon matSuffix>link</mat-icon>
+        </mat-form-field>
+
+        <div class="divider-text">
+          <span>OU</span>
+        </div>
+
+        <!-- Video Upload -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Télécharger une vidéo</mat-label>
+          <input matInput [(ngModel)]="videoFileName" name="videoDisplay" [value]="videoFileName" readonly placeholder="Choisir une vidéo..." />
+          <button mat-icon-button matSuffix (click)="videoFileInput.click()" type="button" [disabled]="isUploading">
+            <mat-icon *ngIf="!isUploading">upload</mat-icon>
+            <mat-icon *ngIf="isUploading" class="spinning">hourglass_empty</mat-icon>
+          </button>
+        </mat-form-field>
+        <input #videoFileInput type="file" accept="video/*" (change)="onVideoChange($event)" hidden />
+
+        <!-- Current Video Preview -->
+        <div class="video-preview" *ngIf="aboutUs.videoUrl && !isUploading">
+          <p class="preview-label">Vidéo actuelle:</p>
+          <a [href]="aboutUs.videoUrl" target="_blank" class="video-link">
+            <mat-icon>play_circle</mat-icon>
+            Voir la vidéo
+          </a>
+        </div>
       </div>
 
       <!-- Active Status -->

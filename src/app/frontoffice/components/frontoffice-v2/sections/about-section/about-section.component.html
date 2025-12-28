@@ -39,30 +39,52 @@
           <!-- Video Side -->
           <div class="video-container">
             <div class="video-wrapper">
-              <video 
-                #videoPlayer
-                [src]="aboutData.videoUrl || 'https://www.w3.org/WAI/perspective-videos/captions.mp4'"
-                class="about-video"
-                [class.playing]="isPlaying">
-              </video>
-              
-              <!-- Play Button Overlay -->
-              <div class="play-button-overlay" *ngIf="!isPlaying" (click)="togglePlay()">
-                <button class="play-button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                  </svg>
-                </button>
-              </div>
+              <!-- YouTube Video -->
+              <iframe 
+                *ngIf="aboutData.videoUrl && isYouTubeUrl(aboutData.videoUrl)"
+                [src]="getYouTubeEmbedUrl(aboutData.videoUrl) | safe: 'resourceUrl'"
+                class="about-video youtube-video"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
 
-              <!-- Video Controls -->
-              <div class="video-controls" *ngIf="isPlaying">
-                <button class="control-button" (click)="togglePlay()">
-                  <svg *ngIf="isPlaying" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="6" y="4" width="4" height="16"></rect>
-                    <rect x="14" y="4" width="4" height="16"></rect>
-                  </svg>
-                </button>
+              <!-- Direct Video File -->
+              <ng-container *ngIf="aboutData.videoUrl && !isYouTubeUrl(aboutData.videoUrl)">
+                <video 
+                  #videoPlayer
+                  [src]="aboutData.videoUrl"
+                  class="about-video"
+                  [class.playing]="isPlaying">
+                </video>
+                
+                <!-- Play Button Overlay -->
+                <div class="play-button-overlay" *ngIf="!isPlaying" (click)="togglePlay()">
+                  <button class="play-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Video Controls -->
+                <div class="video-controls" *ngIf="isPlaying">
+                  <button class="control-button" (click)="togglePlay()">
+                    <svg *ngIf="isPlaying" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="6" y="4" width="4" height="16"></rect>
+                      <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                  </button>
+                </div>
+              </ng-container>
+
+              <!-- Fallback if no video -->
+              <div *ngIf="!aboutData.videoUrl" class="no-video-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34l1 1L23 7v10"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+                <p>Aucune vidéo disponible</p>
               </div>
             </div>
           </div>
@@ -73,6 +95,45 @@
             
             <div class="about-description">
               <p class="about-text" [innerHTML]="formatDescription(aboutData.description)"></p>
+            </div>
+
+            <!-- Q&A Section -->
+            <div class="qa-section" *ngIf="aboutData.qaList && aboutData.qaList.length > 0">
+              <div class="qa-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <h4 class="qa-title">Questions Fréquentes</h4>
+              </div>
+
+              <div class="qa-accordion">
+                <div 
+                  class="qa-item" 
+                  *ngFor="let qa of aboutData.qaList; let i = index"
+                  [class.expanded]="isQAExpanded(i)">
+                  
+                  <button class="qa-question" (click)="toggleQA(i)">
+                    <span class="question-number">{{ i + 1 }}</span>
+                    <span class="question-text">{{ qa.question }}</span>
+                    <svg class="question-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+
+                  <div class="qa-answer" [class.show]="isQAExpanded(i)">
+                    <div class="answer-content">
+                      <div class="answer-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                      </div>
+                      <p class="answer-text preserve-formatting">{{ qa.response }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

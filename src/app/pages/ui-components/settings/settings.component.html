@@ -31,17 +31,65 @@
                 <input matInput [(ngModel)]="newAboutUs.title" name="aboutTitle" placeholder="Titre de la section" />
               </mat-form-field>
             </div>
-            
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="form-field full-width">
-                <mat-label>Description</mat-label>
-                <textarea matInput [(ngModel)]="newAboutUs.description" name="aboutDescription" rows="4" placeholder="Description détaillée"></textarea>
-              </mat-form-field>
+
+            <!-- Q&A Section -->
+            <div class="qa-management-section">
+              <div class="qa-management-header">
+                <h4 class="qa-management-title">
+                  <mat-icon>question_answer</mat-icon>
+                  Questions et Réponses
+                </h4>
+              </div>
+
+              <!-- Add Q&A Form -->
+              <div class="qa-add-form">
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="form-field full-width">
+                    <mat-label>Question</mat-label>
+                    <input matInput [(ngModel)]="newQuestion" name="newQuestion" placeholder="Entrez une question" />
+                  </mat-form-field>
+                </div>
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="form-field full-width">
+                    <mat-label>Réponse</mat-label>
+                    <textarea matInput [(ngModel)]="newResponse" name="newResponse" rows="3" placeholder="Entrez la réponse"></textarea>
+                  </mat-form-field>
+                </div>
+                <button mat-raised-button color="accent" class="add-qa-btn" (click)="addQAToNew()" type="button">
+                  <mat-icon>add_circle</mat-icon>
+                  Ajouter Question
+                </button>
+              </div>
+
+              <!-- Q&A List -->
+              <div class="qa-list-preview" *ngIf="newAboutUs.qaList && newAboutUs.qaList.length > 0">
+                <div class="qa-item-preview" *ngFor="let qa of newAboutUs.qaList; let i = index">
+                  <div class="qa-item-number">{{ i + 1 }}</div>
+                  <div class="qa-item-content">
+                    <div class="qa-item-question"><strong>Q:</strong> {{ qa.question }}</div>
+                    <div class="qa-item-response"><strong>R:</strong> {{ qa.response }}</div>
+                  </div>
+                  <button mat-icon-button color="warn" (click)="removeQAFromNew(i)" matTooltip="Supprimer">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
             </div>
             
             <div class="form-row">
               <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Vidéo</mat-label>
+                <mat-label>Lien YouTube</mat-label>
+                <input matInput [(ngModel)]="newAboutUs.videoUrl" name="aboutVideoUrl" placeholder="https://www.youtube.com/watch?v=..." (ngModelChange)="onAboutUsVideoUrlChange()" />
+                <mat-icon matSuffix>link</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row video-upload-section">
+              <div class="divider-text">
+                <span>OU</span>
+              </div>
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Télécharger une vidéo</mat-label>
                 <input matInput [(ngModel)]="aboutUsVideoName" name="aboutVideoDisplay" [value]="aboutUsVideoName" readonly placeholder="Choisir une vidéo..." />
                 <button mat-icon-button matSuffix (click)="aboutUsFileInput.click()" type="button" [disabled]="isUploadingAboutUs">
                   <mat-icon *ngIf="!isUploadingAboutUs">upload</mat-icon>
@@ -49,7 +97,9 @@
                 </button>
               </mat-form-field>
               <input #aboutUsFileInput type="file" accept="video/*" (change)="onAboutUsVideoChange($event)" hidden />
-              
+            </div>
+
+            <div class="form-row">
               <div class="form-actions">
                 <button mat-raised-button color="primary" class="submit-btn" (click)="addAboutUs()" [disabled]="isUploadingAboutUs">
                   <mat-icon *ngIf="!isUploadingAboutUs">add</mat-icon>
@@ -83,6 +133,10 @@
                 <mat-slide-toggle [(ngModel)]="item.isActive" (change)="toggleAboutUsActive(item)" color="primary" class="compact-toggle"></mat-slide-toggle>
               </div>
               <p class="item-description" [innerHTML]="formatDescription(item.description)"></p>
+              <div class="qa-count" *ngIf="item.qaList && item.qaList.length > 0">
+                <mat-icon>question_answer</mat-icon>
+                <span>{{ item.qaList.length }} question(s) et réponse(s)</span>
+              </div>
             </div>
             <div class="item-actions">
               <button mat-icon-button class="action-icon edit-icon" (click)="editAboutUs(item)" matTooltip="Modifier">

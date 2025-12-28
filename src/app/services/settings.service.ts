@@ -3,6 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export interface AboutUsQA {
+  id?: number;
+  question: string;
+  response: string;
+  displayOrder?: number;
+}
+
 export interface AboutUs {
   id?: number;
   title: string;
@@ -12,6 +19,7 @@ export interface AboutUs {
   eventsCount?: string;
   visitorsCount?: string;
   exhibitorsCount?: string;
+  qaList?: AboutUsQA[];
   isActive: boolean;
 }
 
@@ -115,5 +123,22 @@ export class SettingsService {
 
   uploadVideo(formData: FormData): Observable<any> {
     return this.http.post(`${environment.apiUrl}/api/upload/video`, formData);
+  }
+
+  // Q&A methods
+  getQAByAboutUsId(aboutUsId: number): Observable<AboutUsQA[]> {
+    return this.http.get<AboutUsQA[]>(`${this.apiUrl}/about-us/${aboutUsId}/qa`);
+  }
+
+  createQA(aboutUsId: number, qa: AboutUsQA): Observable<AboutUsQA> {
+    return this.http.post<AboutUsQA>(`${this.apiUrl}/about-us/${aboutUsId}/qa`, qa);
+  }
+
+  updateQA(qaId: number, qa: AboutUsQA): Observable<AboutUsQA> {
+    return this.http.put<AboutUsQA>(`${this.apiUrl}/qa/${qaId}`, qa);
+  }
+
+  deleteQA(qaId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/qa/${qaId}`);
   }
 }

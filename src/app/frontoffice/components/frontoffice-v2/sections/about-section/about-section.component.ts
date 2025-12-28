@@ -14,6 +14,7 @@ export class AboutSectionComponent implements OnInit {
   isLoading = true;
   hasError = false;
   isPlaying = false;
+  expandedQAIndex: number | null = null;
 
   constructor(private settingsService: SettingsService) {}
 
@@ -59,12 +60,52 @@ export class AboutSectionComponent implements OnInit {
     return description.replace(/\n/g, '<br>');
   }
 
+  toggleQA(index: number): void {
+    if (this.expandedQAIndex === index) {
+      this.expandedQAIndex = null;
+    } else {
+      this.expandedQAIndex = index;
+    }
+  }
+
+  isQAExpanded(index: number): boolean {
+    return this.expandedQAIndex === index;
+  }
+
+  isYouTubeUrl(url: string): boolean {
+    if (!url) return false;
+    return url.includes('youtube.com') || url.includes('youtu.be');
+  }
+
+  getYouTubeEmbedUrl(url: string): string {
+    if (!url) return '';
+    
+    let videoId = '';
+    
+    // Handle youtube.com/watch?v=VIDEO_ID
+    if (url.includes('youtube.com/watch')) {
+      const urlParams = new URLSearchParams(url.split('?')[1]);
+      videoId = urlParams.get('v') || '';
+    }
+    // Handle youtu.be/VIDEO_ID
+    else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1].split('?')[0];
+    }
+    // Handle youtube.com/embed/VIDEO_ID (already embedded)
+    else if (url.includes('youtube.com/embed/')) {
+      return url;
+    }
+    
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+  }
+
   private loadFallbackData(): void {
     this.aboutData = {
       id: 0,
       title: 'Qui Sommes Nous',
       description: 'Depuis plus de 20 ans, nous organisons les plus grands événements de foires et salons en Europe. Notre mission est de connecter les exposants et les visiteurs dans des espaces d\'exception. Avec plus de 100 événements par an et des millions de visiteurs, nous sommes le leader incontesté dans l\'organisation de foires et salons professionnels.',
       imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
+      qaList: [],
       isActive: true
     };
   }

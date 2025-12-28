@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { SettingsService, AboutUs, Video, SocialLinks } from '../../../services/settings.service';
+import { SettingsService, AboutUs, AboutUsQA, Video, SocialLinks } from '../../../services/settings.service';
 import { EditAboutUsComponent } from '../edit-about-us/edit-about-us.component';
 import { EditVideoComponent } from '../edit-video/edit-video.component';
 
@@ -24,6 +24,7 @@ export class SettingsComponent implements OnInit {
     title: '',
     description: '',
     imageUrl: '',
+    qaList: [],
     isActive: true
   };
 
@@ -61,6 +62,8 @@ export class SettingsComponent implements OnInit {
   aboutUsVideoName = '';
   videoFile: File | null = null;
   videoFileName = '';
+  newQuestion = '';
+  newResponse = '';
 
   constructor(
     private snackBar: MatSnackBar,
@@ -144,8 +147,13 @@ export class SettingsComponent implements OnInit {
 
   // About Us Methods
   addAboutUs(): void {
-    if (!this.newAboutUs.title || !this.newAboutUs.description) {
-      this.showSnackBar('Veuillez remplir tous les champs obligatoires', 'error');
+    if (!this.newAboutUs.title) {
+      this.showSnackBar('Veuillez remplir le titre', 'error');
+      return;
+    }
+
+    if (!this.newAboutUs.qaList || this.newAboutUs.qaList.length === 0) {
+      this.showSnackBar('Veuillez ajouter au moins une question et réponse', 'error');
       return;
     }
 
@@ -264,10 +272,52 @@ export class SettingsComponent implements OnInit {
       title: '',
       description: '',
       videoUrl: '',
+      qaList: [],
       isActive: true
     };
     this.aboutUsVideoFile = null;
     this.aboutUsVideoName = '';
+    this.newQuestion = '';
+    this.newResponse = '';
+  }
+
+  addQAToNew(): void {
+    if (!this.newQuestion.trim() || !this.newResponse.trim()) {
+      this.showSnackBar('Veuillez remplir la question et la réponse', 'error');
+      return;
+    }
+
+    const qa: AboutUsQA = {
+      question: this.newQuestion,
+      response: this.newResponse,
+      displayOrder: this.newAboutUs.qaList ? this.newAboutUs.qaList.length : 0
+    };
+
+    if (!this.newAboutUs.qaList) {
+      this.newAboutUs.qaList = [];
+    }
+    this.newAboutUs.qaList.push(qa);
+    
+    this.newQuestion = '';
+    this.newResponse = '';
+    this.showSnackBar('Question ajoutée avec succès', 'success');
+  }
+
+  removeQAFromNew(index: number): void {
+    if (this.newAboutUs.qaList) {
+      this.newAboutUs.qaList.splice(index, 1);
+      this.newAboutUs.qaList.forEach((qa, idx) => {
+        qa.displayOrder = idx;
+      });
+      this.showSnackBar('Question supprimée', 'success');
+    }
+  }
+
+  onAboutUsVideoUrlChange(): void {
+    if (this.newAboutUs.videoUrl && this.newAboutUs.videoUrl.trim() !== '') {
+      this.aboutUsVideoFile = null;
+      this.aboutUsVideoName = '';
+    }
   }
 
   // Videos Methods
