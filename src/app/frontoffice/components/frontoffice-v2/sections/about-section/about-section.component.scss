@@ -128,9 +128,9 @@
 
 .about-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1fr 1.2fr;
   gap: 60px;
-  align-items: center;
+  align-items: start;
   
   @media (max-width: 968px) {
     grid-template-columns: 1fr;

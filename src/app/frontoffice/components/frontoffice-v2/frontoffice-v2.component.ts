@@ -18,6 +18,7 @@ interface Foire {
   location: string;
   image: string;
   description: string;
+  disponible?: boolean;
 }
 
 interface ReservationForm {
@@ -42,6 +43,7 @@ interface FoireDetails {
   location: string;
   pays: string;
   description: string;
+  disponible?: boolean;
 }
 
 interface ExhibitorForm {
@@ -124,7 +126,8 @@ export class FrontofficeV2Component implements OnInit {
       image: foire.image,
       location: foire.location,
       pays: countryName,
-      description: foire.description
+      description: foire.description,
+      disponible: foire.disponible === true
     };
     
     this.reservationForm.pays = countryName;

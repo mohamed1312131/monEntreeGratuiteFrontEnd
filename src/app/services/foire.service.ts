@@ -25,6 +25,7 @@ export interface Foire {
   countryCode?: string;
   isActive: boolean;
   isPublished?: boolean;
+  disponible?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -79,5 +80,9 @@ export class FoireService {
 
   countReservationsByStatus(foireId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/countReservationsByStatus/${foireId}`);
+  }
+
+  toggleDisponible(countryCode: string, id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/toggleDisponible/${countryCode}/${id}`, {});
   }
 }

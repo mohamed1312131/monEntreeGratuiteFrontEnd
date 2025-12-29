@@ -124,6 +124,9 @@
                 <th mat-header-cell *matHeaderCellDef class="col-actions">Actions</th>
                 <td mat-cell *matCellDef="let foire" class="col-actions">
                   <div class="action-btns">
+                    <button mat-icon-button class="action-icon" [class.disponible-icon]="foire.disponible" (click)="toggleDisponible(country.apiKey, foire)" [matTooltip]="foire.disponible ? 'Disponible' : 'Non disponible'">
+                      <mat-icon>{{ foire.disponible ? 'check_circle' : 'cancel' }}</mat-icon>
+                    </button>
                     <button mat-icon-button class="action-icon" [class.active-icon]="foire.isActive" (click)="activateFoire(country.apiKey, foire)" [matTooltip]="foire.isActive ? 'Désactiver' : 'Activer'">
                       <mat-icon>{{ foire.isActive ? 'toggle_on' : 'toggle_off' }}</mat-icon>
                     </button>

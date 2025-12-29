@@ -1,11 +1,50 @@
-// Exposant Management Component Styles
+// Modern Professional Exposant Management Dashboard
+
+.exposant-container {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
 // Header Section
 .header-section {
+  background: linear-gradient(135deg, #01B3A7 0%, #00d4b8 100%);
+  box-shadow: 0 4px 20px rgba(1, 179, 167, 0.15);
+  position: relative;
+  overflow: hidden;
+  padding: 24px 32px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  h2 {
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    position: relative;
+  }
+
   .title-icon {
     vertical-align: middle;
-    margin-right: 8px;
-    color: #01B3A7;
+    margin-right: 12px;
+    color: white;
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
   }
 }
 
@@ -15,10 +54,24 @@
   gap: 16px;
   align-items: center;
   flex-wrap: wrap;
+  padding: 16px 20px;
+  background: white;
+  border-bottom: 1px solid #e1e4e8;
 
   .search-field {
     flex: 1;
     min-width: 300px;
+
+    ::ng-deep {
+      .mat-mdc-form-field-wrapper {
+        padding-bottom: 0;
+      }
+
+      .mat-mdc-text-field-wrapper {
+        background: #f6f8fa;
+        border-radius: 6px;
+      }
+    }
   }
 
   button {
@@ -26,9 +79,12 @@
     text-transform: none;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
+    background: linear-gradient(135deg, #01B3A7 0%, #00d4b8 100%);
+    color: white;
 
     mat-icon {
       margin-right: 8px;
+      color: white;
     }
 
     &:hover {
@@ -38,31 +94,55 @@
   }
 }
 
+// Table Container
+.table-container {
+  flex: 1;
+  margin: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 // Table Styles
 .mat-elevation-z8 {
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 table {
   background: white;
+  width: 100%;
 
   th {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    color: #2a3547;
+    background-color: #f6f8fa;
+    color: #24292e;
     font-weight: 600;
-    padding: 12px 8px;
+    padding: 12px 16px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e1e4e8;
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
 
   td {
-    padding: 12px 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #24292e;
+    border-bottom: 1px solid #e1e4e8;
   }
 
   .table-row {
-    transition: background-color 0.2s ease;
+    transition: background-color 0.15s ease;
 
     &:hover {
-      background-color: rgba(1, 179, 167, 0.05);
+      background-color: #f6f8fa;
     }
   }
 }
@@ -70,39 +150,88 @@ table {
 // ID Badge
 .id-badge {
   background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-  color: #1976d2;
-  padding: 4px 12px;
-  border-radius: 12px;
+  color: #01B3A7;
+  padding: 4px 10px;
+  border-radius: 10px;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 11px;
+  font-family: monospace;
 }
 
 // Country Flag
 .country-flag {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
   border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 // Personnes Chip
 .personnes-chip {
   background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-  color: #2e7d32;
+  color: #28a745;
   font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 0.875rem;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 11px;
 }
 
 // Age Chip
 .age-chip {
   background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-  color: #e65100;
-  font-weight: 500;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 0.875rem;
+  color: #f66a0a;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+// Action Buttons
+.action-buttons {
+  display: flex;
+  gap: 2px;
+
+  button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &[color="primary"] mat-icon {
+      color: #f66a0a;
+    }
+
+    &[color="accent"] mat-icon {
+      color: #01B3A7;
+    }
+
+    &[color="warn"] mat-icon {
+      color: #d73a49;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+  }
+}
+
+// Paginator
+mat-paginator {
+  border-top: 1px solid #e1e4e8;
+  background-color: #fafbfc;
+  
+  ::ng-deep {
+    .mat-mdc-paginator-container {
+      padding: 8px 16px;
+      min-height: 48px;
+    }
+  }
 }
 
 // Snackbar Styles
@@ -128,9 +257,24 @@ table {
 
 // Responsive
 @media (max-width: 768px) {
+  .header-section {
+    padding: 16px;
+
+    h2 {
+      font-size: 20px;
+    }
+
+    .title-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+  }
+
   .action-toolbar {
     flex-direction: column;
     align-items: stretch;
+    padding: 12px;
 
     .search-field {
       width: 100%;
@@ -142,15 +286,20 @@ table {
     }
   }
 
+  .table-container {
+    margin: 8px;
+  }
+
   .country-flag {
     width: 24px;
     height: 24px;
   }
 
   table {
+    font-size: 12px;
+
     th, td {
-      padding: 8px 4px;
-      font-size: 0.875rem;
+      padding: 8px;
     }
   }
 }

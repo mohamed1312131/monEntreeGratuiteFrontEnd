@@ -63,6 +63,19 @@
       <form class="reservation-form" (ngSubmit)="submitReservation()">
         <h4>Réservez votre invitation gratuite</h4>
         
+        <!-- Bientôt disponible Message -->
+        <div *ngIf="!selectedFoire.disponible" class="bientot-disponible-alert">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <div>
+            <strong>Bientôt disponible</strong>
+            <p>Les réservations pour cette foire seront bientôt ouvertes. Revenez prochainement!</p>
+          </div>
+        </div>
+        
         <!-- Error Message -->
         <div *ngIf="errorMessage" class="error-alert">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -87,7 +100,7 @@
         <!-- Type d'entrée -->
         <div class="form-group">
           <label for="entreeType">Je souhaite une entrée pour *</label>
-          <select id="entreeType" [(ngModel)]="reservationForm.entreeType" name="entreeType" required class="form-control">
+          <select id="entreeType" [(ngModel)]="reservationForm.entreeType" name="entreeType" required class="form-control" [disabled]="!selectedFoire.disponible">
             <option value="">Sélectionnez</option>
             <option value="couple">Couple</option>
             <option value="moi-et-ami">Moi et mon ami(e)</option>
@@ -98,37 +111,37 @@
         <!-- Ville -->
         <div class="form-group">
           <label for="ville">Ville *</label>
-          <input type="text" id="ville" [(ngModel)]="reservationForm.ville" name="ville" required class="form-control" placeholder="Votre ville">
+          <input type="text" id="ville" [(ngModel)]="reservationForm.ville" name="ville" required class="form-control" placeholder="Votre ville" [disabled]="!selectedFoire.disponible">
         </div>
 
         <!-- Nom et Prénom -->
         <div class="form-row">
           <div class="form-group">
             <label for="nom">Nom *</label>
-            <input type="text" id="nom" [(ngModel)]="reservationForm.nom" name="nom" required class="form-control" placeholder="Nom">
+            <input type="text" id="nom" [(ngModel)]="reservationForm.nom" name="nom" required class="form-control" placeholder="Nom" [disabled]="!selectedFoire.disponible">
           </div>
           <div class="form-group">
             <label for="prenom">Prénom *</label>
-            <input type="text" id="prenom" [(ngModel)]="reservationForm.prenom" name="prenom" required class="form-control" placeholder="Prénom">
+            <input type="text" id="prenom" [(ngModel)]="reservationForm.prenom" name="prenom" required class="form-control" placeholder="Prénom" [disabled]="!selectedFoire.disponible">
           </div>
         </div>
 
         <!-- SMS Number -->
         <div class="form-group">
           <label for="smsNumber">Je veux recevoir mon invitation par SMS sur le numéro</label>
-          <input type="tel" id="smsNumber" [(ngModel)]="reservationForm.smsNumber" name="smsNumber" class="form-control" placeholder="+33 6 12 34 56 78">
+          <input type="tel" id="smsNumber" [(ngModel)]="reservationForm.smsNumber" name="smsNumber" class="form-control" placeholder="+33 6 12 34 56 78" [disabled]="!selectedFoire.disponible">
         </div>
 
         <!-- Email -->
         <div class="form-group">
           <label for="email">Je veux recevoir mon invitation par email à l'adresse *</label>
-          <input type="email" id="email" [(ngModel)]="reservationForm.email" name="email" required class="form-control" placeholder="votre@email.com">
+          <input type="email" id="email" [(ngModel)]="reservationForm.email" name="email" required class="form-control" placeholder="votre@email.com" [disabled]="!selectedFoire.disponible">
         </div>
 
         <!-- Tranche d'âge -->
         <div class="form-group">
           <label for="trancheAge">Tranche d'âge *</label>
-          <select id="trancheAge" [(ngModel)]="reservationForm.trancheAge" name="trancheAge" required class="form-control">
+          <select id="trancheAge" [(ngModel)]="reservationForm.trancheAge" name="trancheAge" required class="form-control" [disabled]="!selectedFoire.disponible">
             <option value="">Sélectionnez votre tranche d'âge</option>
             <option value="moins-35">Moins de 35 ans</option>
             <option value="35-70">Entre 35 et 70 ans</option>
@@ -139,13 +152,13 @@
         <!-- Téléphone -->
         <div class="form-group">
           <label for="telephone">Numéro de téléphone sur lequel vous êtes joignable *</label>
-          <input type="tel" id="telephone" [(ngModel)]="reservationForm.telephone" name="telephone" required class="form-control" placeholder="+33 6 12 34 56 78">
+          <input type="tel" id="telephone" [(ngModel)]="reservationForm.telephone" name="telephone" required class="form-control" placeholder="+33 6 12 34 56 78" [disabled]="!selectedFoire.disponible">
         </div>
 
         <!-- Conditions générales -->
         <div class="form-group checkbox-group">
           <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="reservationForm.acceptConditions" name="acceptConditions" required>
+            <input type="checkbox" [(ngModel)]="reservationForm.acceptConditions" name="acceptConditions" required [disabled]="!selectedFoire.disponible">
             <span class="checkbox-text">
               Je reconnais avoir lu et accepté les <a href="#" target="_blank">conditions générales de services et d'utilisation</a> *
             </span>
@@ -155,7 +168,7 @@
         <!-- Marketing consent -->
         <div class="form-group checkbox-group">
           <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing" required>
+            <input type="checkbox" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing" required [disabled]="!selectedFoire.disponible">
             <span class="checkbox-text">
               En cochant cette case, j'autorise VIPLUX détenteur de monentreegratuite, à utiliser mon email et/ou mon téléphone pour m'adresser mon invitation, des offres, actualités et relances liées à ses offres. Je peux retirer mon consentement à tout moment via le lien de désinscription (emails) ou en répondant STOP (SMS).
             </span>
@@ -163,7 +176,7 @@
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" class="btn-submit" [disabled]="!reservationForm.acceptConditions || !reservationForm.acceptMarketing || isSubmitting">
+        <button type="submit" class="btn-submit" [disabled]="!selectedFoire.disponible || !reservationForm.acceptConditions || !reservationForm.acceptMarketing || isSubmitting">
           <span *ngIf="!isSubmitting">Confirmer ma réservation</span>
           <span *ngIf="isSubmitting">
             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>

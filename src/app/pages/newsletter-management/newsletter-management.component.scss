@@ -1,40 +1,86 @@
+// Modern Professional Newsletter Management Dashboard
+
 .newsletter-container {
-  padding: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
   .header-card {
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+
+    mat-card-content {
+      padding: 0;
+    }
 
     .header-content {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 24px 32px;
+      background: linear-gradient(135deg, #01B3A7 0%, #00d4b8 100%);
+      box-shadow: 0 4px 20px rgba(1, 179, 167, 0.15);
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+      }
 
       .header-title {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 16px;
+        z-index: 1;
 
         mat-icon {
           font-size: 32px;
           width: 32px;
           height: 32px;
-          color: #1976d2;
+          color: white;
         }
 
         h1 {
           font-size: 24px;
-          font-weight: 600;
-          color: #333;
+          font-weight: 700;
+          color: white;
           margin: 0;
+          letter-spacing: -0.5px;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
       }
 
       button {
+        height: 44px;
+        padding: 0 24px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        z-index: 1;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.3);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
         mat-icon {
           margin-right: 8px;
+          color: white;
         }
       }
     }
@@ -43,16 +89,21 @@
   .statistics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
+    gap: 12px;
+    padding: 12px;
 
     .stat-card {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      transition: all 0.2s ease;
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      }
+
+      mat-card-content {
+        padding: 20px;
       }
 
       .stat-content {
@@ -61,9 +112,9 @@
         gap: 16px;
 
         mat-icon {
-          font-size: 48px;
-          width: 48px;
-          height: 48px;
+          font-size: 40px;
+          width: 40px;
+          height: 40px;
         }
 
         .stat-details {
@@ -71,61 +122,67 @@
           flex-direction: column;
 
           .stat-value {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             line-height: 1;
           }
 
           .stat-label {
-            font-size: 14px;
-            color: #666;
+            font-size: 13px;
+            color: #586069;
             margin-top: 4px;
+            font-weight: 500;
           }
         }
       }
 
       &.active {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
         mat-icon {
-          color: #4caf50;
+          color: #28a745;
         }
         .stat-value {
-          color: #4caf50;
+          color: #28a745;
         }
       }
 
       &.unsubscribed {
+        background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
         mat-icon {
-          color: #ff9800;
+          color: #f66a0a;
         }
         .stat-value {
-          color: #ff9800;
+          color: #f66a0a;
         }
       }
 
       &.bounced {
+        background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
         mat-icon {
-          color: #f44336;
+          color: #d73a49;
         }
         .stat-value {
-          color: #f44336;
+          color: #d73a49;
         }
       }
 
       &.selected {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
         mat-icon {
-          color: #2196f3;
+          color: #01B3A7;
         }
         .stat-value {
-          color: #2196f3;
+          color: #01B3A7;
         }
       }
     }
   }
 
   .bulk-actions-card {
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0 12px 12px 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    background: linear-gradient(135deg, #01B3A7 0%, #00d4b8 100%);
     color: white;
 
     .bulk-actions-content {
@@ -176,13 +233,18 @@
   }
 
   .add-form-card {
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 12px 12px 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+
+    mat-card-content {
+      padding: 20px;
+    }
 
     h3 {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
-      color: #333;
+      color: #24292e;
       margin: 0 0 20px 0;
     }
 
@@ -207,8 +269,9 @@
   }
 
   .filters-card {
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 12px 12px 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
 
     .filters-header {
       display: flex;
@@ -216,17 +279,21 @@
       align-items: center;
       margin-bottom: 20px;
 
+      mat-card-content {
+        padding: 20px;
+      }
+
       h3 {
         display: flex;
         align-items: center;
         gap: 8px;
         font-size: 16px;
         font-weight: 600;
-        color: #333;
+        color: #24292e;
         margin: 0;
 
         mat-icon {
-          color: #1976d2;
+          color: #01B3A7;
         }
       }
     }
@@ -243,9 +310,10 @@
       border-top: 1px solid #e0e0e0;
 
       .info-chip {
-        background-color: #e3f2fd;
-        color: #1976d2;
-        font-weight: 500;
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        color: #01B3A7;
+        font-weight: 600;
+        border-radius: 12px;
 
         mat-icon {
           font-size: 18px;
@@ -257,7 +325,21 @@
   }
 
   .table-card {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    margin: 0 12px 12px 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    mat-card-content {
+      padding: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
     .loading-state,
     .empty-state {
@@ -267,35 +349,53 @@
       justify-content: center;
       padding: 60px 20px;
       gap: 16px;
+      flex: 1;
 
       mat-icon {
         font-size: 64px;
         width: 64px;
         height: 64px;
-        color: #ccc;
+        color: #01B3A7;
+        opacity: 0.3;
       }
 
       p {
         font-size: 16px;
-        color: #666;
+        color: #01B3A7;
+        font-weight: 500;
         margin: 0;
       }
     }
 
     .table-container {
-      overflow-x: auto;
+      flex: 1;
+      overflow: auto;
 
       .subscribers-table {
         width: 100%;
 
         th {
           font-weight: 600;
-          color: #333;
-          background-color: #f5f5f5;
+          color: #24292e;
+          background-color: #f6f8fa;
+          padding: 12px 16px;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          border-bottom: 2px solid #e1e4e8;
+          position: sticky;
+          top: 0;
+          z-index: 10;
         }
 
         td {
-          padding: 16px;
+          padding: 12px 16px;
+          font-size: 13px;
+          border-bottom: 1px solid #e1e4e8;
+        }
+
+        tr:hover {
+          background-color: #f6f8fa;
         }
 
         .email-cell,
@@ -305,40 +405,42 @@
           gap: 8px;
 
           mat-icon {
-            color: #666;
-            font-size: 20px;
-            width: 20px;
-            height: 20px;
+            color: #01B3A7;
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
           }
 
           span {
-            font-size: 14px;
-            color: #333;
+            font-size: 13px;
+            color: #24292e;
+            font-weight: 500;
           }
         }
 
         .status-chip {
-          font-size: 12px;
-          font-weight: 500;
-          padding: 4px 12px;
+          font-size: 11px;
+          font-weight: 600;
+          padding: 4px 10px;
+          border-radius: 10px;
 
           &.active {
-            background-color: #4caf50;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
           }
 
           &.unsubscribed {
-            background-color: #ff9800;
+            background: linear-gradient(135deg, #f66a0a 0%, #ff9800 100%);
             color: white;
           }
-
         }
 
         .count-chip {
-          background-color: #e3f2fd;
-          color: #1976d2;
-          font-size: 12px;
-          font-weight: 500;
+          background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+          color: #01B3A7;
+          font-size: 11px;
+          font-weight: 600;
+          border-radius: 10px;
 
           mat-icon {
             font-size: 14px;
@@ -355,7 +457,15 @@
       }
 
       mat-paginator {
-        border-top: 1px solid #e0e0e0;
+        border-top: 1px solid #e1e4e8;
+        background-color: #fafbfc;
+        
+        ::ng-deep {
+          .mat-mdc-paginator-container {
+            padding: 8px 16px;
+            min-height: 48px;
+          }
+        }
       }
     }
   }
@@ -363,13 +473,13 @@
 
 @media (max-width: 768px) {
   .newsletter-container {
-    padding: 12px;
 
     .header-card {
       .header-content {
         flex-direction: column;
         gap: 16px;
         align-items: stretch;
+        padding: 16px;
 
         button {
           width: 100%;
@@ -379,6 +489,8 @@
 
     .statistics-grid {
       grid-template-columns: 1fr;
+      padding: 8px;
+      gap: 8px;
     }
 
     .filters-grid,
@@ -386,12 +498,19 @@
       grid-template-columns: 1fr !important;
     }
 
+    .table-card,
+    .add-form-card,
+    .filters-card,
+    .bulk-actions-card {
+      margin: 0 8px 8px 8px;
+    }
+
     .table-card {
       .table-container {
         .subscribers-table {
           font-size: 12px;
 
-          td {
+          th, td {
             padding: 8px;
           }
         }

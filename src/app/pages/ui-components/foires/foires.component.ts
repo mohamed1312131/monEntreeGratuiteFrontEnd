@@ -167,6 +167,20 @@ export class FoiresComponent implements OnInit {
     });
   }
 
+  toggleDisponible(countryKey: string, foire: Foire): void {
+    this.foireService.toggleDisponible(countryKey, foire.id).subscribe({
+      next: () => {
+        foire.disponible = !foire.disponible;
+        const status = foire.disponible ? 'disponible' : 'non disponible';
+        this.showSnackBar(`Foire marquée comme ${status}`, 'success');
+      },
+      error: (error) => {
+        console.error('Error toggling disponible status:', error);
+        this.showSnackBar('Erreur lors de la modification de la disponibilité', 'error');
+      }
+    });
+  }
+
   sendEmailReminders(foire: Foire): void {
     if (confirm(`Envoyer des rappels email à tous les participants de ${foire.name}?`)) {
       this.foireService.sendReminders(foire.id).subscribe({

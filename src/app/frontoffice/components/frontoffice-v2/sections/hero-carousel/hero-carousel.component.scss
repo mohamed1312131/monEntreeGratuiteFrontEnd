@@ -183,16 +183,21 @@
   }
 }
 
+@media (max-width: 480px) {
+  .hero-cta-container {
+    display: none !important;
+  }
+}
+
 .hero-cta-button-inline {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   width: 100%;
-  padding: 16px 32px;
-
+  padding: 20px 32px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: #fff;
 
   border: none;
@@ -221,7 +226,13 @@
 
 @media (max-width: 480px) {
   .hero-cta-button-inline {
-    padding: 14px 20px;
-    font-size: 0.9rem;
+    padding: 2px 5px !important;
+    font-size: 0.65rem !important;
+    gap: 2px !important;
+  }
+
+  .hero-cta-button-inline svg {
+    width: 14px !important;
+    height: 14px !important;
   }
 }

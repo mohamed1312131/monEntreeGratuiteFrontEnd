@@ -482,6 +482,22 @@
       background: rgba(215, 58, 73, 0.1);
     }
   }
+
+  &.disponible-icon {
+    color: #28a745;
+    
+    &:hover {
+      background: rgba(40, 167, 69, 0.1);
+    }
+  }
+
+  &:not(.disponible-icon):not(.active-icon):not(.email-icon):not(.view-icon):not(.delete-icon) {
+    color: #d73a49;
+    
+    &:hover {
+      background: rgba(215, 58, 73, 0.1);
+    }
+  }
 }
 
 // Compact Pagination
