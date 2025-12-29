@@ -9,6 +9,7 @@ interface Foire {
   image: string;
   description: string;
   countryCode?: string;
+  disponible?: boolean;
 }
 
 @Component({
@@ -109,7 +110,8 @@ export class FoiresSectionComponent implements OnInit {
       location: foire.location || this.formatLocation(foire),
       image: foire.image || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
       description: foire.description || '',
-      countryCode: foire.countryCode
+      countryCode: foire.countryCode,
+      disponible: foire.disponible
     }));
   }
 
