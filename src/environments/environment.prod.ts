@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://monentreegratuitebackend-production.up.railway.app',
+  apiUrl: 'https://monentreegratuitebackend-production-f481.up.railway.app',
   recaptchaSiteKey: '6Ld0UDssAAAAAMUzj7bDDPaQ4ZmEzELX0h3p0rlu'  // Replace with your actual site key from Google reCAPTCHA
 };
