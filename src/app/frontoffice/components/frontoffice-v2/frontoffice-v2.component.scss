@@ -240,9 +240,14 @@
       input[type="checkbox"] {
         width: 20px;
         height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+        max-width: 20px;
+        max-height: 20px;
         margin-top: 2px;
         cursor: pointer;
         accent-color: #f59e0b;
+        flex-shrink: 0;
       }
 
       label {
@@ -252,6 +257,7 @@
         margin-bottom: 0;
         cursor: pointer;
         line-height: 1.5;
+        font-weight: 400;
 
         a {
           color: #D4AF37;
@@ -745,9 +751,14 @@
         gap: 10px;
         
         input[type="checkbox"] {
-          width: 16px;
-          height: 16px;
+          width: 18px !important;
+          height: 18px !important;
+          min-width: 18px !important;
+          min-height: 18px !important;
+          max-width: 18px !important;
+          max-height: 18px !important;
           margin-top: 3px;
+          flex-shrink: 0;
         }
 
         label {
@@ -804,9 +815,14 @@
         gap: 10px;
         
         input[type="checkbox"] {
-          width: 16px;
-          height: 16px;
+          width: 18px !important;
+          height: 18px !important;
+          min-width: 18px !important;
+          min-height: 18px !important;
+          max-width: 18px !important;
+          max-height: 18px !important;
           margin-top: 3px;
+          flex-shrink: 0;
         }
 
         label {

@@ -2,6 +2,9 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ReservationService, ReservationCreateDTO } from 'src/app/services/reservation.service';
 import { ExposantRequestService, ExposantRequestCreateDTO } from 'src/app/services/exposant-request.service';
 import { UserVisitService } from 'src/app/services/user-visit.service';
+import { environment } from 'src/environments/environment';
+
+declare const grecaptcha: any;
 
 interface HeroSlide {
   id: number;
@@ -203,6 +206,23 @@ export class FrontofficeV2Component implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = '';
     this.successMessage = '';
+
+    // Execute reCAPTCHA before submitting
+    if (typeof grecaptcha !== 'undefined') {
+      grecaptcha.ready(() => {
+        grecaptcha.execute(environment.recaptchaSiteKey, { action: 'reservation' }).then((token: string) => {
+          this.processReservation(token);
+        }).catch((error: any) => {
+          console.error('reCAPTCHA error:', error);
+          this.processReservation(''); // Submit without token if reCAPTCHA fails
+        });
+      });
+    } else {
+      this.processReservation(''); // Submit without token if reCAPTCHA not loaded
+    }
+  }
+
+  private processReservation(recaptchaToken: string): void {
     
     // Map age category to backend enum values
     const ageCategoryMap: { [key: string]: string } = {
@@ -212,13 +232,18 @@ export class FrontofficeV2Component implements OnInit {
     };
 
     // Prepare reservation data for backend
-    const reservationData: ReservationCreateDTO = {
-      foireId: this.selectedFoire.id,
-      name: `${this.reservationForm.prenom} ${this.reservationForm.nom}`,
-      city: this.reservationForm.ville,
+    const reservationData: any = {
+      foireId: this.selectedFoire!.id,
+      nom: this.reservationForm.nom,
+      prenom: this.reservationForm.prenom,
+      ville: this.reservationForm.ville,
       email: this.reservationForm.email,
-      phone: this.reservationForm.telephone,
-      ageCategory: ageCategoryMap[this.reservationForm.trancheAge] || this.reservationForm.trancheAge
+      telephone: this.reservationForm.telephone,
+      smsNumber: this.reservationForm.smsNumber,
+      pays: this.reservationForm.pays,
+      trancheAge: this.reservationForm.trancheAge,
+      ageCategory: ageCategoryMap[this.reservationForm.trancheAge] || this.reservationForm.trancheAge,
+      recaptchaToken: recaptchaToken
     };
     
     // Submit to backend
@@ -309,7 +334,23 @@ export class FrontofficeV2Component implements OnInit {
     this.exhibitorErrorMessage = '';
     this.exhibitorSuccessMessage = '';
 
-    const requestData: ExposantRequestCreateDTO = {
+    // Execute reCAPTCHA before submitting
+    if (typeof grecaptcha !== 'undefined') {
+      grecaptcha.ready(() => {
+        grecaptcha.execute(environment.recaptchaSiteKey, { action: 'exposant_request' }).then((token: string) => {
+          this.processExhibitorRequest(token);
+        }).catch((error: any) => {
+          console.error('reCAPTCHA error:', error);
+          this.processExhibitorRequest(''); // Submit without token if reCAPTCHA fails
+        });
+      });
+    } else {
+      this.processExhibitorRequest(''); // Submit without token if reCAPTCHA not loaded
+    }
+  }
+
+  private processExhibitorRequest(recaptchaToken: string): void {
+    const requestData: any = {
       nomEtablissement: this.exhibitorForm.nomEtablissement,
       secteurActivite: this.exhibitorForm.secteurActivite,
       description: this.exhibitorForm.description,
@@ -317,7 +358,8 @@ export class FrontofficeV2Component implements OnInit {
       nomPrenom: this.exhibitorForm.nomPrenom,
       email: this.exhibitorForm.email,
       telephone: this.exhibitorForm.telephone,
-      acceptContact: this.exhibitorForm.acceptContact
+      acceptContact: this.exhibitorForm.acceptContact,
+      recaptchaToken: recaptchaToken
     };
 
     this.exposantRequestService.createExposantRequest(requestData).subscribe({

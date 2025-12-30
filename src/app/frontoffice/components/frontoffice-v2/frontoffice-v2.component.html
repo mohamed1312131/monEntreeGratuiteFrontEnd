@@ -157,21 +157,17 @@
 
         <!-- Conditions générales -->
         <div class="form-group checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="reservationForm.acceptConditions" name="acceptConditions" required [disabled]="!selectedFoire.disponible">
-            <span class="checkbox-text">
-              Je reconnais avoir lu et accepté les <a href="#" target="_blank">conditions générales de services et d'utilisation</a> *
-            </span>
+          <input type="checkbox" id="acceptConditions" [(ngModel)]="reservationForm.acceptConditions" name="acceptConditions" required [disabled]="!selectedFoire.disponible">
+          <label for="acceptConditions">
+            Je reconnais avoir lu et accepté les <a routerLink="/conditions-generales" target="_blank">conditions générales de services et d'utilisation</a> *
           </label>
         </div>
 
         <!-- Marketing consent -->
         <div class="form-group checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing" required [disabled]="!selectedFoire.disponible">
-            <span class="checkbox-text">
-              En cochant cette case, j'autorise VIPLUX détenteur de monentreegratuite, à utiliser mon email et/ou mon téléphone pour m'adresser mon invitation, des offres, actualités et relances liées à ses offres. Je peux retirer mon consentement à tout moment via le lien de désinscription (emails) ou en répondant STOP (SMS).
-            </span>
+          <input type="checkbox" id="acceptMarketing" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing" required [disabled]="!selectedFoire.disponible">
+          <label for="acceptMarketing">
+            En cochant cette case, j'autorise VIPLUX détenteur de monentreegratuite, à utiliser mon email et/ou mon téléphone pour m'adresser mon invitation, des offres, actualités et relances liées à ses offres. Je peux retirer mon consentement à tout moment via le lien de désinscription (emails) ou en répondant STOP (SMS).
           </label>
         </div>
 

@@ -89,12 +89,13 @@ export class NewsletterSubscriberService {
     return this.http.get<SubscriptionAuditLog[]>(`${this.apiUrl}/${id}/audit-log`);
   }
 
-  subscribe(email: string, name: string, phone?: string, source?: string): Observable<NewsletterSubscriber> {
+  subscribe(email: string, name: string, phone?: string, source?: string, recaptchaToken?: string): Observable<NewsletterSubscriber> {
     return this.http.post<NewsletterSubscriber>(`${this.apiUrl}/subscribe`, {
       email,
       name,
       phone,
-      source: source || 'manual'
+      source: source || 'manual',
+      recaptchaToken
     });
   }
 

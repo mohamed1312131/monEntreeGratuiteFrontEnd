@@ -2,6 +2,9 @@ import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@ang
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SettingsService, SocialLinks } from 'src/app/services/settings.service';
 import { NewsletterSubscriberService } from 'src/app/services/newsletter-subscriber.service';
+import { environment } from 'src/environments/environment';
+
+declare const grecaptcha: any;
 
 @Component({
   selector: 'app-footer-section',
@@ -63,10 +66,26 @@ export class FooterSectionComponent implements OnInit {
     this.subscribeError = '';
     this.subscribeSuccess = false;
 
+    // Execute reCAPTCHA before submitting
+    if (typeof grecaptcha !== 'undefined') {
+      grecaptcha.ready(() => {
+        grecaptcha.execute(environment.recaptchaSiteKey, { action: 'newsletter' }).then((token: string) => {
+          this.processNewsletterSubscription(token);
+        }).catch((error: any) => {
+          console.error('reCAPTCHA error:', error);
+          this.processNewsletterSubscription(''); // Submit without token if reCAPTCHA fails
+        });
+      });
+    } else {
+      this.processNewsletterSubscription(''); // Submit without token if reCAPTCHA not loaded
+    }
+  }
+
+  private processNewsletterSubscription(recaptchaToken: string): void {
     const email = this.newsletterForm.get('email')?.value;
     const name = this.newsletterForm.get('name')?.value;
 
-    this.newsletterService.subscribe(email, name, undefined, 'website').subscribe({
+    this.newsletterService.subscribe(email, name, undefined, 'website', recaptchaToken).subscribe({
       next: () => {
         this.subscribeSuccess = true;
         this.subscribeLoading = false;
