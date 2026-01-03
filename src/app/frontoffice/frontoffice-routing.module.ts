@@ -8,7 +8,7 @@ import { ReservationPageComponent } from './components/reservation-page/reservat
 
 const routes: Routes = [
   {
-    path: 'VIP-LUX-:foirename',
+    path: 'VIP-LUX/:foirename',
     component: ReservationPageComponent,
   },
   {
