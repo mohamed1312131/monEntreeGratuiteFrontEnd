@@ -1,0 +1,200 @@
+
+<div class="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800">
+  
+  <!-- ===== HEADER ===== -->
+  <app-header-section></app-header-section>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="reservation-page-container">
+    
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Chargement...</p>
+    </div>
+
+    <!-- Error State (Foire not found) -->
+    <div *ngIf="!isLoading && !selectedFoire" class="error-container">
+      <div class="error-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h2>Foire introuvable</h2>
+      <p>La foire que vous recherchez n'existe pas ou n'est plus disponible.</p>
+      <a routerLink="/" class="btn-home">Retour à l'accueil</a>
+    </div>
+
+    <!-- Reservation Form -->
+    <div *ngIf="!isLoading && selectedFoire" class="form-wrapper">
+      
+      <!-- Foire Details Section -->
+      <div class="foire-details">
+        <img [src]="selectedFoire.image" [alt]="selectedFoire.name" class="foire-image">
+        <div class="foire-info">
+          <h1>{{ selectedFoire.name }}</h1>
+          <p class="foire-date">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            {{ selectedFoire.date }}
+          </p>
+          <p class="foire-location">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            {{ selectedFoire.location }} - {{ selectedFoire.pays }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Reservation Form -->
+      <form class="reservation-form" (ngSubmit)="submitReservation()">
+        <h2>Réservez votre invitation gratuite</h2>
+        
+        <!-- Bientôt disponible Message -->
+        <div *ngIf="!selectedFoire.disponible" class="bientot-disponible-alert">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <div>
+            <strong>Bientôt disponible</strong>
+            <p>Les réservations pour cette foire seront bientôt ouvertes. Revenez prochainement!</p>
+          </div>
+        </div>
+        
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="error-alert">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Pays -->
+        <div class="form-group">
+          <label for="pays">Pays *</label>
+          <select id="pays" [(ngModel)]="reservationForm.pays" name="pays" required class="form-control" [disabled]="true" style="background-color: #f1f5f9; cursor: not-allowed; opacity: 0.8;">
+            <option value="">Sélectionnez un pays</option>
+            <option value="France">France</option>
+            <option value="Belgique">Belgique</option>
+            <option value="Suisse">Suisse</option>
+          </select>
+        </div>
+
+        <!-- Type d'entrée -->
+        <div class="form-group">
+          <label for="entreeType">Je souhaite une entrée pour *</label>
+          <select id="entreeType" [(ngModel)]="reservationForm.entreeType" name="entreeType" required class="form-control" [disabled]="!selectedFoire.disponible">
+            <option value="">Sélectionnez</option>
+            <option value="couple">Couple</option>
+            <option value="moi-et-ami">Moi et mon ami(e)</option>
+            <option value="moi-seulement">Moi seulement</option>
+          </select>
+        </div>
+
+        <!-- Ville -->
+        <div class="form-group">
+          <label for="ville">Ville *</label>
+          <input type="text" id="ville" [(ngModel)]="reservationForm.ville" name="ville" required class="form-control" placeholder="Votre ville" [disabled]="!selectedFoire.disponible">
+        </div>
+
+        <!-- Nom et Prénom -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nom">Nom *</label>
+            <input type="text" id="nom" [(ngModel)]="reservationForm.nom" name="nom" required class="form-control" placeholder="Nom" [disabled]="!selectedFoire.disponible">
+          </div>
+          <div class="form-group">
+            <label for="prenom">Prénom *</label>
+            <input type="text" id="prenom" [(ngModel)]="reservationForm.prenom" name="prenom" required class="form-control" placeholder="Prénom" [disabled]="!selectedFoire.disponible">
+          </div>
+        </div>
+
+        <!-- SMS Number -->
+        <div class="form-group">
+          <label for="smsNumber">Je veux recevoir mon invitation par SMS sur le numéro</label>
+          <input type="tel" id="smsNumber" [(ngModel)]="reservationForm.smsNumber" name="smsNumber" class="form-control" placeholder="+33 6 12 34 56 78" [disabled]="!selectedFoire.disponible">
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Je veux recevoir mon invitation par email à l'adresse *</label>
+          <input type="email" id="email" [(ngModel)]="reservationForm.email" name="email" required class="form-control" placeholder="votre@email.com" [disabled]="!selectedFoire.disponible">
+        </div>
+
+        <!-- Tranche d'âge -->
+        <div class="form-group">
+          <label for="trancheAge">Tranche d'âge *</label>
+          <select id="trancheAge" [(ngModel)]="reservationForm.trancheAge" name="trancheAge" required class="form-control" [disabled]="!selectedFoire.disponible">
+            <option value="">Sélectionnez votre tranche d'âge</option>
+            <option value="moins-35">Moins de 35 ans</option>
+            <option value="35-70">Entre 35 et 70 ans</option>
+            <option value="plus-70">Plus de 70 ans</option>
+          </select>
+        </div>
+
+        <!-- Téléphone -->
+        <div class="form-group">
+          <label for="telephone">Numéro de téléphone sur lequel vous êtes joignable *</label>
+          <input type="tel" id="telephone" [(ngModel)]="reservationForm.telephone" name="telephone" required class="form-control" placeholder="+33 6 12 34 56 78" [disabled]="!selectedFoire.disponible">
+        </div>
+
+        <!-- Conditions générales -->
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="acceptConditions" [(ngModel)]="reservationForm.acceptConditions" name="acceptConditions" required [disabled]="!selectedFoire.disponible">
+          <label for="acceptConditions">
+            Je reconnais avoir lu et accepté les <a routerLink="/conditions-generales" target="_blank">conditions générales de services et d'utilisation</a> *
+          </label>
+        </div>
+
+        <!-- Marketing consent -->
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="acceptMarketing" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing" required [disabled]="!selectedFoire.disponible">
+          <label for="acceptMarketing">
+            En cochant cette case, j'autorise VIPLUX détenteur de monentreegratuite, à utiliser mon email et/ou mon téléphone pour m'adresser mon invitation, des offres, actualités et relances liées à ses offres. Je peux retirer mon consentement à tout moment via le lien de désinscription (emails) ou en répondant STOP (SMS).
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit" [disabled]="!selectedFoire.disponible || !reservationForm.acceptConditions || !reservationForm.acceptMarketing || isSubmitting">
+          <span *ngIf="!isSubmitting">Confirmer ma réservation</span>
+          <span *ngIf="isSubmitting">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Envoi en cours...
+          </span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <app-footer-section></app-footer-section>
+
+  <!-- ===== SUCCESS POPUP MODAL ===== -->
+  <div class="success-popup-overlay" [class.show]="showSuccessPopup" (click)="closeSuccessPopup()"></div>
+  <div class="success-popup" [class.show]="showSuccessPopup">
+    <div class="success-popup-content">
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <h3>Réservation Confirmée !</h3>
+      <p>Votre réservation a été enregistrée avec succès.</p>
+      <p class="contact-message">Nous vous contacterons très prochainement par email avec tous les détails.</p>
+      <button class="success-btn" (click)="closeSuccessPopup()">Parfait !</button>
+    </div>
+  </div>
+</div>

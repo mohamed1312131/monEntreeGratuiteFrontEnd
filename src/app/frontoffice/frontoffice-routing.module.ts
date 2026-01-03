@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FrontofficeComponent } from './frontoffice.component';
 import { ConditionsGeneralesComponent } from './components/conditions-generales/conditions-generales.component';
 import { PolitiqueConfidentialiteComponent } from './components/politique-confidentialite/politique-confidentialite.component';
+import { ReservationPageComponent } from './components/reservation-page/reservation-page.component';
 
 
 const routes: Routes = [
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'politique-confidentialite',
     component: PolitiqueConfidentialiteComponent,
+  },
+  {
+    path: 'rev/:foirename',
+    component: ReservationPageComponent,
   },
 ];
 

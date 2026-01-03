@@ -27,6 +27,7 @@ import { FooterSectionComponent } from './components/frontoffice-v2/sections/foo
 import { SafePipe } from '../pipes/safe.pipe';
 import { ConditionsGeneralesComponent } from './components/conditions-generales/conditions-generales.component';
 import { PolitiqueConfidentialiteComponent } from './components/politique-confidentialite/politique-confidentialite.component';
+import { ReservationPageComponent } from './components/reservation-page/reservation-page.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { PolitiqueConfidentialiteComponent } from './components/politique-confid
     FooterSectionComponent,
     SafePipe,
     ConditionsGeneralesComponent,
-    PolitiqueConfidentialiteComponent
+    PolitiqueConfidentialiteComponent,
+    ReservationPageComponent
   ],
   imports: [CommonModule, FrontofficeRoutingModule, FormsModule, ReactiveFormsModule],
 })
