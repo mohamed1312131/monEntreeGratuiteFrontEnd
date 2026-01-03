@@ -95,19 +95,37 @@ export class ReservationPageComponent implements OnInit {
         
         if (foire) {
           let dateRangesArray: string[] = [];
+          let ranges: any[] = [];
           
-          if (foire.dateRanges && Array.isArray(foire.dateRanges)) {
-            dateRangesArray = foire.dateRanges.map((dr: any) => 
-              typeof dr === 'string' ? dr : `${dr.startDate} - ${dr.endDate}`
-            );
+          // Handle dateRanges whether it's a JSON string (from Entity) or Array (from DTO)
+          if (foire.dateRanges) {
+            if (typeof foire.dateRanges === 'string') {
+              try {
+                ranges = JSON.parse(foire.dateRanges);
+              } catch (e) {
+                console.error('Error parsing dateRanges', e);
+              }
+            } else if (Array.isArray(foire.dateRanges)) {
+              ranges = foire.dateRanges;
+            }
+          }
+
+          if (ranges.length > 0) {
+            dateRangesArray = ranges.map((dr: any) => {
+              if (typeof dr === 'string') return dr;
+              const start = this.formatDate(dr.startDate);
+              const end = this.formatDate(dr.endDate);
+              return `Du ${start} au ${end}`;
+            });
           } else if (foire.date) {
-            dateRangesArray = [foire.date];
+            // Fallback for legacy date format
+            dateRangesArray = [this.formatDate(foire.date.toString())];
           }
           
           this.selectedFoire = {
             id: foire.id,
             name: foire.name,
-            date: dateRangesArray.length > 0 ? dateRangesArray.join(' • ') : 'À venir',
+            date: dateRangesArray.length > 0 ? dateRangesArray.join(' • ') : 'Dates à confirmer',
             image: foire.image || '',
             location: foire.location || foire.city || '',
             pays: foire.countryCode === 'FR' ? 'France' : foire.countryCode === 'BE' ? 'Belgique' : foire.countryCode === 'CH' ? 'Suisse' : 'France',
@@ -125,6 +143,19 @@ export class ReservationPageComponent implements OnInit {
         this.errorMessage = 'Erreur lors du chargement de la foire';
         this.isLoading = false;
       }
+    });
+  }
+
+  private formatDate(dateStr: string): string {
+    if (!dateStr) return '';
+    // Handle ISO string or YYYY-MM-DD
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    
+    return date.toLocaleDateString('fr-FR', { 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
     });
   }
 
