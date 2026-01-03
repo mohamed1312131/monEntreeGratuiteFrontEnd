@@ -90,9 +90,15 @@ export class ReservationPageComponent implements OnInit {
         );
         
         if (foire) {
-          const dateRangesArray = foire.dateRanges?.map((dr: any) => 
-            typeof dr === 'string' ? dr : `${dr.startDate} - ${dr.endDate}`
-          ) || [];
+          let dateRangesArray: string[] = [];
+          
+          if (foire.dateRanges && Array.isArray(foire.dateRanges)) {
+            dateRangesArray = foire.dateRanges.map((dr: any) => 
+              typeof dr === 'string' ? dr : `${dr.startDate} - ${dr.endDate}`
+            );
+          } else if (foire.date) {
+            dateRangesArray = [foire.date];
+          }
           
           this.selectedFoire = {
             id: foire.id,
