@@ -20,7 +20,7 @@ const routes: Routes = [
     component: PolitiqueConfidentialiteComponent,
   },
   {
-    path: 'rev/:foirename',
+    path: 'VIP-LUX-:foirename',
     component: ReservationPageComponent,
   },
 ];

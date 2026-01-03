@@ -84,9 +84,12 @@ export class ReservationPageComponent implements OnInit {
     this.isLoading = true;
     this.foireService.getAllFoires().subscribe({
       next: (foires) => {
+        // Normalize the URL parameter: replace hyphens with spaces for matching
+        const normalizedSearchName = name.replace(/-/g, ' ').toLowerCase();
+        
         const foire = foires.find(f => 
-          f.name.toLowerCase().replace(/\s+/g, '-') === name.toLowerCase() ||
-          f.name.toLowerCase() === name.toLowerCase().replace(/-/g, ' ')
+          f.name.toLowerCase() === normalizedSearchName ||
+          f.name.toLowerCase().replace(/\s+/g, '-') === name.toLowerCase()
         );
         
         if (foire) {
