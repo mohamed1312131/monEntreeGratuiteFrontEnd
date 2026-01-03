@@ -5,12 +5,6 @@ import { FullComponent } from './layouts/full/full.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  // Frontoffice (user-facing) at site root
-  {
-    path: '',
-    loadChildren: () =>
-      import('./frontoffice/frontoffice.module').then((m) => m.FrontofficeModule),
-  },
   // Admin area under /admin
   {
     path: 'admin',
@@ -55,6 +49,12 @@ const routes: Routes = [
         ],
       },
     ],
+  },
+  // Frontoffice (user-facing) at site root - must be last before wildcard
+  {
+    path: '',
+    loadChildren: () =>
+      import('./frontoffice/frontoffice.module').then((m) => m.FrontofficeModule),
   },
   // Fallback to frontoffice
   { path: '**', redirectTo: '' },

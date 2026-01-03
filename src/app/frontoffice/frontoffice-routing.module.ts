@@ -8,8 +8,8 @@ import { ReservationPageComponent } from './components/reservation-page/reservat
 
 const routes: Routes = [
   {
-    path: '',
-    component: FrontofficeComponent,
+    path: 'VIP-LUX-:foirename',
+    component: ReservationPageComponent,
   },
   {
     path: 'conditions-generales',
@@ -20,8 +20,8 @@ const routes: Routes = [
     component: PolitiqueConfidentialiteComponent,
   },
   {
-    path: 'VIP-LUX-:foirename',
-    component: ReservationPageComponent,
+    path: '',
+    component: FrontofficeComponent,
   },
 ];
 
