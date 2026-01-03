@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { SettingsService, SocialLinks } from 'src/app/services/settings.service';
 
 @Component({
@@ -16,7 +17,10 @@ export class HeaderSectionComponent implements OnInit {
   // Output events to communicate with parent component
   @Output() navigationClick = new EventEmitter<string>();
 
-  constructor(private settingsService: SettingsService) {}
+  constructor(
+    private settingsService: SettingsService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadSocialLinks();
@@ -41,20 +45,36 @@ export class HeaderSectionComponent implements OnInit {
   }
 
   /**
-   * Scroll to a section by ID
+   * Scroll to a section by ID or navigate to home page with fragment
    * @param sectionId - The ID of the section to scroll to
    */
   scrollToSection(sectionId: string): void {
     // Close mobile menu if open
     this.isMenuOpen = false;
     
-    // Emit event to parent component
-    this.navigationClick.emit(sectionId);
+    // Check if we're on the home page
+    const currentUrl = this.router.url;
+    const isHomePage = currentUrl === '/' || currentUrl === '' || currentUrl.startsWith('/#');
     
-    // Alternatively, handle scrolling directly in the component
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (isHomePage) {
+      // We're on home page, just scroll
+      this.navigationClick.emit(sectionId);
+      
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // We're on another page, navigate to home with fragment
+      this.router.navigate(['/'], { fragment: sectionId }).then(() => {
+        // After navigation, scroll to the section
+        setTimeout(() => {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      });
     }
   }
 }
