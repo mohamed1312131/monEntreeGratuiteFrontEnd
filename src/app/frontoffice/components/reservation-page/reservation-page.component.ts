@@ -79,6 +79,7 @@ export class ReservationPageComponent implements OnInit {
       this.loadFoireByName(this.foireName);
     });
   }
+  
 
   loadFoireByName(name: string): void {
     this.isLoading = true;
