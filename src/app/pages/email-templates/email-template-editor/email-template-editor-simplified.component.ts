@@ -14,6 +14,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatChipsModule } from '@angular/material/chips';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { EmailTemplateService } from '../../../services/email-template.service';
 import { TemplateBuilderService } from '../../../services/template-builder.service';
@@ -37,7 +39,9 @@ import { EmailTemplateConfig, AVAILABLE_DYNAMIC_FIELDS, FONT_FAMILIES, FONT_SIZE
     MatSnackBarModule,
     MatSlideToggleModule,
     MatDividerModule,
-    MatTabsModule
+    MatTabsModule,
+    MatChipsModule,
+    DragDropModule
   ],
   templateUrl: './email-template-editor-simplified.component.html',
   styleUrl: './email-template-editor.component.scss'
@@ -60,6 +64,8 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
   galleryPreviews: string[] = [];
   galleryImageUrls: string[] = [];
   uploadingGallery = false;
+  
+  availableDynamicFieldsForChips = AVAILABLE_DYNAMIC_FIELDS;
 
   constructor(
     private fb: FormBuilder,
@@ -97,14 +103,9 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
       // Header (removed from form, handled separately)
       headerImageUrl: [''],
       
-      // Content Sections
-      recipientNameText: [''],
-      eventDateText: [''],
-      eventTimeText: [''],
-      ticketCodeText: [''],
-      foireNameText: [''],
-      customText1: [''],
-      customText2: [''],
+      // Unified Content Section
+      contentText: [''],
+      contentTextColor: ['#34495e'],
       
       // Button
       buttonEnabled: [false],
@@ -118,6 +119,10 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
       gpsLabel: ['COORDONNÉES GPS'],
       gpsLatitude: [''],
       gpsLongitude: [''],
+      gpsBgColor: ['#f5f7fa'],
+      gpsTextColor: ['#1976D2'],
+      gpsButtonBgColor: ['#1976D2'],
+      gpsButtonTextColor: ['#ffffff'],
       
       // Gallery (removed from form, handled separately)
       galleryImageUrls: [''],
@@ -167,6 +172,7 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
       fontSize: config.fontSize,
       primaryColor: config.primaryColor,
       headerImageUrl: config.headerImage?.url || '',
+      contentTextColor: config.contentTextColor || '#34495e',
       buttonEnabled: !!config.button,
       buttonText: config.button?.text || '',
       buttonLink: config.button?.link || '',
@@ -176,6 +182,10 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
       gpsLabel: config.gpsCoordinates?.label || 'COORDONNÉES GPS',
       gpsLatitude: config.gpsCoordinates?.latitude || '',
       gpsLongitude: config.gpsCoordinates?.longitude || '',
+      gpsBgColor: config.gpsCoordinates?.backgroundColor || '#f5f7fa',
+      gpsTextColor: config.gpsCoordinates?.textColor || '#1976D2',
+      gpsButtonBgColor: config.gpsCoordinates?.buttonBackgroundColor || '#1976D2',
+      gpsButtonTextColor: config.gpsCoordinates?.buttonTextColor || '#ffffff',
       includeSocialLinks: config.includeSocialLinks,
       includeUnsubscribe: config.includeUnsubscribe
     });
@@ -186,19 +196,16 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
 
     if (config.galleryImages && config.galleryImages.length > 0) {
       this.galleryPreviews = config.galleryImages;
+      this.galleryImageUrls = config.galleryImages;
       this.templateForm.patchValue({
         galleryImageUrls: config.galleryImages.join('\n')
       });
     }
 
-    // Load sections into text fields
-    if (config.sections) {
-      config.sections.forEach((section, index) => {
-        if (section.type === 'text') {
-          if (index === 0) this.templateForm.patchValue({ customText1: section.content });
-          if (index === 1) this.templateForm.patchValue({ customText2: section.content });
-        }
-      });
+    // Load unified content from sections
+    if (config.sections && config.sections.length > 0) {
+      const contentText = this.sectionsToContentText(config.sections);
+      this.templateForm.patchValue({ contentText });
     }
   }
 
@@ -211,6 +218,7 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
       fontSize: formValue.fontSize,
       primaryColor: formValue.primaryColor,
       secondaryColor: formValue.primaryColor,
+      contentTextColor: formValue.contentTextColor,
       
       headerImage: formValue.headerImageUrl ? {
         url: formValue.headerImageUrl,
@@ -230,7 +238,11 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
         enabled: true,
         label: formValue.gpsLabel,
         latitude: formValue.gpsLatitude,
-        longitude: formValue.gpsLongitude
+        longitude: formValue.gpsLongitude,
+        backgroundColor: formValue.gpsBgColor,
+        textColor: formValue.gpsTextColor,
+        buttonBackgroundColor: formValue.gpsButtonBgColor,
+        buttonTextColor: formValue.gpsButtonTextColor
       } : { enabled: false },
       
       galleryImages: formValue.galleryImageUrls ? 
@@ -244,76 +256,72 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
   }
 
   buildSections(formValue: any): any[] {
-    const sections = [];
-    
-    // Add dynamic fields and custom text in order
-    // Use user's selected fontSize for all sections
+    const sections: any[] = [];
     const userFontSize = formValue.fontSize || '16px';
+    const contentText = formValue.contentText || '';
     
-    if (formValue.recipientNameText) {
-      sections.push({
-        id: 'name',
-        type: 'dynamic-field',
-        dynamicField: '{{NOM}}',
-        styles: { fontSize: userFontSize, fontWeight: 'bold', textAlign: 'center' }
-      });
+    if (!contentText.trim()) {
+      return sections;
     }
     
-    if (formValue.eventDateText) {
-      sections.push({
-        id: 'date',
-        type: 'dynamic-field',
-        dynamicField: '{{DATE}}',
-        styles: { fontSize: userFontSize, fontWeight: 'bold', textAlign: 'center' }
-      });
-    }
+    // Parse content text and create sections
+    // Split by newlines to preserve line breaks
+    const lines = contentText.split('\n');
     
-    if (formValue.eventTimeText) {
-      sections.push({
-        id: 'time',
-        type: 'dynamic-field',
-        dynamicField: '{{HEURE}}',
-        styles: { fontSize: userFontSize, textAlign: 'center' }
-      });
-    }
-    
-    if (formValue.customText1) {
-      sections.push({
-        id: 'text1',
-        type: 'text',
-        content: formValue.customText1,
-        styles: { textAlign: 'center', marginTop: '10px', fontSize: userFontSize }
-      });
-    }
-    
-    if (formValue.ticketCodeText) {
-      sections.push({
-        id: 'code',
-        type: 'dynamic-field',
-        dynamicField: 'Code: {{CODE}}',
-        styles: { fontSize: userFontSize, fontWeight: 'bold', textAlign: 'center' }
-      });
-    }
-    
-    if (formValue.foireNameText) {
-      sections.push({
-        id: 'foire',
-        type: 'dynamic-field',
-        dynamicField: '{{FOIRE_NAME}}',
-        styles: { fontSize: userFontSize, fontWeight: 'bold', textAlign: 'center', marginTop: '8px' }
-      });
-    }
-    
-    if (formValue.customText2) {
-      sections.push({
-        id: 'text2',
-        type: 'text',
-        content: formValue.customText2,
-        styles: { textAlign: 'center', marginTop: '10px', fontSize: userFontSize }
-      });
+    for (const line of lines) {
+      if (!line.trim()) {
+        // Empty line - add spacer
+        sections.push({
+          id: `spacer-${sections.length}`,
+          type: 'spacer',
+          styles: { marginTop: '10px' }
+        });
+        continue;
+      }
+      
+      // Check if line contains dynamic fields
+      const hasDynamicField = AVAILABLE_DYNAMIC_FIELDS.some(field => 
+        line.includes(field.key)
+      );
+      
+      if (hasDynamicField) {
+        // Line with dynamic fields - treat as mixed content
+        sections.push({
+          id: `mixed-${sections.length}`,
+          type: 'text',
+          content: line,
+          styles: { textAlign: 'center', fontSize: userFontSize, color: formValue.contentTextColor }
+        });
+      } else {
+        // Regular text line
+        sections.push({
+          id: `text-${sections.length}`,
+          type: 'text',
+          content: line,
+          styles: { textAlign: 'center', fontSize: userFontSize, color: formValue.contentTextColor }
+        });
+      }
     }
     
     return sections;
+  }
+  
+  sectionsToContentText(sections: any[]): string {
+    return sections
+      .filter(s => s.type === 'text' || s.type === 'dynamic-field')
+      .map(s => {
+        if (s.type === 'dynamic-field') {
+          return s.dynamicField || '';
+        }
+        return s.content || '';
+      })
+      .join('\n');
+  }
+  
+  insertDynamicField(fieldKey: string): void {
+    const currentContent = this.templateForm.get('contentText')?.value || '';
+    const newContent = currentContent ? `${currentContent}${fieldKey}` : fieldKey;
+    this.templateForm.patchValue({ contentText: newContent });
   }
 
   getPreviewHtml(): SafeHtml {
@@ -419,6 +427,14 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
   removeGalleryImage(index: number): void {
     this.galleryPreviews.splice(index, 1);
     this.galleryImageUrls.splice(index, 1);
+    this.templateForm.patchValue({ 
+      galleryImageUrls: this.galleryImageUrls.join('\n') 
+    });
+  }
+  
+  onGalleryDrop(event: CdkDragDrop<string[]>): void {
+    moveItemInArray(this.galleryPreviews, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.galleryImageUrls, event.previousIndex, event.currentIndex);
     this.templateForm.patchValue({ 
       galleryImageUrls: this.galleryImageUrls.join('\n') 
     });

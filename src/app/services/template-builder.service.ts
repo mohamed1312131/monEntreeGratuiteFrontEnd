@@ -91,7 +91,7 @@ export class TemplateBuilderService {
         .text-content {
             margin: 8px 0;
             line-height: 1.6;
-            color: #34495e;
+            color: ${config.contentTextColor || '#34495e'};
             text-align: center;
             font-size: 1.1em;
         }
@@ -116,23 +116,23 @@ export class TemplateBuilderService {
             box-shadow: 0 6px 20px rgba(0,0,0,0.25);
         }
         .gps-section {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: ${config.gpsCoordinates?.backgroundColor || '#f5f7fa'};
             padding: 25px 35px;
             text-align: center;
             margin: 20px 0;
-            border-left: 4px solid ${config.primaryColor || '#1976D2'};
+            border-left: 4px solid ${config.gpsCoordinates?.textColor || config.primaryColor || '#1976D2'};
             border-radius: 8px;
         }
         .gps-title {
             font-size: 1.4em;
             font-weight: 700;
-            color: ${config.primaryColor || '#1976D2'};
+            color: ${config.gpsCoordinates?.textColor || config.primaryColor || '#1976D2'};
             margin-bottom: 8px;
             letter-spacing: 1px;
         }
         .gps-subtitle {
             font-size: 0.95em;
-            color: #555;
+            color: ${config.gpsCoordinates?.textColor || '#555'};
             margin-bottom: 12px;
             font-weight: 500;
         }
@@ -140,8 +140,8 @@ export class TemplateBuilderService {
             display: inline-block;
             margin-top: 10px;
             padding: 10px 25px;
-            background-color: ${config.primaryColor || '#1976D2'};
-            color: white;
+            background-color: ${config.gpsCoordinates?.buttonBackgroundColor || config.primaryColor || '#1976D2'};
+            color: ${config.gpsCoordinates?.buttonTextColor || 'white'};
             text-decoration: none;
             border-radius: 25px;
             font-weight: 600;
@@ -153,21 +153,20 @@ export class TemplateBuilderService {
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
             padding: 25px 35px;
         }
-        .gallery img {
+        .gallery-item {
+            display: block;
+            margin-bottom: 15px;
             width: 100%;
-            height: 200px;
-            object-fit: cover;
+        }
+        .gallery-item img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 400px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        .gallery img:hover {
-            transform: scale(1.05);
         }
         .social-links {
             text-align: center;
@@ -229,12 +228,11 @@ export class TemplateBuilderService {
                 padding: 10px 20px;
             }
             .gallery {
-                grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
                 padding: 15px 20px;
             }
             .gallery img {
-                height: 150px;
+                max-height: 300px;
             }
             .cta-button {
                 padding: 14px 35px;
@@ -261,7 +259,6 @@ export class TemplateBuilderService {
     
     return config.sections.map(section => {
       const styles = section.styles || {};
-      // Apply user's base font size to all content if not specified
       const baseFontSize = config.fontSize || '16px';
       const fontSize = styles.fontSize || (section.type === 'dynamic-field' ? '24px' : '18px');
       
@@ -272,12 +269,15 @@ export class TemplateBuilderService {
         ${styles.color ? `color: ${styles.color};` : ''}
         ${styles.marginTop ? `margin-top: ${styles.marginTop};` : ''}
         ${styles.marginBottom ? `margin-bottom: ${styles.marginBottom};` : ''}
+        white-space: pre-wrap;
       "`;
 
       if (section.type === 'dynamic-field') {
         return `<div class="content-section"><span class="dynamic-field" ${styleAttr}>${section.dynamicField}</span></div>`;
       } else if (section.type === 'text') {
-        return `<div class="content-section"><div class="text-content" ${styleAttr}>${section.content || ''}</div></div>`;
+        // Preserve line breaks in text content
+        const content = section.content || '';
+        return `<div class="content-section"><div class="text-content" ${styleAttr}>${content}</div></div>`;
       } else if (section.type === 'divider') {
         return `<div class="content-section"><hr class="divider"></div>`;
       } else if (section.type === 'spacer') {
@@ -316,8 +316,8 @@ export class TemplateBuilderService {
 
   private generateGallerySection(config: EmailTemplateConfig): string {
     if (!config.galleryImages || config.galleryImages.length === 0) return '';
-    const images = config.galleryImages.map(url => 
-      `<img src="${url}" alt="Gallery Image">`
+    const images = config.galleryImages.map((url, index) => 
+      `<div class="gallery-item"><img src="${url}" alt="Gallery Image ${index + 1}" style="display: block; width: 100%; height: auto; max-height: 400px; border-radius: 10px; margin-bottom: 15px;"></div>`
     ).join('');
     return `<div class="gallery">${images}</div>`;
   }

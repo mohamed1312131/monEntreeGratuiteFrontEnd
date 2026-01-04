@@ -5,6 +5,7 @@ export interface EmailTemplateConfig {
   fontSize: string;
   primaryColor: string;
   secondaryColor: string;
+  contentTextColor?: string;
   
   // Header Section
   headerImage?: {
@@ -29,6 +30,10 @@ export interface EmailTemplateConfig {
     latitude?: string;
     longitude?: string;
     label?: string;
+    backgroundColor?: string;
+    textColor?: string;
+    buttonBackgroundColor?: string;
+    buttonTextColor?: string;
   };
   
   // Gallery Images

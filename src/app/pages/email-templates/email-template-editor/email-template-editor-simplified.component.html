@@ -127,54 +127,41 @@
           </mat-card-content>
         </mat-card>
 
-        <!-- Content Sections -->
+        <!-- Content Section -->
         <mat-card class="form-card">
           <mat-card-content>
-            <h3>Content Sections</h3>
-            <p class="section-hint">Check boxes to include dynamic fields in your template</p>
+            <h3>Email Content</h3>
+            <p class="section-hint">Write your content and insert dynamic fields by typing them correctly (e.g., {{'{{'}}NOM{{'}}'}}, {{'{{'}}DATE{{'}}'}}). Line breaks will be preserved.</p>
 
-            <div class="checkbox-field">
-              <mat-checkbox formControlName="recipientNameText">
-                Include Recipient Name ({{'{{'}}NOM{{'}}'}})
-              </mat-checkbox>
+            <div class="dynamic-fields-chips">
+              <p style="font-size: 13px; color: #666; margin-bottom: 8px;">Click to insert dynamic fields:</p>
+              <mat-chip-set>
+                <mat-chip *ngFor="let field of availableDynamicFieldsForChips" 
+                          (click)="insertDynamicField(field.key)"
+                          style="cursor: pointer;">
+                  <mat-icon>add</mat-icon>
+                  {{field.label}}
+                </mat-chip>
+              </mat-chip-set>
             </div>
 
-            <div class="checkbox-field">
-              <mat-checkbox formControlName="eventDateText">
-                Include Event Date ({{'{{'}}DATE{{'}}'}})
-              </mat-checkbox>
-            </div>
+            <mat-form-field appearance="outline" class="full-width" style="margin-top: 16px;">
+              <mat-label>Email Content</mat-label>
+              <textarea matInput formControlName="contentText" rows="10"
+                        placeholder="Example:
+Bonjour {{'{{'}}NOM{{'}}'}},
 
-            <div class="checkbox-field">
-              <mat-checkbox formControlName="eventTimeText">
-                Include Event Time ({{'{{'}}HEURE{{'}}'}})
-              </mat-checkbox>
-            </div>
+Votre réservation pour le {{'{{'}}DATE{{'}}'}} à {{'{{'}}HEURE{{'}}'}} est confirmée.
+Code de réservation: {{'{{'}}CODE{{'}}'}}
 
-            <div class="checkbox-field">
-              <mat-checkbox formControlName="ticketCodeText">
-                Include Ticket Code ({{'{{'}}CODE{{'}}'}})
-              </mat-checkbox>
-            </div>
-
-            <div class="checkbox-field">
-              <mat-checkbox formControlName="foireNameText">
-                Include Fair Name ({{'{{'}}FOIRE_NAME{{'}}'}})
-              </mat-checkbox>
-            </div>
-
-            <mat-divider style="margin: 20px 0;"></mat-divider>
-
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Custom Text Section 1</mat-label>
-              <textarea matInput formControlName="customText1" rows="3"
-                        placeholder="Add your custom text here..."></textarea>
+À bientôt!"></textarea>
+              <mat-hint>Use dynamic fields like {{'{{'}}NOM{{'}}'}}, {{'{{'}}DATE{{'}}'}}, {{'{{'}}HEURE{{'}}'}}, {{'{{'}}CODE{{'}}'}}, {{'{{'}}FOIRE_NAME{{'}}'}}</mat-hint>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Custom Text Section 2</mat-label>
-              <textarea matInput formControlName="customText2" rows="3"
-                        placeholder="Add more custom text here..."></textarea>
+              <mat-label>Content Text Color</mat-label>
+              <input matInput formControlName="contentTextColor" type="color">
+              <mat-icon matSuffix>palette</mat-icon>
             </mat-form-field>
           </mat-card-content>
         </mat-card>
@@ -244,6 +231,32 @@
                   <input matInput formControlName="gpsLongitude" placeholder="2.3522">
                 </mat-form-field>
               </div>
+
+              <h4 style="margin: 16px 0 8px 0; font-size: 14px; font-weight: 600;">GPS Section Colors</h4>
+              
+              <div class="color-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Background Color</mat-label>
+                  <input matInput formControlName="gpsBgColor" type="color">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Text Color</mat-label>
+                  <input matInput formControlName="gpsTextColor" type="color">
+                </mat-form-field>
+              </div>
+
+              <div class="color-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Button Background</mat-label>
+                  <input matInput formControlName="gpsButtonBgColor" type="color">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Button Text Color</mat-label>
+                  <input matInput formControlName="gpsButtonTextColor" type="color">
+                </mat-form-field>
+              </div>
             </div>
           </mat-card-content>
         </mat-card>
@@ -268,18 +281,28 @@
               <mat-icon>{{ uploadingGallery ? 'hourglass_empty' : 'add_photo_alternate' }}</mat-icon>
               {{ uploadingGallery ? 'Uploading...' : 'Upload Gallery Images' }}
             </button>
-            <p class="section-hint">You can select multiple images at once</p>
+            <p class="section-hint">Images will display vertically in the email. Drag to reorder.</p>
 
-            <div *ngIf="galleryPreviews.length > 0" class="gallery-preview">
-              <div *ngFor="let url of galleryPreviews; let i = index" class="gallery-item">
-                <img [src]="url" alt="Gallery Image">
-                <button mat-icon-button 
-                        (click)="removeGalleryImage(i)" 
-                        color="warn"
-                        class="remove-gallery-btn"
-                        matTooltip="Remove image">
-                  <mat-icon>close</mat-icon>
-                </button>
+            <div *ngIf="galleryPreviews.length > 0" 
+                 class="gallery-preview-vertical"
+                 cdkDropList
+                 (cdkDropListDropped)="onGalleryDrop($event)">
+              <div *ngFor="let url of galleryPreviews; let i = index" 
+                   class="gallery-item-vertical"
+                   cdkDrag>
+                <div class="drag-handle" cdkDragHandle>
+                  <mat-icon>drag_indicator</mat-icon>
+                </div>
+                <img [src]="url" alt="Gallery Image {{i + 1}}">
+                <div class="gallery-item-info">
+                  <span class="image-order">Image {{i + 1}}</span>
+                  <button mat-icon-button 
+                          (click)="removeGalleryImage(i)" 
+                          color="warn"
+                          matTooltip="Remove image">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
               </div>
             </div>
           </mat-card-content>
