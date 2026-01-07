@@ -21,6 +21,7 @@ export interface ReservationData {
   ageCategory: string;
   status: string;
   country: string;
+  createdAt: string;
 }
 
 export interface ReservationCreateDTO {

@@ -24,6 +24,7 @@ interface Reservation {
   phone: string;
   ageCategory: string;
   status: string;
+  createdAt: string;
 }
 
 @Component({
@@ -68,7 +69,8 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       email: 'jean.dupont@email.com',
       phone: '+33 6 12 34 56 78',
       ageCategory: 'ENTRE',
-      status: 'CONFIRMED'
+      status: 'CONFIRMED',
+      createdAt: '2024-12-01T10:00:00'
     },
     {
       id: 2,
@@ -81,7 +83,8 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       email: 'marie.martin@email.com',
       phone: '+33 6 23 45 67 89',
       ageCategory: 'MOINS',
-      status: 'PENDING'
+      status: 'PENDING',
+      createdAt: '2024-12-02T14:30:00'
     },
     {
       id: 3,
@@ -94,7 +97,8 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       email: 'pierre.dubois@email.com',
       phone: '+32 4 12 34 56 78',
       ageCategory: 'PLUS',
-      status: 'CONFIRMED'
+      status: 'CONFIRMED',
+      createdAt: '2024-12-03T09:15:00'
     },
     {
       id: 4,
@@ -107,7 +111,8 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       email: 'sophie.laurent@email.com',
       phone: '+33 6 34 56 78 90',
       ageCategory: 'ENTRE',
-      status: 'COMPLETED'
+      status: 'COMPLETED',
+      createdAt: '2024-12-04T16:45:00'
     },
     {
       id: 5,
@@ -120,7 +125,8 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       email: 'luc.bernard@email.com',
       phone: '+41 22 123 45 67',
       ageCategory: 'MOINS',
-      status: 'PENDING'
+      status: 'PENDING',
+      createdAt: '2024-12-05T11:20:00'
     },
     {
       id: 6,
@@ -133,7 +139,8 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       email: 'claire.petit@email.com',
       phone: '+33 6 45 67 89 01',
       ageCategory: 'PLUS',
-      status: 'BLOCKED'
+      status: 'BLOCKED',
+      createdAt: '2024-12-06T13:10:00'
     },
     {
       id: 7,
@@ -146,7 +153,8 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       email: 'thomas.moreau@email.com',
       phone: '+32 4 23 45 67 89',
       ageCategory: 'ENTRE',
-      status: 'CONFIRMED'
+      status: 'CONFIRMED',
+      createdAt: '2024-12-07T15:55:00'
     }
   ];
 
@@ -187,6 +195,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
           email: r.email,
           phone: r.phone,
           ageCategory: r.ageCategory,
+          createdAt: r.createdAt,
           status: r.status
         }));
         this.loadReservations();
@@ -414,9 +423,9 @@ export class ReservationComponent implements OnInit, AfterViewInit {
 
   getAgeLabel(ageCategory: string): string {
     const labels: { [key: string]: string } = {
-      'MOINS': '< 30 ans',
-      'ENTRE': '30-60 ans',
-      'PLUS': '> 60 ans'
+      'MOINS': 'moins de 35ans',
+      'ENTRE': 'entre 35 et 70 ans',
+      'PLUS': 'plus de 70 ans'
     };
     return labels[ageCategory] || ageCategory;
   }

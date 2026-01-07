@@ -32,21 +32,36 @@ export class ExcelExportService {
    * Export reservations to Excel with formatted columns
    */
   exportReservations(reservations: any[]): void {
+    const ageLabels: { [key: string]: string } = {
+      'MOINS': 'moins de 35ans',
+      'ENTRE': 'entre 35 et 70 ans',
+      'PLUS': 'plus de 70 ans'
+    };
+
     const formattedData = reservations.map(r => ({
       'ID': r.id,
       'Pays': r.country,
       'Date Réservation': r.reservationDate,
-      'Date Foire': this.formatDateRanges(r.foireDateRanges),
+      'Heure Réservation': this.extractTime(r.createdAt), // Assuming createdAt exists or needs to be added
       'Nom Foire': r.foireName,
       'Nom': r.name,
       'Ville': r.city,
       'Email': r.email,
       'Téléphone': r.phone,
-      'Catégorie Âge': r.ageCategory,
-      'Statut': r.status
+      'Catégorie Âge': ageLabels[r.ageCategory] || r.ageCategory
     }));
 
     this.exportToExcel(formattedData, `Reservations_${this.getDateString()}`, 'Réservations');
+  }
+
+  private extractTime(dateString: string): string {
+    if (!dateString) return '';
+    // Check if it's a full ISO string or just date
+    if (dateString.includes('T')) {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    }
+    return '';
   }
 
   /**
