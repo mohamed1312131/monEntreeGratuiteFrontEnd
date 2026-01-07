@@ -29,7 +29,7 @@ export interface CampaignStats {
   providedIn: 'root'
 })
 export class CampaignService {
-  private apiUrl = `${environment.apiUrl}/campaigns`;
+  private apiUrl = `${environment.apiUrl}/api/campaigns`;
 
   constructor(private http: HttpClient) {}
 
