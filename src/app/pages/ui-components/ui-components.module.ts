@@ -27,6 +27,8 @@ import { ExcelUploadComponent } from './excel-upload/excel-upload.component';
 import { EmailTemplateListComponent } from '../email-templates/email-template-list/email-template-list.component';
 import { EmailTemplateEditorComponent } from '../email-templates/email-template-editor/email-template-editor.component';
 import { EmailTemplateEditorSimplifiedComponent } from '../email-templates/email-template-editor/email-template-editor-simplified.component';
+import { CampaignHistoryComponent } from './campaigns/campaign-history.component';
+import { CampaignStatsComponent } from './campaigns/campaign-stats.component';
 
 @NgModule({
   imports: [
@@ -52,7 +54,9 @@ import { EmailTemplateEditorSimplifiedComponent } from '../email-templates/email
     SettingsComponent,
     EditAboutUsComponent,
     EditVideoComponent,
-    ExcelUploadComponent
+    ExcelUploadComponent,
+    CampaignHistoryComponent,
+    CampaignStatsComponent
   ],
 })
 export class UicomponentsModule {}

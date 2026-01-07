@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddFoireComponent } from '../add-foire/add-foire.component';
 import { FoireDetailsComponent } from '../foire-details/foire-details.component';
+import { CampaignHistoryComponent } from '../campaigns/campaign-history.component';
 import { FoireService, Foire as FoireData } from '../../../services/foire.service';
 
 interface Foire extends FoireData {
@@ -200,6 +201,14 @@ export class FoiresComponent implements OnInit {
       width: '900px',
       maxHeight: '90vh',
       data: foire
+    });
+  }
+
+  viewCampaigns(foire: Foire): void {
+    this.dialog.open(CampaignHistoryComponent, {
+      width: '700px',
+      maxHeight: '90vh',
+      data: { foireId: foire.id, foireName: foire.name }
     });
   }
 
