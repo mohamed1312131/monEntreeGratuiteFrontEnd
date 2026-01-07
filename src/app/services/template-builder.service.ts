@@ -345,9 +345,10 @@ export class TemplateBuilderService {
   }
 
   private generateFooterSection(): string {
+    const unsubscribeUrl = 'https://monentreegratuitebackend-production-f481.up.railway.app/api/public/unsubscribe/email?email={{EMAIL}}';
     return `
         <div class="footer">
-            <p>Pour être retiré de notre liste de diffusion, vous pouvez vous <a href="#">désinscrire</a></p>
+            <p>Pour être retiré de notre liste de diffusion, vous pouvez vous <a href="${unsubscribeUrl}" style="color: #1976D2; text-decoration: underline;">désinscrire</a></p>
         </div>
     `;
   }

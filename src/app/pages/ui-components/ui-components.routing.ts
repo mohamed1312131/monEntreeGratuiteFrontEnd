@@ -7,8 +7,6 @@ import { SettingsComponent } from './settings/settings.component';
 import { ExcelUploadComponent } from './excel-upload/excel-upload.component';
 import { EmailTemplateListComponent } from '../email-templates/email-template-list/email-template-list.component';
 import { EmailTemplateEditorComponent } from '../email-templates/email-template-editor/email-template-editor.component';
-import { InvitationListComponent } from '../email-templates/invitation-list/invitation-list.component';
-import { EmailSendingWizardComponent } from '../email-templates/email-sending-wizard/email-sending-wizard.component';
 import { EmailTemplateEditorSimplifiedComponent } from '../email-templates/email-template-editor/email-template-editor-simplified.component';
 import { NewsletterManagementComponent } from '../newsletter-management/newsletter-management.component';
 import { PublicUnsubscribeComponent } from '../public-unsubscribe/public-unsubscribe.component';
@@ -60,16 +58,6 @@ export const UiComponentsRoutes: Routes = [
       {
         path: 'email-templates/editor/:id',
         component: EmailTemplateEditorComponent,
-        data: { fullWidth: true }
-      },
-      {
-        path: 'email-templates/invitations',
-        component: InvitationListComponent,
-        data: { fullWidth: true }
-      },
-      {
-        path: 'email-templates/send',
-        component: EmailSendingWizardComponent,
         data: { fullWidth: true }
       },
       {

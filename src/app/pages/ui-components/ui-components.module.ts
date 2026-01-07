@@ -26,8 +26,6 @@ import { EditVideoComponent } from './edit-video/edit-video.component';
 import { ExcelUploadComponent } from './excel-upload/excel-upload.component';
 import { EmailTemplateListComponent } from '../email-templates/email-template-list/email-template-list.component';
 import { EmailTemplateEditorComponent } from '../email-templates/email-template-editor/email-template-editor.component';
-import { InvitationListComponent } from '../email-templates/invitation-list/invitation-list.component';
-import { EmailSendingWizardComponent } from '../email-templates/email-sending-wizard/email-sending-wizard.component';
 import { EmailTemplateEditorSimplifiedComponent } from '../email-templates/email-template-editor/email-template-editor-simplified.component';
 
 @NgModule({
@@ -42,8 +40,6 @@ import { EmailTemplateEditorSimplifiedComponent } from '../email-templates/email
     EmailTemplateListComponent,
     EmailTemplateEditorComponent,
     EmailTemplateEditorSimplifiedComponent,
-    InvitationListComponent,
-    EmailSendingWizardComponent
   ],
   declarations: [
     SliderComponent,
