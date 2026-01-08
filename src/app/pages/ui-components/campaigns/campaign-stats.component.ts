@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CampaignService, CampaignStats } from '../../../services/campaign.service';
+import { CampaignUsersComponent } from './campaign-users.component';
 
 @Component({
   selector: 'app-campaign-stats',
@@ -13,96 +15,103 @@ import { CampaignService, CampaignStats } from '../../../services/campaign.servi
         </button>
       </div>
 
-      <div class="dialog-content" *ngIf="isLoading">
-        <div class="loading-spinner">
+      <div class="dialog-content">
+        <div *ngIf="isLoading" class="loading-spinner">
           <mat-spinner diameter="40"></mat-spinner>
         </div>
-      </div>
 
-      <div class="dialog-content" *ngIf="!isLoading && stats">
-        <h3 class="campaign-title">{{ stats.name }}</h3>
-        <p class="campaign-date">Envoyé le {{ stats.sentAt | date:'dd/MM/yyyy à HH:mm' }}</p>
-        
-        <div class="stats-list">
-          
-          <!-- Delivered -->
-          <div class="stat-row">
-            <div class="stat-label-group">
-              <span class="status-dot dot-green"></span>
-              <span class="stat-label">Délivrés</span>
+        <div *ngIf="!isLoading && stats">
+          <h3 class="campaign-title">{{ stats.name }}</h3>
+          <p class="campaign-date">{{ stats.sentAt | date:'dd/MM/yyyy HH:mm' }}</p>
+
+          <div class="stats-list">
+            <!-- Total Recipients -->
+            <div class="stat-row clickable" (click)="viewUsers('all')">
+              <div class="stat-label-group">
+                <span class="status-dot dot-gray"></span>
+                <span class="stat-label">Destinataires</span>
+              </div>
+              <div class="stat-value">{{ stats.totalRecipients }}</div>
             </div>
-            <div class="stat-value">
-              {{ stats.deliveredCount }} ({{ getPercentage(stats.deliveredCount, stats.totalRecipients) }}%)
+
+            <!-- Delivered -->
+            <div class="stat-row clickable" (click)="viewUsers('delivered')">
+              <div class="stat-label-group">
+                <span class="status-dot dot-green"></span>
+                <span class="stat-label">Délivrés</span>
+              </div>
+              <div class="stat-value">
+                {{ stats.deliveredCount }}/{{ stats.totalRecipients }} ({{ getPercentage(stats.deliveredCount, stats.totalRecipients) }}%)
+              </div>
             </div>
+
+            <!-- Failed -->
+            <div class="stat-row clickable" (click)="viewUsers('failed')">
+              <div class="stat-label-group">
+                <span class="status-dot dot-red"></span>
+                <span class="stat-label">Non délivrés</span>
+              </div>
+              <div class="stat-value">
+                {{ stats.failedCount }}/{{ stats.totalRecipients }} ({{ getPercentage(stats.failedCount, stats.totalRecipients) }}%)
+              </div>
+            </div>
+
+            <!-- Opens -->
+            <div class="stat-row clickable" (click)="viewUsers('opened')">
+              <div class="stat-label-group">
+                <span class="status-dot dot-blue"></span>
+                <span class="stat-label">Ouvreurs</span>
+              </div>
+              <div class="stat-value">
+                {{ stats.openCount }}/{{ stats.deliveredCount }} ({{ getPercentage(stats.openCount, stats.deliveredCount) }}%)
+              </div>
+            </div>
+
+            <!-- Non-Openers -->
+            <div class="stat-row clickable" (click)="viewUsers('not-opened')">
+              <div class="stat-label-group">
+                <span class="status-dot dot-hollow-blue"></span>
+                <span class="stat-label">Non ouvreurs</span>
+              </div>
+              <div class="stat-value">
+                {{ stats.deliveredCount - stats.openCount }}/{{ stats.deliveredCount }} ({{ getPercentage(stats.deliveredCount - stats.openCount, stats.deliveredCount) }}%)
+              </div>
+            </div>
+
+            <!-- Clicks -->
+            <div class="stat-row clickable" (click)="viewUsers('clicked')">
+              <div class="stat-label-group">
+                <span class="status-dot dot-purple"></span>
+                <span class="stat-label">Cliqueurs</span>
+              </div>
+              <div class="stat-value">
+                {{ stats.clickCount }}/{{ stats.openCount }} ({{ getPercentage(stats.clickCount, stats.openCount) }}%)
+              </div>
+            </div>
+
+            <!-- Non-Clickers -->
+            <div class="stat-row clickable" (click)="viewUsers('not-clicked')">
+              <div class="stat-label-group">
+                <span class="status-dot dot-hollow-purple"></span>
+                <span class="stat-label">Non cliqueurs</span>
+              </div>
+              <div class="stat-value">
+                {{ stats.openCount - stats.clickCount }}/{{ stats.openCount }} ({{ getPercentage(stats.openCount - stats.clickCount, stats.openCount) }}%)
+              </div>
+            </div>
+
+            <!-- Unsubscribes -->
+            <div class="stat-row clickable" (click)="viewUsers('unsubscribed')">
+              <div class="stat-label-group">
+                <span class="status-dot dot-orange"></span>
+                <span class="stat-label">Désabonnements</span>
+              </div>
+              <div class="stat-value">
+                {{ stats.unsubscribeCount }}/{{ stats.deliveredCount }} ({{ getPercentage(stats.unsubscribeCount, stats.deliveredCount) }}%)
+              </div>
+            </div>
+
           </div>
-
-          <!-- Opens -->
-          <div class="stat-row">
-            <div class="stat-label-group">
-              <span class="status-dot dot-blue"></span>
-              <span class="stat-label">Ouvreurs</span>
-            </div>
-            <div class="stat-value">
-              {{ stats.openCount }} ({{ getPercentage(stats.openCount, stats.deliveredCount) }}%)
-            </div>
-          </div>
-
-          <!-- Clicks -->
-          <div class="stat-row">
-            <div class="stat-label-group">
-              <span class="status-dot dot-purple"></span>
-              <span class="stat-label">Cliqueurs</span>
-            </div>
-            <div class="stat-value">
-              {{ stats.clickCount }} ({{ getPercentage(stats.clickCount, stats.openCount) }}%)
-            </div>
-          </div>
-
-          <!-- Unsubscribes -->
-          <div class="stat-row">
-            <div class="stat-label-group">
-              <span class="status-dot dot-orange"></span>
-              <span class="stat-label">Désabonnements</span>
-            </div>
-            <div class="stat-value">
-              {{ stats.unsubscribeCount }} ({{ getPercentage(stats.unsubscribeCount, stats.deliveredCount) }}%)
-            </div>
-          </div>
-
-          <!-- Spam Complaints -->
-          <div class="stat-row">
-            <div class="stat-label-group">
-              <span class="status-dot dot-black"></span>
-              <span class="stat-label">Plaintes pour spam</span>
-            </div>
-            <div class="stat-value">
-              {{ stats.spamCount }} (0%) 
-              <mat-icon class="help-icon" matTooltip="Nécessite une intégration externe">help_outline</mat-icon>
-            </div>
-          </div>
-
-          <!-- Non-Openers -->
-          <div class="stat-row">
-            <div class="stat-label-group">
-              <span class="status-dot dot-hollow-green"></span>
-              <span class="stat-label">Non ouvreurs</span>
-            </div>
-            <div class="stat-value">
-              {{ stats.deliveredCount - stats.openCount }} ({{ getPercentage(stats.deliveredCount - stats.openCount, stats.deliveredCount) }}%)
-            </div>
-          </div>
-
-          <!-- Non-Clickers -->
-          <div class="stat-row">
-            <div class="stat-label-group">
-              <span class="status-dot dot-hollow-red"></span>
-              <span class="stat-label">Non cliqueurs</span>
-            </div>
-            <div class="stat-value">
-              {{ stats.openCount - stats.clickCount }} ({{ getPercentage(stats.openCount - stats.clickCount, stats.openCount) }}%)
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
@@ -127,18 +136,22 @@ import { CampaignService, CampaignStats } from '../../../services/campaign.servi
     .stats-list { display: flex; flex-direction: column; gap: 15px; }
     .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
     .stat-row:last-child { border-bottom: none; }
+    .stat-row.clickable { cursor: pointer; transition: background-color 0.2s; }
+    .stat-row.clickable:hover { background-color: #f5f5f5; }
     
     .stat-label-group { display: flex; align-items: center; gap: 12px; }
     .stat-label { font-size: 14px; color: #444; }
     .stat-value { font-weight: 500; color: #333; display: flex; align-items: center; gap: 5px; }
     
     .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .dot-gray { background-color: #9e9e9e; }
     .dot-green { background-color: #4caf50; }
+    .dot-red { background-color: #f44336; }
     .dot-blue { background-color: #2196f3; }
     .dot-purple { background-color: #9c27b0; }
     .dot-orange { background-color: #ff9800; }
-    .dot-black { background-color: #000; }
-    
+    .dot-hollow-blue { border: 2px solid #2196f3; background-color: transparent; }
+    .dot-hollow-purple { border: 2px solid #9c27b0; background-color: transparent; }
     .dot-hollow-green { border: 2px solid #4caf50; width: 8px; height: 8px; background: transparent; }
     .dot-hollow-red { border: 2px solid #f44336; width: 8px; height: 8px; background: transparent; }
     
@@ -151,7 +164,8 @@ export class CampaignStatsComponent implements OnInit {
 
   constructor(
     private campaignService: CampaignService,
-    public dialogRef: MatDialogRef<CampaignStatsComponent>,
+    private dialogRef: MatDialogRef<CampaignStatsComponent>,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: { campaignId: number }
   ) {}
 
@@ -176,6 +190,12 @@ export class CampaignStatsComponent implements OnInit {
   getPercentage(count: number, total: number): number {
     if (!total || total === 0) return 0;
     return Math.round((count / total) * 100);
+  }
+
+  viewUsers(type: string): void {
+    // TODO: Open dialog to show user list for this metric
+    console.log('View users for:', type, 'Campaign ID:', this.data.campaignId);
+    this.snackBar.open(`Affichage des utilisateurs: ${type}`, 'Fermer', { duration: 2000 });
   }
 
   close(): void {

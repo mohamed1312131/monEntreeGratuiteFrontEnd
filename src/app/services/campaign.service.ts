@@ -40,4 +40,8 @@ export class CampaignService {
   getCampaignStats(campaignId: number): Observable<CampaignStats> {
     return this.http.get<CampaignStats>(`${this.apiUrl}/${campaignId}/stats`);
   }
+
+  getCampaignUsers(campaignId: number, type: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${campaignId}/users/${type}`);
+  }
 }

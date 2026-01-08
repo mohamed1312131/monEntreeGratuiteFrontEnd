@@ -29,6 +29,7 @@ import { EmailTemplateEditorComponent } from '../email-templates/email-template-
 import { EmailTemplateEditorSimplifiedComponent } from '../email-templates/email-template-editor/email-template-editor-simplified.component';
 import { CampaignHistoryComponent } from './campaigns/campaign-history.component';
 import { CampaignStatsComponent } from './campaigns/campaign-stats.component';
+import { CampaignUsersComponent } from './campaigns/campaign-users.component';
 
 @NgModule({
   imports: [
