@@ -1,16 +1,14 @@
 <div class="dialog-container">
-  <!-- Header -->
+  <!-- Compact Header -->
   <div class="dialog-header">
     <div class="header-content">
-      <div class="header-icon-wrapper">
-        <mat-icon class="header-icon">schedule</mat-icon>
-      </div>
+      <mat-icon class="header-icon">schedule</mat-icon>
       <div class="header-text">
         <h2 class="dialog-title">Gestion des Horaires</h2>
-        <p class="dialog-subtitle">{{ foire.name }}</p>
+        <span class="dialog-subtitle">{{ foire.name }}</span>
       </div>
     </div>
-    <button mat-icon-button (click)="close()" class="close-btn">
+    <button mat-icon-button (click)="close()" class="close-btn" matTooltip="Fermer">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -19,38 +17,32 @@
   <mat-dialog-content class="dialog-content">
     <div class="info-banner">
       <mat-icon>info</mat-icon>
-      <span>Ajoutez des créneaux horaires pour chaque jour de la foire. Vous pouvez ajouter plusieurs horaires par jour.</span>
+      <span>Configurez les horaires d'entrée pour chaque jour (format 24h)</span>
     </div>
 
     <div class="days-container">
-      <div *ngFor="let daySlot of dayTimeSlots; let i = index" class="day-card" [class.has-times]="hasTimeSlotsForDay(daySlot)">
+      <div *ngFor="let daySlot of dayTimeSlots; let i = index" class="day-card" [class.has-times]="hasTimeSlotsForDay(daySlot)" [class.expanded]="daySlot.isExpanded">
         
-        <!-- Day Header -->
+        <!-- Compact Day Header -->
         <div class="day-header" (click)="toggleDayExpansion(daySlot)">
           <div class="day-info">
-            <div class="day-date">
-              <mat-icon class="calendar-icon">event</mat-icon>
-              <span class="date-text">{{ daySlot.displayDate }}</span>
-            </div>
-            <div class="day-meta">
-              <span class="time-count" *ngIf="hasTimeSlotsForDay(daySlot)">
-                <mat-icon>schedule</mat-icon>
-                {{ getActiveTimeSlotsCount(daySlot) }} créneau(x)
-              </span>
-              <span class="no-times" *ngIf="!hasTimeSlotsForDay(daySlot)">
-                Aucun horaire défini
-              </span>
-            </div>
+            <mat-icon class="calendar-icon">event</mat-icon>
+            <span class="date-text">{{ daySlot.displayDate }}</span>
+            <span class="time-count" *ngIf="hasTimeSlotsForDay(daySlot)">
+              <mat-icon>schedule</mat-icon>
+              {{ getActiveTimeSlotsCount(daySlot) }}
+            </span>
+            <span class="no-times-badge" *ngIf="!hasTimeSlotsForDay(daySlot)">Vide</span>
           </div>
           
           <div class="day-actions">
             <button 
-              mat-mini-fab 
+              mat-icon-button
               color="primary" 
               (click)="addTimeSlot(daySlot); $event.stopPropagation()" 
               class="add-time-btn"
-              matTooltip="Ajouter un créneau horaire">
-              <mat-icon>add</mat-icon>
+              matTooltip="Ajouter un horaire">
+              <mat-icon>add_circle</mat-icon>
             </button>
             <mat-icon class="expand-icon" [class.expanded]="daySlot.isExpanded">
               {{ daySlot.isExpanded ? 'expand_less' : 'expand_more' }}
@@ -58,59 +50,53 @@
           </div>
         </div>
 
-        <!-- Time Slots List -->
-        <div class="time-slots-container" *ngIf="daySlot.isExpanded && hasTimeSlotsForDay(daySlot)" [@slideDown]>
+        <!-- Compact Time Slots List -->
+        <div class="time-slots-container" *ngIf="daySlot.isExpanded" [@slideDown]>
           <div *ngFor="let timeSlot of daySlot.times; let j = index" 
-               class="time-slot-card" 
+               class="time-slot-row" 
                [class.disabled]="!timeSlot.isEnabled">
             
-            <div class="time-slot-content">
-              <!-- Time Input -->
-              <div class="time-inputs">
-                <mat-form-field appearance="outline" class="time-field-single">
-                  <mat-label>Heure d'entrée</mat-label>
-                  <input 
-                    matInput 
-                    type="time" 
-                    [(ngModel)]="timeSlot.startTime"
-                    [disabled]="!timeSlot.isEnabled"
-                    placeholder="HH:mm">
-                  <mat-icon matPrefix>login</mat-icon>
-                </mat-form-field>
-              </div>
-
-              <!-- Actions -->
-              <div class="time-slot-actions">
-                <button 
-                  mat-icon-button 
-                  [color]="timeSlot.isEnabled ? 'primary' : 'warn'"
-                  (click)="toggleTimeSlot(timeSlot)"
-                  [matTooltip]="timeSlot.isEnabled ? 'Désactiver ce créneau' : 'Activer ce créneau'"
-                  class="toggle-btn">
-                  <mat-icon>{{ timeSlot.isEnabled ? 'toggle_on' : 'toggle_off' }}</mat-icon>
-                </button>
-                
-                <button 
-                  mat-icon-button 
-                  color="warn"
-                  (click)="removeTimeSlot(daySlot, timeSlot)"
-                  matTooltip="Supprimer ce créneau"
-                  class="delete-btn">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
+            <div class="time-slot-number">{{ j + 1 }}</div>
+            
+            <div class="time-input-wrapper">
+              <mat-icon class="time-icon">access_time</mat-icon>
+              <input 
+                type="time" 
+                class="time-input"
+                [(ngModel)]="timeSlot.startTime"
+                [disabled]="!timeSlot.isEnabled"
+                step="300"
+                placeholder="00:00">
             </div>
 
-            <!-- Status Badge -->
-            <div class="status-badge" [class.active]="timeSlot.isEnabled">
-              <mat-icon>{{ timeSlot.isEnabled ? 'check_circle' : 'cancel' }}</mat-icon>
-              <span>{{ timeSlot.isEnabled ? 'Actif' : 'Désactivé' }}</span>
+            <div class="status-indicator" [class.active]="timeSlot.isEnabled">
+              <span class="status-dot"></span>
+              <span class="status-text">{{ timeSlot.isEnabled ? 'Actif' : 'Inactif' }}</span>
+            </div>
+
+            <div class="time-slot-actions">
+              <button 
+                mat-icon-button 
+                [color]="timeSlot.isEnabled ? 'primary' : ''"
+                (click)="toggleTimeSlot(timeSlot)"
+                [matTooltip]="timeSlot.isEnabled ? 'Désactiver' : 'Activer'"
+                class="toggle-btn">
+                <mat-icon>{{ timeSlot.isEnabled ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+              </button>
+              
+              <button 
+                mat-icon-button 
+                (click)="removeTimeSlot(daySlot, timeSlot)"
+                matTooltip="Supprimer"
+                class="delete-btn">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
             </div>
           </div>
 
-          <div class="empty-state" *ngIf="daySlot.times.length === 0">
+          <div class="empty-slot-message" *ngIf="daySlot.times.length === 0">
             <mat-icon>schedule</mat-icon>
-            <p>Aucun créneau horaire pour ce jour</p>
+            <span>Cliquez sur + pour ajouter un horaire</span>
           </div>
         </div>
       </div>

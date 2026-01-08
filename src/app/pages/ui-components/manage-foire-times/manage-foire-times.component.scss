@@ -2,54 +2,49 @@
   display: flex;
   flex-direction: column;
   max-height: 90vh;
-  width: 900px;
+  width: 1000px;
   max-width: 95vw;
 }
 
-// Header
+// Compact Header
 .dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 32px;
+  padding: 16px 24px;
   background: linear-gradient(135deg, #01B3A7 0%, #00FFB0 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(1, 179, 167, 0.2);
+  box-shadow: 0 2px 8px rgba(1, 179, 167, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
   .header-content {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 
-    .header-icon-wrapper {
-      width: 56px;
-      height: 56px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(10px);
-
-      .header-icon {
-        font-size: 32px;
-        width: 32px;
-        height: 32px;
-      }
+    .header-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      opacity: 0.95;
     }
 
     .header-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
       .dialog-title {
         margin: 0;
-        font-size: 1.75rem;
-        font-weight: 700;
-        letter-spacing: -0.5px;
+        font-size: 1.3rem;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+        line-height: 1.2;
       }
 
       .dialog-subtitle {
-        margin: 4px 0 0 0;
-        font-size: 0.95rem;
-        opacity: 0.9;
+        font-size: 0.85rem;
+        opacity: 0.85;
         font-weight: 400;
       }
     }
@@ -57,6 +52,14 @@
 
   .close-btn {
     color: white;
+    width: 36px;
+    height: 36px;
+    
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
     
     &:hover {
       background: rgba(255, 255, 255, 0.15);
@@ -66,29 +69,29 @@
 
 // Content
 .dialog-content {
-  padding: 24px 32px;
+  padding: 16px 24px;
   overflow-y: auto;
   flex: 1;
-  background: #f8f9fa;
+  background: #f5f7fa;
 }
 
 .info-banner {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, rgba(1, 179, 167, 0.08) 0%, rgba(0, 255, 176, 0.08) 100%);
-  border-left: 4px solid #01B3A7;
-  border-radius: 8px;
-  margin-bottom: 24px;
+  gap: 10px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(1, 179, 167, 0.06) 0%, rgba(0, 255, 176, 0.06) 100%);
+  border-left: 3px solid #01B3A7;
+  border-radius: 6px;
+  margin-bottom: 16px;
   color: #2a3547;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
 
   mat-icon {
     color: #01B3A7;
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -96,117 +99,117 @@
 .days-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
 
+// Compact Professional Day Card
 .day-card {
   background: white;
-  border-radius: 16px;
-  border: 2px solid #e5eaef;
+  border-radius: 8px;
+  border: 1px solid #e5eaef;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   &:hover {
     border-color: #01B3A7;
-    box-shadow: 0 4px 16px rgba(1, 179, 167, 0.1);
+    box-shadow: 0 2px 8px rgba(1, 179, 167, 0.12);
   }
 
   &.has-times {
-    border-color: rgba(1, 179, 167, 0.3);
+    border-color: rgba(1, 179, 167, 0.25);
+    background: linear-gradient(to right, rgba(1, 179, 167, 0.02), white);
+  }
+
+  &.expanded {
+    box-shadow: 0 3px 12px rgba(1, 179, 167, 0.15);
   }
 
   .day-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 24px;
+    padding: 12px 16px;
     cursor: pointer;
-    background: linear-gradient(135deg, rgba(1, 179, 167, 0.02) 0%, rgba(0, 255, 176, 0.02) 100%);
-    transition: background 0.3s ease;
+    transition: background 0.2s ease;
 
     &:hover {
-      background: linear-gradient(135deg, rgba(1, 179, 167, 0.05) 0%, rgba(0, 255, 176, 0.05) 100%);
+      background: rgba(1, 179, 167, 0.03);
     }
 
     .day-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       flex: 1;
 
-      .day-date {
-        display: flex;
+      .calendar-icon {
+        color: #01B3A7;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+
+      .date-text {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #2a3547;
+        text-transform: capitalize;
+        flex-shrink: 0;
+      }
+
+      .time-count {
+        display: inline-flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 8px;
+        gap: 4px;
+        padding: 2px 8px;
+        background: linear-gradient(135deg, #01B3A7 0%, #00FFB0 100%);
+        color: white;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
 
-        .calendar-icon {
-          color: #01B3A7;
-          font-size: 24px;
-          width: 24px;
-          height: 24px;
-        }
-
-        .date-text {
-          font-size: 1.1rem;
-          font-weight: 600;
-          color: #2a3547;
-          text-transform: capitalize;
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
         }
       }
 
-      .day-meta {
-        margin-left: 36px;
-
-        .time-count {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 12px;
-          background: linear-gradient(135deg, #01B3A7 0%, #00FFB0 100%);
-          color: white;
-          border-radius: 20px;
-          font-size: 0.85rem;
-          font-weight: 600;
-
-          mat-icon {
-            font-size: 16px;
-            width: 16px;
-            height: 16px;
-          }
-        }
-
-        .no-times {
-          color: #7c8fac;
-          font-size: 0.9rem;
-          font-style: italic;
-        }
+      .no-times-badge {
+        padding: 2px 8px;
+        background: #f0f0f0;
+        color: #999;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
       }
     }
 
     .day-actions {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 8px;
 
       .add-time-btn {
-        background: linear-gradient(135deg, #01B3A7 0%, #00FFB0 100%);
-        box-shadow: 0 4px 12px rgba(1, 179, 167, 0.3);
-        transition: all 0.3s ease;
-
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(1, 179, 167, 0.4);
-        }
-
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        
         mat-icon {
-          color: white;
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
         }
       }
 
       .expand-icon {
         color: #7c8fac;
-        transition: transform 0.3s ease;
-        font-size: 28px;
-        width: 28px;
-        height: 28px;
+        transition: transform 0.2s ease;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
 
         &.expanded {
           transform: rotate(180deg);
@@ -216,20 +219,23 @@
   }
 
   .time-slots-container {
-    padding: 20px 24px;
+    padding: 8px 16px 12px;
     background: #fafbfc;
     border-top: 1px solid #e5eaef;
   }
 }
 
-// Time Slot Card
-.time-slot-card {
+// Compact Time Slot Row
+.time-slot-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
   background: white;
-  border: 2px solid #e5eaef;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
-  transition: all 0.3s ease;
+  border: 1px solid #e5eaef;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
 
   &:last-child {
     margin-bottom: 0;
@@ -237,150 +243,218 @@
 
   &:hover {
     border-color: #01B3A7;
-    box-shadow: 0 2px 8px rgba(1, 179, 167, 0.1);
+    box-shadow: 0 1px 4px rgba(1, 179, 167, 0.1);
   }
 
   &.disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     background: #f8f9fa;
-    border-color: #dee2e6;
 
-    .time-inputs {
-      opacity: 0.5;
+    .time-input {
+      background: #f0f0f0;
+      cursor: not-allowed;
     }
   }
 
-  .time-slot-content {
+  .time-slot-number {
     display: flex;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 12px;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #01B3A7 0%, #00FFB0 100%);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
 
-    .time-inputs {
-      display: flex;
-      align-items: center;
-      flex: 1;
+  .time-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 180px;
 
-      .time-field-single {
-        flex: 1;
-        max-width: 250px;
-
-        ::ng-deep {
-          .mat-form-field-prefix {
-            mat-icon {
-              color: #01B3A7;
-              font-size: 20px;
-            }
-          }
-        }
-      }
+    .time-icon {
+      color: #01B3A7;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
     }
 
-    .time-slot-actions {
-      display: flex;
-      gap: 8px;
+    .time-input {
+      flex: 1;
+      padding: 6px 10px;
+      border: 1px solid #e5eaef;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #2a3547;
+      background: white;
+      transition: all 0.2s ease;
+      font-family: 'Roboto Mono', monospace;
 
-      .toggle-btn {
-        mat-icon {
-          font-size: 28px;
-          width: 28px;
-          height: 28px;
-        }
+      &:focus {
+        outline: none;
+        border-color: #01B3A7;
+        box-shadow: 0 0 0 2px rgba(1, 179, 167, 0.1);
       }
 
-      .delete-btn {
-        &:hover {
-          background: rgba(250, 137, 107, 0.1);
-        }
+      &:disabled {
+        background: #f0f0f0;
+        cursor: not-allowed;
+        color: #999;
+      }
+
+      // Force 24-hour format
+      &::-webkit-calendar-picker-indicator {
+        filter: invert(0.5);
       }
     }
   }
 
-  .status-badge {
-    display: inline-flex;
+  .status-indicator {
+    display: flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    background: #f8f9fa;
-    color: #7c8fac;
-    border: 1px solid #dee2e6;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #f0f0f0;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s ease;
 
     &.active {
       background: linear-gradient(135deg, rgba(1, 179, 167, 0.1) 0%, rgba(0, 255, 176, 0.1) 100%);
-      color: #01B3A7;
       border-color: rgba(1, 179, 167, 0.3);
     }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #999;
+      transition: all 0.2s ease;
+    }
+
+    &.active .status-dot {
+      background: #01B3A7;
+      box-shadow: 0 0 6px rgba(1, 179, 167, 0.5);
+    }
+
+    .status-text {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #999;
+    }
+
+    &.active .status-text {
+      color: #01B3A7;
+    }
+  }
+
+  .time-slot-actions {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+
+    button {
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .toggle-btn {
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .delete-btn {
+      &:hover {
+        background: rgba(244, 67, 54, 0.1);
+        color: #f44336;
+      }
+    }
+  }
+}
+
+.empty-slot-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  color: #999;
+  font-size: 0.85rem;
+  font-style: italic;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+  }
+}
+
+// Compact Empty States
+.empty-state-main {
+  text-align: center;
+  padding: 40px 20px;
+  color: #7c8fac;
+
+  mat-icon {
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    opacity: 0.3;
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    margin: 0 0 6px 0;
+    font-size: 1.1rem;
+    color: #2a3547;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+// Compact Dialog Actions
+.dialog-actions {
+  padding: 12px 24px;
+  border-top: 1px solid #e5eaef;
+  background: white;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  .cancel-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #7c8fac;
+    padding: 8px 16px;
 
     mat-icon {
       font-size: 18px;
       width: 18px;
       height: 18px;
     }
-  }
-}
-
-// Empty States
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #7c8fac;
-
-  mat-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    opacity: 0.5;
-    margin-bottom: 12px;
-  }
-
-  p {
-    margin: 0;
-    font-size: 0.95rem;
-  }
-}
-
-.empty-state-main {
-  text-align: center;
-  padding: 60px 20px;
-  color: #7c8fac;
-
-  mat-icon {
-    font-size: 72px;
-    width: 72px;
-    height: 72px;
-    opacity: 0.3;
-    margin-bottom: 16px;
-  }
-
-  h3 {
-    margin: 0 0 8px 0;
-    font-size: 1.25rem;
-    color: #2a3547;
-  }
-
-  p {
-    margin: 0;
-    font-size: 0.95rem;
-  }
-}
-
-// Dialog Actions
-.dialog-actions {
-  padding: 20px 32px;
-  border-top: 1px solid #e5eaef;
-  background: white;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-
-  .cancel-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #7c8fac;
 
     &:hover {
       background: rgba(124, 143, 172, 0.1);
@@ -390,16 +464,22 @@
   .save-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: linear-gradient(135deg, #01B3A7 0%, #00FFB0 100%);
     color: white;
-    padding: 10px 28px;
+    padding: 8px 24px;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(1, 179, 167, 0.3);
+    box-shadow: 0 2px 8px rgba(1, 179, 167, 0.25);
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
 
     &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(1, 179, 167, 0.4);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(1, 179, 167, 0.35);
     }
 
     &:disabled {
@@ -409,7 +489,6 @@
 
     mat-spinner {
       display: inline-block;
-      margin-right: 8px;
     }
   }
 }
