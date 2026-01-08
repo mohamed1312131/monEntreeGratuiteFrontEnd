@@ -39,38 +39,61 @@
           </button>
         </div>
 
-        <div *ngFor="let range of dateRanges; let i = index" class="date-range-row">
-          <mat-form-field appearance="outline" class="date-field">
-            <mat-label>Date de début</mat-label>
-            <input matInput type="date" [(ngModel)]="range.startDate" [ngModelOptions]="{standalone: true}" required />
-          </mat-form-field>
+        <div *ngFor="let range of dateRanges; let i = index" class="date-range-card">
+          <div class="card-header">
+            <span class="period-number">Période {{ i + 1 }}</span>
+            <button 
+              mat-icon-button 
+              type="button" 
+              (click)="removeDateRange(i)" 
+              class="remove-range-btn"
+              [disabled]="dateRanges.length === 1"
+              matTooltip="Supprimer cette période">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
 
-          <mat-form-field appearance="outline" class="time-field">
-            <mat-label>Heure début</mat-label>
-            <input matInput type="time" [(ngModel)]="range.startTime" [ngModelOptions]="{standalone: true}" placeholder="HH:mm" />
-          </mat-form-field>
+          <div class="date-time-grid">
+            <!-- Start Date & Time -->
+            <div class="datetime-group">
+              <label class="group-label">
+                <mat-icon>event</mat-icon>
+                Début
+              </label>
+              <div class="fields-row">
+                <mat-form-field appearance="outline" class="date-field">
+                  <mat-label>Date</mat-label>
+                  <input matInput type="date" [(ngModel)]="range.startDate" [ngModelOptions]="{standalone: true}" required />
+                  <mat-icon matPrefix>calendar_today</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="time-field">
+                  <mat-label>Heure (optionnel)</mat-label>
+                  <input matInput type="time" [(ngModel)]="range.startTime" [ngModelOptions]="{standalone: true}" placeholder="HH:mm" />
+                  <mat-icon matPrefix>schedule</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
 
-          <span class="date-separator">à</span>
-
-          <mat-form-field appearance="outline" class="date-field">
-            <mat-label>Date de fin</mat-label>
-            <input matInput type="date" [(ngModel)]="range.endDate" [ngModelOptions]="{standalone: true}" required />
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="time-field">
-            <mat-label>Heure fin</mat-label>
-            <input matInput type="time" [(ngModel)]="range.endTime" [ngModelOptions]="{standalone: true}" placeholder="HH:mm" />
-          </mat-form-field>
-
-          <button 
-            mat-icon-button 
-            type="button" 
-            (click)="removeDateRange(i)" 
-            class="remove-range-btn"
-            [disabled]="dateRanges.length === 1"
-            matTooltip="Supprimer cette période">
-            <mat-icon>delete</mat-icon>
-          </button>
+            <!-- End Date & Time -->
+            <div class="datetime-group">
+              <label class="group-label">
+                <mat-icon>event</mat-icon>
+                Fin
+              </label>
+              <div class="fields-row">
+                <mat-form-field appearance="outline" class="date-field">
+                  <mat-label>Date</mat-label>
+                  <input matInput type="date" [(ngModel)]="range.endDate" [ngModelOptions]="{standalone: true}" required />
+                  <mat-icon matPrefix>calendar_today</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="time-field">
+                  <mat-label>Heure (optionnel)</mat-label>
+                  <input matInput type="time" [(ngModel)]="range.endTime" [ngModelOptions]="{standalone: true}" placeholder="HH:mm" />
+                  <mat-icon matPrefix>schedule</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
