@@ -1,37 +1,50 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FoireService } from '../../../services/foire.service';
+import { FoireService, Foire } from '../../../services/foire.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-add-foire',
-  templateUrl: './add-foire.component.html',
-  styleUrls: ['./add-foire.component.scss']
+  selector: 'app-edit-foire',
+  templateUrl: './edit-foire.component.html',
+  styleUrls: ['./edit-foire.component.scss']
 })
-export class AddFoireComponent implements OnInit {
+export class EditFoireComponent implements OnInit {
   form!: FormGroup;
   selectedFile: File | null = null;
   imageError = false;
   isSubmitting = false;
   dateRanges: Array<{startDate: string, endDate: string, startTime?: string, endTime?: string}> = [];
+  currentImage: string = '';
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<AddFoireComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { countryCode: string; countryName: string },
+    private dialogRef: MatDialogRef<EditFoireComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { foire: Foire; countryCode: string; countryName: string },
     private foireService: FoireService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      nomFoire: ['', Validators.required],
-      location: ['', Validators.required],
-      description: ['', Validators.required]
+      nomFoire: [this.data.foire.name || '', Validators.required],
+      location: [this.data.foire.location || '', Validators.required],
+      description: [this.data.foire.description || '', Validators.required]
     });
-    // Initialize with one empty date range
-    this.addDateRange();
+
+    this.currentImage = this.data.foire.image || '';
+
+    // Load existing date ranges or initialize with one empty range
+    if (this.data.foire.dateRanges && this.data.foire.dateRanges.length > 0) {
+      this.dateRanges = this.data.foire.dateRanges.map(range => ({
+        startDate: range.startDate || '',
+        endDate: range.endDate || '',
+        startTime: range.startTime || '',
+        endTime: range.endTime || ''
+      }));
+    } else {
+      this.addDateRange();
+    }
   }
 
   onFileChange(event: Event): void {
@@ -89,12 +102,6 @@ export class AddFoireComponent implements OnInit {
       return;
     }
 
-    if (!this.selectedFile) {
-      this.imageError = true;
-      this.showSnackBar('Veuillez sélectionner une image', 'error');
-      return;
-    }
-
     // Validate date ranges - must have at least one complete range
     const hasValidDateRanges = this.dateRanges.length > 0 && 
                                this.dateRanges.every(range => range.startDate && range.endDate);
@@ -133,8 +140,9 @@ export class AddFoireComponent implements OnInit {
     this.isSubmitting = true;
     
     const formData = new FormData();
-    formData.append('file', this.selectedFile);
-    formData.append('countryCode', this.data.countryCode);
+    if (this.selectedFile) {
+      formData.append('file', this.selectedFile);
+    }
     formData.append('name', this.form.get('nomFoire')?.value.trim());
     formData.append('location', this.form.get('location')?.value.trim());
     formData.append('description', this.form.get('description')?.value.trim());
@@ -142,18 +150,22 @@ export class AddFoireComponent implements OnInit {
     // Convert date ranges to JSON
     formData.append('dateRanges', JSON.stringify(this.dateRanges));
 
-    this.foireService.addFoire(formData).subscribe({
+    this.foireService.updateFoire(this.data.countryCode, this.data.foire.id, formData).subscribe({
       next: (response) => {
-        this.showSnackBar('Foire créée avec succès', 'success');
+        this.showSnackBar('Foire mise à jour avec succès', 'success');
         this.dialogRef.close(response);
       },
       error: (error) => {
-        console.error('Error creating foire:', error);
-        const errorMsg = error?.error?.error || 'Erreur lors de la création de la foire';
+        console.error('Error updating foire:', error);
+        const errorMsg = error?.error?.error || 'Erreur lors de la mise à jour de la foire';
         this.showSnackBar(errorMsg, 'error');
         this.isSubmitting = false;
       }
     });
+  }
+
+  close(): void {
+    this.dialogRef.close();
   }
 
   showSnackBar(message: string, type: 'success' | 'error'): void {
@@ -163,9 +175,5 @@ export class AddFoireComponent implements OnInit {
       verticalPosition: 'top',
       panelClass: type === 'success' ? 'snack-bar-success' : 'snack-bar-error'
     });
-  }
-
-  close(): void {
-    this.dialogRef.close();
   }
 }

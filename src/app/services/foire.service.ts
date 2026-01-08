@@ -6,6 +6,8 @@ import { environment } from '../../environments/environment';
 export interface DateRange {
   startDate: string;
   endDate: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export interface Foire {
@@ -56,6 +58,10 @@ export class FoireService {
 
   addFoire(formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/add`, formData);
+  }
+
+  updateFoire(countryCode: string, id: number, formData: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/update/${countryCode}/${id}`, formData);
   }
 
   activateFoire(countryCode: string, id: number): Observable<any> {

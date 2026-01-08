@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddFoireComponent } from '../add-foire/add-foire.component';
+import { EditFoireComponent } from '../edit-foire/edit-foire.component';
 import { FoireDetailsComponent } from '../foire-details/foire-details.component';
 import { CampaignHistoryComponent } from '../campaigns/campaign-history.component';
 import { FoireService, Foire as FoireData } from '../../../services/foire.service';
@@ -129,6 +130,28 @@ export class FoiresComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // Reload the foires for this country to show the new one
+        this.loadFoiresByCountry(country);
+      }
+    });
+  }
+
+  editFoire(country: Country, foire: Foire): void {
+    const dialogRef = this.dialog.open(EditFoireComponent, {
+      width: '700px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      disableClose: false,
+      autoFocus: true,
+      data: { 
+        foire: foire,
+        countryCode: country.apiKey, 
+        countryName: country.name 
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Reload the foires for this country to show the updated one
         this.loadFoiresByCountry(country);
       }
     });
