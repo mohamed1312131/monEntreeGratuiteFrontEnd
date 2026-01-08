@@ -103,11 +103,7 @@
                   <div class="date-ranges-cell">
                     <div *ngIf="foire.dateRanges && foire.dateRanges.length > 0" class="ranges-container">
                       <span *ngFor="let range of foire.dateRanges; let i = index" class="date-range-chip">
-                        {{ range.startDate | date:'dd/MM' }}
-                        <span *ngIf="range.startTime" class="time-text">{{ range.startTime }}</span>
-                        -
-                        {{ range.endDate | date:'dd/MM/yy' }}
-                        <span *ngIf="range.endTime" class="time-text">{{ range.endTime }}</span>
+                        {{ range.startDate | date:'dd/MM' }} - {{ range.endDate | date:'dd/MM/yy' }}
                       </span>
                     </div>
                     <span *ngIf="!foire.dateRanges || foire.dateRanges.length === 0" class="no-dates">Aucune date</span>
@@ -134,7 +130,7 @@
                     <button mat-icon-button class="action-icon" [class.active-icon]="foire.isActive" (click)="activateFoire(country.apiKey, foire)" [matTooltip]="foire.isActive ? 'Désactiver' : 'Activer'">
                       <mat-icon>{{ foire.isActive ? 'toggle_on' : 'toggle_off' }}</mat-icon>
                     </button>
-                    <button mat-icon-button class="action-icon time-icon" (click)="manageTimes(foire)" matTooltip="Gérer les horaires">
+                    <button mat-icon-button class="action-icon time-icon" (click)="manageTimes(country, foire)" matTooltip="Gérer les horaires">
                       <mat-icon>schedule</mat-icon>
                     </button>
                     <button mat-icon-button class="action-icon edit-icon" (click)="editFoire(country, foire)" matTooltip="Modifier">

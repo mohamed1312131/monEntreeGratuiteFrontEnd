@@ -259,12 +259,11 @@
     .time-inputs {
       display: flex;
       align-items: center;
-      gap: 16px;
       flex: 1;
 
-      .time-field {
+      .time-field-single {
         flex: 1;
-        max-width: 200px;
+        max-width: 250px;
 
         ::ng-deep {
           .mat-form-field-prefix {
@@ -273,17 +272,6 @@
               font-size: 20px;
             }
           }
-        }
-      }
-
-      .time-separator {
-        display: flex;
-        align-items: center;
-        color: #7c8fac;
-        margin-top: -8px;
-
-        mat-icon {
-          font-size: 20px;
         }
       }
     }

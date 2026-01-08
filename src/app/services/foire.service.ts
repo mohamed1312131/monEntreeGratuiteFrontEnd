@@ -6,8 +6,17 @@ import { environment } from '../../environments/environment';
 export interface DateRange {
   startDate: string;
   endDate: string;
-  startTime?: string;
-  endTime?: string;
+}
+
+export interface TimeSlot {
+  id: string;
+  startTime: string;
+  isEnabled: boolean;
+}
+
+export interface DayTimeSlot {
+  date: string;
+  times: TimeSlot[];
 }
 
 export interface Foire {
@@ -16,6 +25,7 @@ export interface Foire {
   date?: string; // Deprecated - kept for backward compatibility
   endDate?: string; // Deprecated
   dateRanges?: DateRange[]; // New field for multiple date ranges
+  dayTimeSlots?: DayTimeSlot[]; // Day-specific time slots
   location?: string; // New field for location
   url?: string;
   image?: string;
@@ -62,6 +72,16 @@ export class FoireService {
 
   updateFoire(countryCode: string, id: number, formData: FormData): Observable<any> {
     return this.http.put(`${this.apiUrl}/update/${countryCode}/${id}`, formData);
+  }
+
+  updateDayTimeSlots(countryCode: string, id: number, dayTimeSlots: DayTimeSlot[]): Observable<any> {
+    return this.http.put(`${this.apiUrl}/updateTimeSlots/${countryCode}/${id}`, JSON.stringify(dayTimeSlots), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  getDayTimeSlots(id: number): Observable<DayTimeSlot[]> {
+    return this.http.get<DayTimeSlot[]>(`${this.apiUrl}/getTimeSlots/${id}`);
   }
 
   activateFoire(countryCode: string, id: number): Observable<any> {

@@ -65,32 +65,17 @@
                [class.disabled]="!timeSlot.isEnabled">
             
             <div class="time-slot-content">
-              <!-- Time Inputs -->
+              <!-- Time Input -->
               <div class="time-inputs">
-                <mat-form-field appearance="outline" class="time-field">
-                  <mat-label>Heure de début</mat-label>
+                <mat-form-field appearance="outline" class="time-field-single">
+                  <mat-label>Heure d'entrée</mat-label>
                   <input 
                     matInput 
                     type="time" 
                     [(ngModel)]="timeSlot.startTime"
                     [disabled]="!timeSlot.isEnabled"
                     placeholder="HH:mm">
-                  <mat-icon matPrefix>access_time</mat-icon>
-                </mat-form-field>
-
-                <span class="time-separator">
-                  <mat-icon>arrow_forward</mat-icon>
-                </span>
-
-                <mat-form-field appearance="outline" class="time-field">
-                  <mat-label>Heure de fin</mat-label>
-                  <input 
-                    matInput 
-                    type="time" 
-                    [(ngModel)]="timeSlot.endTime"
-                    [disabled]="!timeSlot.isEnabled"
-                    placeholder="HH:mm">
-                  <mat-icon matPrefix>access_time</mat-icon>
+                  <mat-icon matPrefix>login</mat-icon>
                 </mat-form-field>
               </div>
 

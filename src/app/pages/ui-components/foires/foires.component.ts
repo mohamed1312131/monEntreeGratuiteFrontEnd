@@ -236,18 +236,20 @@ export class FoiresComponent implements OnInit {
     });
   }
 
-  manageTimes(foire: Foire): void {
+  manageTimes(country: Country, foire: Foire): void {
     const dialogRef = this.dialog.open(ManageFoireTimesComponent, {
       width: '900px',
       maxWidth: '95vw',
       maxHeight: '90vh',
-      data: { foire: foire }
+      data: { 
+        foire: foire,
+        countryCode: country.apiKey
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // TODO: Handle saved time slots
-        this.showSnackBar('Horaires mis à jour avec succès', 'success');
+        this.loadFoiresByCountry(country);
       }
     });
   }

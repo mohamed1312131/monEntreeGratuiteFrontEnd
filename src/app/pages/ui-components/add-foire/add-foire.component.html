@@ -54,11 +54,11 @@
           </div>
 
           <div class="date-time-grid">
-            <!-- Start Date & Time -->
+            <!-- Start Date -->
             <div class="datetime-group">
               <label class="group-label">
                 <mat-icon>event</mat-icon>
-                Début
+                Date de début
               </label>
               <div class="fields-row">
                 <mat-form-field appearance="outline" class="date-field">
@@ -66,30 +66,20 @@
                   <input matInput type="date" [(ngModel)]="range.startDate" [ngModelOptions]="{standalone: true}" required />
                   <mat-icon matPrefix>calendar_today</mat-icon>
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="time-field">
-                  <mat-label>Heure (optionnel)</mat-label>
-                  <input matInput type="time" [(ngModel)]="range.startTime" [ngModelOptions]="{standalone: true}" placeholder="HH:mm" />
-                  <mat-icon matPrefix>schedule</mat-icon>
-                </mat-form-field>
               </div>
             </div>
 
-            <!-- End Date & Time -->
+            <!-- End Date -->
             <div class="datetime-group">
               <label class="group-label">
                 <mat-icon>event</mat-icon>
-                Fin
+                Date de fin
               </label>
               <div class="fields-row">
                 <mat-form-field appearance="outline" class="date-field">
                   <mat-label>Date</mat-label>
                   <input matInput type="date" [(ngModel)]="range.endDate" [ngModelOptions]="{standalone: true}" required />
                   <mat-icon matPrefix>calendar_today</mat-icon>
-                </mat-form-field>
-                <mat-form-field appearance="outline" class="time-field">
-                  <mat-label>Heure (optionnel)</mat-label>
-                  <input matInput type="time" [(ngModel)]="range.endTime" [ngModelOptions]="{standalone: true}" placeholder="HH:mm" />
-                  <mat-icon matPrefix>schedule</mat-icon>
                 </mat-form-field>
               </div>
             </div>

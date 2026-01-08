@@ -14,7 +14,7 @@ export class AddFoireComponent implements OnInit {
   selectedFile: File | null = null;
   imageError = false;
   isSubmitting = false;
-  dateRanges: Array<{startDate: string, endDate: string, startTime?: string, endTime?: string}> = [];
+  dateRanges: Array<{startDate: string, endDate: string}> = [];
 
   constructor(
     private fb: FormBuilder,
@@ -68,7 +68,7 @@ export class AddFoireComponent implements OnInit {
   }
 
   addDateRange(): void {
-    this.dateRanges.push({ startDate: '', endDate: '', startTime: '', endTime: '' });
+    this.dateRanges.push({ startDate: '', endDate: '' });
   }
 
   removeDateRange(index: number): void {
@@ -101,19 +101,6 @@ export class AddFoireComponent implements OnInit {
     
     if (!hasValidDateRanges) {
       this.showSnackBar('Veuillez remplir au moins une période complète (date de début et fin)', 'error');
-      return;
-    }
-
-    // Validate that if time is provided, both start and end times are filled
-    const hasValidTimes = this.dateRanges.every(range => {
-      if (range.startTime || range.endTime) {
-        return range.startTime && range.endTime;
-      }
-      return true;
-    });
-
-    if (!hasValidTimes) {
-      this.showSnackBar('Si vous ajoutez une heure, veuillez remplir l\'heure de début et de fin', 'error');
       return;
     }
 

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Foire } from '../../../services/foire.service';
+import { Foire, FoireService } from '../../../services/foire.service';
 
 interface DayTimeSlot {
   date: Date;
@@ -14,7 +14,6 @@ interface DayTimeSlot {
 interface TimeSlot {
   id: string;
   startTime: string;
-  endTime: string;
   isEnabled: boolean;
 }
 
@@ -30,14 +29,27 @@ export class ManageFoireTimesComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<ManageFoireTimesComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { foire: Foire },
-    private snackBar: MatSnackBar
+    @Inject(MAT_DIALOG_DATA) public data: { foire: Foire; countryCode: string },
+    private snackBar: MatSnackBar,
+    private foireService: FoireService
   ) {
     this.foire = data.foire;
   }
 
   ngOnInit(): void {
+    this.loadExistingTimeSlots();
+  }
+
+  loadExistingTimeSlots(): void {
+    this.isLoading = true;
     this.generateDayTimeSlots();
+    
+    // Load existing time slots from backend if available
+    if (this.foire.dayTimeSlots && this.foire.dayTimeSlots.length > 0) {
+      this.mergeSavedTimeSlots(this.foire.dayTimeSlots);
+    }
+    
+    this.isLoading = false;
   }
 
   generateDayTimeSlots(): void {
@@ -71,6 +83,19 @@ export class ManageFoireTimesComponent implements OnInit {
     });
   }
 
+  mergeSavedTimeSlots(savedSlots: any[]): void {
+    savedSlots.forEach(savedSlot => {
+      const daySlot = this.dayTimeSlots.find(d => d.dateString === savedSlot.date);
+      if (daySlot && savedSlot.times) {
+        daySlot.times = savedSlot.times.map((t: any) => ({
+          id: t.id,
+          startTime: t.startTime,
+          isEnabled: t.isEnabled
+        }));
+      }
+    });
+  }
+
   formatDateToString(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -92,7 +117,6 @@ export class ManageFoireTimesComponent implements OnInit {
     const newTimeSlot: TimeSlot = {
       id: this.generateId(),
       startTime: '',
-      endTime: '',
       isEnabled: true
     };
     daySlot.times.push(newTimeSlot);
@@ -132,20 +156,43 @@ export class ManageFoireTimesComponent implements OnInit {
     
     this.dayTimeSlots.forEach(daySlot => {
       daySlot.times.forEach(timeSlot => {
-        if (timeSlot.isEnabled && (!timeSlot.startTime || !timeSlot.endTime)) {
+        if (timeSlot.isEnabled && !timeSlot.startTime) {
           hasErrors = true;
         }
       });
     });
 
     if (hasErrors) {
-      this.showSnackBar('Veuillez remplir toutes les heures de début et de fin pour les créneaux actifs', 'error');
+      this.showSnackBar('Veuillez remplir l\'heure d\'entrée pour tous les créneaux actifs', 'error');
       return;
     }
 
-    // TODO: Save to backend
-    this.showSnackBar('Configuration des horaires enregistrée avec succès', 'success');
-    this.dialogRef.close(this.dayTimeSlots);
+    // Prepare data for backend (only include days with times)
+    const dayTimeSlotsData = this.dayTimeSlots
+      .filter(daySlot => daySlot.times.length > 0)
+      .map(daySlot => ({
+        date: daySlot.dateString,
+        times: daySlot.times.map(t => ({
+          id: t.id,
+          startTime: t.startTime,
+          isEnabled: t.isEnabled
+        }))
+      }));
+
+    this.isLoading = true;
+    
+    this.foireService.updateDayTimeSlots(this.data.countryCode, this.foire.id, dayTimeSlotsData).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.showSnackBar('Configuration des horaires enregistrée avec succès', 'success');
+        this.dialogRef.close(true);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Error saving time slots:', error);
+        this.showSnackBar('Erreur lors de l\'enregistrement des horaires', 'error');
+      }
+    });
   }
 
   close(): void {
