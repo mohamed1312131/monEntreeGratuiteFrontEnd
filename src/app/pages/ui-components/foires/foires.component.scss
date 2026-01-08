@@ -459,11 +459,35 @@
     }
   }
 
+  &.time-icon {
+    color: #01B3A7;
+    
+    &:hover {
+      background: rgba(1, 179, 167, 0.1);
+    }
+  }
+
+  &.edit-icon {
+    color: #6f42c1;
+    
+    &:hover {
+      background: rgba(111, 66, 193, 0.1);
+    }
+  }
+
   &.email-icon {
     color: #0366d6;
     
     &:hover {
       background: rgba(3, 102, 214, 0.1);
+    }
+  }
+
+  &.history-icon {
+    color: #e36209;
+    
+    &:hover {
+      background: rgba(227, 98, 9, 0.1);
     }
   }
 

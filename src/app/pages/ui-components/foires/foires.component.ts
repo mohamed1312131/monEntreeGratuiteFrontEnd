@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddFoireComponent } from '../add-foire/add-foire.component';
 import { EditFoireComponent } from '../edit-foire/edit-foire.component';
+import { ManageFoireTimesComponent } from '../manage-foire-times/manage-foire-times.component';
 import { FoireDetailsComponent } from '../foire-details/foire-details.component';
 import { CampaignHistoryComponent } from '../campaigns/campaign-history.component';
 import { FoireService, Foire as FoireData } from '../../../services/foire.service';
@@ -232,6 +233,22 @@ export class FoiresComponent implements OnInit {
       width: '700px',
       maxHeight: '90vh',
       data: { foireId: foire.id, foireName: foire.name }
+    });
+  }
+
+  manageTimes(foire: Foire): void {
+    const dialogRef = this.dialog.open(ManageFoireTimesComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: { foire: foire }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // TODO: Handle saved time slots
+        this.showSnackBar('Horaires mis à jour avec succès', 'success');
+      }
     });
   }
 

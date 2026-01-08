@@ -134,6 +134,9 @@
                     <button mat-icon-button class="action-icon" [class.active-icon]="foire.isActive" (click)="activateFoire(country.apiKey, foire)" [matTooltip]="foire.isActive ? 'Désactiver' : 'Activer'">
                       <mat-icon>{{ foire.isActive ? 'toggle_on' : 'toggle_off' }}</mat-icon>
                     </button>
+                    <button mat-icon-button class="action-icon time-icon" (click)="manageTimes(foire)" matTooltip="Gérer les horaires">
+                      <mat-icon>schedule</mat-icon>
+                    </button>
                     <button mat-icon-button class="action-icon edit-icon" (click)="editFoire(country, foire)" matTooltip="Modifier">
                       <mat-icon>edit</mat-icon>
                     </button>

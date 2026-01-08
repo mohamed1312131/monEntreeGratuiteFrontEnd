@@ -1,0 +1,158 @@
+<div class="dialog-container">
+  <!-- Header -->
+  <div class="dialog-header">
+    <div class="header-content">
+      <div class="header-icon-wrapper">
+        <mat-icon class="header-icon">schedule</mat-icon>
+      </div>
+      <div class="header-text">
+        <h2 class="dialog-title">Gestion des Horaires</h2>
+        <p class="dialog-subtitle">{{ foire.name }}</p>
+      </div>
+    </div>
+    <button mat-icon-button (click)="close()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="dialog-content">
+    <div class="info-banner">
+      <mat-icon>info</mat-icon>
+      <span>Ajoutez des créneaux horaires pour chaque jour de la foire. Vous pouvez ajouter plusieurs horaires par jour.</span>
+    </div>
+
+    <div class="days-container">
+      <div *ngFor="let daySlot of dayTimeSlots; let i = index" class="day-card" [class.has-times]="hasTimeSlotsForDay(daySlot)">
+        
+        <!-- Day Header -->
+        <div class="day-header" (click)="toggleDayExpansion(daySlot)">
+          <div class="day-info">
+            <div class="day-date">
+              <mat-icon class="calendar-icon">event</mat-icon>
+              <span class="date-text">{{ daySlot.displayDate }}</span>
+            </div>
+            <div class="day-meta">
+              <span class="time-count" *ngIf="hasTimeSlotsForDay(daySlot)">
+                <mat-icon>schedule</mat-icon>
+                {{ getActiveTimeSlotsCount(daySlot) }} créneau(x)
+              </span>
+              <span class="no-times" *ngIf="!hasTimeSlotsForDay(daySlot)">
+                Aucun horaire défini
+              </span>
+            </div>
+          </div>
+          
+          <div class="day-actions">
+            <button 
+              mat-mini-fab 
+              color="primary" 
+              (click)="addTimeSlot(daySlot); $event.stopPropagation()" 
+              class="add-time-btn"
+              matTooltip="Ajouter un créneau horaire">
+              <mat-icon>add</mat-icon>
+            </button>
+            <mat-icon class="expand-icon" [class.expanded]="daySlot.isExpanded">
+              {{ daySlot.isExpanded ? 'expand_less' : 'expand_more' }}
+            </mat-icon>
+          </div>
+        </div>
+
+        <!-- Time Slots List -->
+        <div class="time-slots-container" *ngIf="daySlot.isExpanded && hasTimeSlotsForDay(daySlot)" [@slideDown]>
+          <div *ngFor="let timeSlot of daySlot.times; let j = index" 
+               class="time-slot-card" 
+               [class.disabled]="!timeSlot.isEnabled">
+            
+            <div class="time-slot-content">
+              <!-- Time Inputs -->
+              <div class="time-inputs">
+                <mat-form-field appearance="outline" class="time-field">
+                  <mat-label>Heure de début</mat-label>
+                  <input 
+                    matInput 
+                    type="time" 
+                    [(ngModel)]="timeSlot.startTime"
+                    [disabled]="!timeSlot.isEnabled"
+                    placeholder="HH:mm">
+                  <mat-icon matPrefix>access_time</mat-icon>
+                </mat-form-field>
+
+                <span class="time-separator">
+                  <mat-icon>arrow_forward</mat-icon>
+                </span>
+
+                <mat-form-field appearance="outline" class="time-field">
+                  <mat-label>Heure de fin</mat-label>
+                  <input 
+                    matInput 
+                    type="time" 
+                    [(ngModel)]="timeSlot.endTime"
+                    [disabled]="!timeSlot.isEnabled"
+                    placeholder="HH:mm">
+                  <mat-icon matPrefix>access_time</mat-icon>
+                </mat-form-field>
+              </div>
+
+              <!-- Actions -->
+              <div class="time-slot-actions">
+                <button 
+                  mat-icon-button 
+                  [color]="timeSlot.isEnabled ? 'primary' : 'warn'"
+                  (click)="toggleTimeSlot(timeSlot)"
+                  [matTooltip]="timeSlot.isEnabled ? 'Désactiver ce créneau' : 'Activer ce créneau'"
+                  class="toggle-btn">
+                  <mat-icon>{{ timeSlot.isEnabled ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+                </button>
+                
+                <button 
+                  mat-icon-button 
+                  color="warn"
+                  (click)="removeTimeSlot(daySlot, timeSlot)"
+                  matTooltip="Supprimer ce créneau"
+                  class="delete-btn">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Status Badge -->
+            <div class="status-badge" [class.active]="timeSlot.isEnabled">
+              <mat-icon>{{ timeSlot.isEnabled ? 'check_circle' : 'cancel' }}</mat-icon>
+              <span>{{ timeSlot.isEnabled ? 'Actif' : 'Désactivé' }}</span>
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="daySlot.times.length === 0">
+            <mat-icon>schedule</mat-icon>
+            <p>Aucun créneau horaire pour ce jour</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state-main" *ngIf="dayTimeSlots.length === 0">
+      <mat-icon>event_busy</mat-icon>
+      <h3>Aucune date définie</h3>
+      <p>Veuillez d'abord définir les périodes de la foire</p>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Footer Actions -->
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="close()" class="cancel-btn">
+      <mat-icon>close</mat-icon>
+      Annuler
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="save()"
+      [disabled]="isLoading"
+      class="save-btn">
+      <mat-icon *ngIf="!isLoading">save</mat-icon>
+      <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+      {{ isLoading ? 'Enregistrement...' : 'Enregistrer' }}
+    </button>
+  </mat-dialog-actions>
+</div>

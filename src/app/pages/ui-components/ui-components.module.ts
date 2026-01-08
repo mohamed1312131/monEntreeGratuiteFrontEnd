@@ -15,6 +15,7 @@ import { UiComponentsRoutes } from './ui-components.routing';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AddFoireComponent } from './add-foire/add-foire.component';
 import { EditFoireComponent } from './edit-foire/edit-foire.component';
+import { ManageFoireTimesComponent } from './manage-foire-times/manage-foire-times.component';
 import { AddSliderComponent } from './add-slider/add-slider.component';
 import { ExposantComponent } from './exposant/exposant.component';
 import { FoireDetailsComponent } from './foire-details/foire-details.component';
@@ -51,6 +52,7 @@ import { CampaignUsersComponent } from './campaigns/campaign-users.component';
     ReservationComponent,
     AddFoireComponent,
     EditFoireComponent,
+    ManageFoireTimesComponent,
     ExposantComponent,
     FoireDetailsComponent,
     AddSliderComponent,
