@@ -239,10 +239,15 @@
               }
               
               .drag-handle {
-                cursor: move;
+                cursor: grab;
                 color: #999;
                 display: flex;
                 align-items: center;
+                user-select: none;
+                
+                &:active {
+                  cursor: grabbing;
+                }
                 
                 mat-icon {
                   font-size: 24px;

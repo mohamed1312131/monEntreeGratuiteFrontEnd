@@ -111,6 +111,43 @@ import { CampaignUsersComponent } from './campaign-users.component';
               </div>
             </div>
 
+            <!-- Divider for Rates -->
+            <div style="margin: 10px 0; border-top: 2px solid #e0e0e0;"></div>
+            <h4 style="margin: 10px 0 15px 0; font-size: 14px; font-weight: 600; color: #555;">Taux de Performance</h4>
+
+            <!-- Open Rate -->
+            <div class="stat-row">
+              <div class="stat-label-group">
+                <span class="status-dot dot-blue"></span>
+                <span class="stat-label">Taux d'ouverture</span>
+              </div>
+              <div class="stat-value">
+                {{ stats.openRate }}%
+              </div>
+            </div>
+
+            <!-- Click Rate -->
+            <div class="stat-row">
+              <div class="stat-label-group">
+                <span class="status-dot dot-purple"></span>
+                <span class="stat-label">Taux de clic</span>
+              </div>
+              <div class="stat-value">
+                {{ stats.clickRate }}%
+              </div>
+            </div>
+
+            <!-- Click-to-Open Rate -->
+            <div class="stat-row">
+              <div class="stat-label-group">
+                <span class="status-dot dot-purple"></span>
+                <span class="stat-label">Taux de clic/ouverture</span>
+              </div>
+              <div class="stat-value">
+                {{ stats.clickToOpenRate }}%
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

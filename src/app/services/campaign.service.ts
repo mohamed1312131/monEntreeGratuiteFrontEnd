@@ -23,6 +23,9 @@ export interface CampaignStats {
   clickCount: number;
   unsubscribeCount: number;
   spamCount: number;
+  openRate: number;
+  clickRate: number;
+  clickToOpenRate: number;
 }
 
 @Injectable({

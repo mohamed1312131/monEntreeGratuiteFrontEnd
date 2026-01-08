@@ -80,6 +80,12 @@ export class FoiresComponent implements OnInit {
           ...f,
           reservationCount: 0
         }));
+        // Sort foires by name alphabetically
+        country.foires.sort((a, b) => {
+          const nameA = (a.name || '').toLowerCase();
+          const nameB = (b.name || '').toLowerCase();
+          return nameA.localeCompare(nameB);
+        });
         // Load reservation counts for each foire
         country.foires.forEach(foire => {
           this.loadReservationCount(foire);
