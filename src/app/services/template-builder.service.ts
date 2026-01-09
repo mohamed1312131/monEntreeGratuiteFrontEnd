@@ -249,7 +249,7 @@ export class TemplateBuilderService {
     if (!config.headerImage?.url) return '';
     return `
         <div class="header-section">
-            <img src="${config.headerImage.url}" alt="${config.headerImage.alt || 'Header'}" class="header-image" style="width: 100%; height: auto; display: block; object-fit: cover;">
+            <img src="${config.headerImage.url}" alt="${config.headerImage.alt || 'Header'}" class="header-image" style="width: 100%; height: auto; display: block;">
         </div>
     `;
   }
@@ -329,7 +329,7 @@ export class TemplateBuilderService {
   private generateGallerySection(config: EmailTemplateConfig): string {
     if (!config.galleryImages || config.galleryImages.length === 0) return '';
     const images = config.galleryImages.map((url, index) => 
-      `<div class="gallery-item" style="display: block; margin-bottom: 15px; width: 100%;"><img src="${url}" alt="Gallery Image ${index + 1}" style="display: block; width: 100%; height: auto; max-height: 400px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>`
+      `<div class="gallery-item" style="display: block; margin-bottom: 15px; width: 100%;"><img src="${url}" alt="Gallery Image ${index + 1}" style="display: block; width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>`
     ).join('');
     return `<div class="gallery" style="padding: 25px 35px;">${images}</div>`;
   }
