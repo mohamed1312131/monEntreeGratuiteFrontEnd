@@ -164,7 +164,6 @@ export class TemplateBuilderService {
             display: block;
             width: 100%;
             height: auto;
-            max-height: 400px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
@@ -230,9 +229,6 @@ export class TemplateBuilderService {
             .gallery {
                 gap: 10px;
                 padding: 15px 20px;
-            }
-            .gallery img {
-                max-height: 300px;
             }
             .cta-button {
                 padding: 14px 35px;
