@@ -458,13 +458,26 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
   }
   
   onGalleryDrop(event: CdkDragDrop<string[]>): void {
+    // Reorder both arrays
     moveItemInArray(this.galleryPreviews, event.previousIndex, event.currentIndex);
     moveItemInArray(this.galleryImageUrls, event.previousIndex, event.currentIndex);
+    
+    // Create new array references to ensure change detection works
+    // This is especially important for large PNG files where rendering might be delayed
+    this.galleryPreviews = [...this.galleryPreviews];
+    this.galleryImageUrls = [...this.galleryImageUrls];
+    
+    // Update form with new order - this triggers preview regeneration
     this.templateForm.patchValue({ 
       galleryImageUrls: this.galleryImageUrls.join('\n') 
-    });
-    // Trigger change detection to update preview
+    }, { emitEvent: true });
+    
+    // Mark form as dirty and force change detection
+    this.templateForm.markAsDirty();
     this.cdr.detectChanges();
+    
+    // Log for debugging
+    console.log('Gallery reordered:', this.galleryImageUrls);
   }
 
   saveTemplate(): void {
