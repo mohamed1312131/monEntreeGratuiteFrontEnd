@@ -81,7 +81,7 @@ export class TemplateBuilderService {
         }
         .dynamic-field {
             font-weight: 700;
-            color: ${config.primaryColor || '#1976D2'};
+            color: ${config.contentTextColor || '#34495e'};
             font-size: 1.5em;
             display: block;
             margin: 8px 0;
@@ -273,7 +273,7 @@ export class TemplateBuilderService {
       "`;
 
       if (section.type === 'dynamic-field') {
-        const dynamicFieldStyle = `style="font-weight: 700; color: ${primaryColor}; font-size: 1.5em; display: block; margin: 8px 0; letter-spacing: 0.5px; text-align: center;"`;
+        const dynamicFieldStyle = `style="font-weight: 700; color: ${textColor}; font-size: 1.5em; display: block; margin: 8px 0; letter-spacing: 0.5px; text-align: center;"`;
         return `<div class="content-section" style="padding: 6px 35px;"><span class="dynamic-field" ${dynamicFieldStyle}>${section.dynamicField}</span></div>`;
       } else if (section.type === 'text') {
         const content = section.content || '';
