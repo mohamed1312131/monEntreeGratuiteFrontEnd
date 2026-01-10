@@ -17,6 +17,8 @@ export interface ReservationData {
   city: string;
   email: string;
   phone: string;
+  selectedDate?: string;
+  selectedTime?: string;
   reservationDate: string;
   ageCategory: string;
   status: string;

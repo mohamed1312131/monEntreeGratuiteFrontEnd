@@ -1,10 +1,11 @@
 import { Component, OnInit, Output, EventEmitter, ViewEncapsulation, HostListener } from '@angular/core';
-import { FoireService, Foire as FoireData } from 'src/app/services/foire.service';
+import { FoireService, Foire as FoireData, DateRange, DayTimeSlot } from 'src/app/services/foire.service';
 
 interface Foire {
   id: number;
   name: string;
-  dateRanges: string[];
+  dateRanges: DateRange[];
+  dayTimeSlots?: DayTimeSlot[];
   location: string;
   image: string;
   description: string;
@@ -106,7 +107,8 @@ export class FoiresSectionComponent implements OnInit {
     return foires.map(foire => ({
       id: foire.id,
       name: foire.name,
-      dateRanges: this.formatDateRangesAsArray(foire),
+      dateRanges: foire.dateRanges || [],
+      dayTimeSlots: foire.dayTimeSlots || [],
       location: foire.location || this.formatLocation(foire),
       image: foire.image || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80',
       description: foire.description || '',
@@ -115,35 +117,15 @@ export class FoiresSectionComponent implements OnInit {
     }));
   }
 
-  private formatDateRangesAsArray(foire: FoireData): string[] {
-    // Use new dateRanges field if available
-    if (foire.dateRanges && foire.dateRanges.length > 0) {
-      return foire.dateRanges.map(range => {
-        const start = new Date(range.startDate);
-        const end = new Date(range.endDate);
-        const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-        
-        if (range.startDate === range.endDate) {
-          return start.toLocaleDateString('fr-FR', options);
-        }
-        return `${start.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} - ${end.toLocaleDateString('fr-FR', options)}`;
-      });
-    }
+  formatDateRangeDisplay(range: DateRange): string {
+    const start = new Date(range.startDate);
+    const end = new Date(range.endDate);
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
     
-    // Fallback to old date field for backward compatibility
-    if (foire.date) {
-      const start = new Date(foire.date);
-      const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-      
-      if (foire.endDate) {
-        const end = new Date(foire.endDate);
-        return [`${start.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} - ${end.toLocaleDateString('fr-FR', options)}`];
-      }
-      
-      return [start.toLocaleDateString('fr-FR', options)];
+    if (range.startDate === range.endDate) {
+      return start.toLocaleDateString('fr-FR', options);
     }
-    
-    return ['Dates à définir'];
+    return `${start.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} - ${end.toLocaleDateString('fr-FR', options)}`;
   }
 
   private formatLocation(foire: FoireData): string {
@@ -159,7 +141,7 @@ export class FoiresSectionComponent implements OnInit {
         {
           id: 1,
           name: "Foire de Paris 2024",
-          dateRanges: ["15-20 Mars 2024"],
+          dateRanges: [{ startDate: "2024-03-15", endDate: "2024-03-20" }],
           location: "Paris Expo",
           image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80",
           description: "La plus grande foire de France"
@@ -167,7 +149,7 @@ export class FoiresSectionComponent implements OnInit {
         {
           id: 2,
           name: "Salon de Lyon",
-          dateRanges: ["5-10 Avril 2024"],
+          dateRanges: [{ startDate: "2024-04-05", endDate: "2024-04-10" }],
           location: "Eurexpo Lyon",
           image: "https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=800&q=80",
           description: "Gastronomie et vins"
@@ -175,7 +157,7 @@ export class FoiresSectionComponent implements OnInit {
         {
           id: 3,
           name: "Foire de Marseille",
-          dateRanges: ["1-7 Mai 2024"],
+          dateRanges: [{ startDate: "2024-05-01", endDate: "2024-05-07" }],
           location: "Parc Chanot",
           image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
           description: "Événement méditerranéen"
@@ -185,7 +167,7 @@ export class FoiresSectionComponent implements OnInit {
         {
           id: 4,
           name: "Foire de Bruxelles",
-          dateRanges: ["10-15 Mars 2024"],
+          dateRanges: [{ startDate: "2024-03-10", endDate: "2024-03-15" }],
           location: "Brussels Expo",
           image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
           description: "L'événement de Belgique"
@@ -193,7 +175,7 @@ export class FoiresSectionComponent implements OnInit {
         {
           id: 5,
           name: "Salon d'Anvers",
-          dateRanges: ["20-25 Avril 2024"],
+          dateRanges: [{ startDate: "2024-04-20", endDate: "2024-04-25" }],
           location: "Antwerp Expo",
           image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80",
           description: "Innovation et design"
@@ -203,7 +185,7 @@ export class FoiresSectionComponent implements OnInit {
         {
           id: 6,
           name: "Foire de Genève",
-          dateRanges: ["5-10 Juin 2024"],
+          dateRanges: [{ startDate: "2024-06-05", endDate: "2024-06-10" }],
           location: "Palexpo",
           image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80",
           description: "Excellence suisse"
@@ -211,7 +193,7 @@ export class FoiresSectionComponent implements OnInit {
         {
           id: 7,
           name: "Salon de Zurich",
-          dateRanges: ["15-20 Juin 2024"],
+          dateRanges: [{ startDate: "2024-06-15", endDate: "2024-06-20" }],
           location: "Messe Zürich",
           image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
           description: "Innovation et technologie"

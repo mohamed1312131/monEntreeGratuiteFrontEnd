@@ -112,17 +112,29 @@
         </td>
       </ng-container>
 
-      <!-- Date Column -->
-      <ng-container matColumnDef="reservationDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-date">Date</th>
-        <td mat-cell *matCellDef="let row" class="col-date">{{ row.reservationDate }}</td>
-      </ng-container>
-
       <!-- Foire Column -->
       <ng-container matColumnDef="foireName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-foire">Foire</th>
         <td mat-cell *matCellDef="let row" class="col-foire">
           <span class="truncate-text" [title]="row.foireName">{{ row.foireName }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Selected Date Column -->
+      <ng-container matColumnDef="selectedDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-date">Date Visite</th>
+        <td mat-cell *matCellDef="let row" class="col-date">
+          <span *ngIf="row.selectedDate">{{ row.selectedDate }}</span>
+          <span *ngIf="!row.selectedDate" style="color: #999;">N/A</span>
+        </td>
+      </ng-container>
+
+      <!-- Selected Time Column -->
+      <ng-container matColumnDef="selectedTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-time">Créneau</th>
+        <td mat-cell *matCellDef="let row" class="col-time">
+          <span *ngIf="row.selectedTime">{{ row.selectedTime }}</span>
+          <span *ngIf="!row.selectedTime" style="color: #999;">N/A</span>
         </td>
       </ng-container>
 
@@ -157,6 +169,15 @@
         <th mat-header-cell *matHeaderCellDef class="col-age">Âge</th>
         <td mat-cell *matCellDef="let row" class="col-age">
           <span class="age-badge">{{ getAgeLabel(row.ageCategory) }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Created At Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-created">Créé le</th>
+        <td mat-cell *matCellDef="let row" class="col-created">
+          <span *ngIf="row.createdAt">{{ row.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span *ngIf="!row.createdAt" class="text-muted">N/A</span>
         </td>
       </ng-container>
 

@@ -15,6 +15,8 @@ interface DateRange {
 interface Reservation {
   id: number;
   country: string;
+  selectedDate?: string;
+  selectedTime?: string;
   reservationDate: string;
   foireDateRanges: DateRange[];
   foireName: string;
@@ -34,8 +36,8 @@ interface Reservation {
 })
 export class ReservationComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
-    'select', 'id', 'country', 'reservationDate', 'foireName', 
-    'name', 'city', 'email', 'phone', 'ageCategory', 'status', 'actions'
+    'select', 'id', 'country', 'foireName', 'selectedDate', 'selectedTime',
+    'name', 'city', 'email', 'phone', 'ageCategory', 'createdAt', 'status', 'actions'
   ];
 
   dataSource: MatTableDataSource<Reservation>;
@@ -187,6 +189,8 @@ export class ReservationComponent implements OnInit, AfterViewInit {
         this.allReservations = data.map(r => ({
           id: r.id,
           country: r.country,
+          selectedDate: r.selectedDate,
+          selectedTime: r.selectedTime,
           reservationDate: r.reservationDate,
           foireDateRanges: r.foireDateRanges || [],
           foireName: r.foireName,

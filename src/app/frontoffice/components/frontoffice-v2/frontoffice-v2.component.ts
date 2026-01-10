@@ -14,10 +14,27 @@ interface HeroSlide {
   location: string;
 }
 
+interface DateRange {
+  startDate: string;
+  endDate: string;
+}
+
+interface TimeSlot {
+  id: string;
+  startTime: string;
+  isEnabled: boolean;
+}
+
+interface DayTimeSlot {
+  date: string;
+  times: TimeSlot[];
+}
+
 interface Foire {
   id: number;
   name: string;
-  dateRanges: string[];
+  dateRanges: DateRange[];
+  dayTimeSlots?: DayTimeSlot[];
   location: string;
   image: string;
   description: string;
@@ -34,6 +51,8 @@ interface ReservationForm {
   email: string;
   trancheAge: string;
   telephone: string;
+  selectedDate: string;
+  selectedTime: string;
   acceptConditions: boolean;
   acceptMarketing: boolean;
 }
@@ -47,6 +66,8 @@ interface FoireDetails {
   pays: string;
   description: string;
   disponible?: boolean;
+  dateRanges: DateRange[];
+  dayTimeSlots?: DayTimeSlot[];
 }
 
 interface ExhibitorForm {
@@ -94,6 +115,9 @@ export class FrontofficeV2Component implements OnInit {
   exhibitorErrorMessage = '';
   exhibitorSuccessMessage = '';
   
+  availableDates: string[] = [];
+  availableTimeSlots: TimeSlot[] = [];
+  
   reservationForm: ReservationForm = {
     pays: '',
     entreeType: '',
@@ -104,6 +128,8 @@ export class FrontofficeV2Component implements OnInit {
     email: '',
     trancheAge: '',
     telephone: '',
+    selectedDate: '',
+    selectedTime: '',
     acceptConditions: false,
     acceptMarketing: false
   };
@@ -122,21 +148,55 @@ export class FrontofficeV2Component implements OnInit {
   // Form state management
 
   onReserve(foire: Foire, countryName: string): void {
+    const dateRangesStr = foire.dateRanges.map(r => `${r.startDate} - ${r.endDate}`).join(' • ');
+    
     this.selectedFoire = {
       id: foire.id,
       name: foire.name,
-      date: foire.dateRanges.join(' • '),
+      date: dateRangesStr,
       image: foire.image,
       location: foire.location,
       pays: countryName,
       description: foire.description,
-      disponible: foire.disponible === true
+      disponible: foire.disponible === true,
+      dateRanges: foire.dateRanges,
+      dayTimeSlots: foire.dayTimeSlots || []
     };
     
     this.reservationForm.pays = countryName;
     this.errorMessage = '';
     this.successMessage = '';
+    this.loadAvailableDates();
     this.isFormOpen = true;
+  }
+
+  loadAvailableDates(): void {
+    if (!this.selectedFoire || !this.selectedFoire.dayTimeSlots) {
+      this.availableDates = [];
+      return;
+    }
+    
+    // Get all dates that have at least one enabled time slot
+    this.availableDates = this.selectedFoire.dayTimeSlots
+      .filter(daySlot => daySlot.times.some(time => time.isEnabled))
+      .map(daySlot => daySlot.date);
+  }
+
+  onDateSelected(): void {
+    if (!this.reservationForm.selectedDate || !this.selectedFoire?.dayTimeSlots) {
+      this.availableTimeSlots = [];
+      this.reservationForm.selectedTime = '';
+      return;
+    }
+    
+    // Find the day time slot for selected date
+    const daySlot = this.selectedFoire.dayTimeSlots.find(
+      slot => slot.date === this.reservationForm.selectedDate
+    );
+    
+    // Filter only enabled time slots
+    this.availableTimeSlots = daySlot?.times.filter(time => time.isEnabled) || [];
+    this.reservationForm.selectedTime = '';
   }
 
   closeForm(): void {
@@ -159,9 +219,13 @@ export class FrontofficeV2Component implements OnInit {
       email: '',
       trancheAge: '',
       telephone: '',
+      selectedDate: '',
+      selectedTime: '',
       acceptConditions: false,
       acceptMarketing: false
     };
+    this.availableDates = [];
+    this.availableTimeSlots = [];
   }
 
   submitReservation(): void {
@@ -200,6 +264,16 @@ export class FrontofficeV2Component implements OnInit {
 
     if (!this.reservationForm.trancheAge) {
       this.errorMessage = 'Veuillez sélectionner votre tranche d\'âge.';
+      return;
+    }
+
+    if (!this.reservationForm.selectedDate) {
+      this.errorMessage = 'Veuillez sélectionner une date.';
+      return;
+    }
+
+    if (!this.reservationForm.selectedTime) {
+      this.errorMessage = 'Veuillez sélectionner un créneau horaire.';
       return;
     }
     
@@ -243,6 +317,8 @@ export class FrontofficeV2Component implements OnInit {
       pays: this.reservationForm.pays,
       trancheAge: this.reservationForm.trancheAge,
       ageCategory: ageCategoryMap[this.reservationForm.trancheAge] || this.reservationForm.trancheAge,
+      selectedDate: this.reservationForm.selectedDate,
+      selectedTime: this.reservationForm.selectedTime,
       recaptchaToken: recaptchaToken
     };
     
@@ -402,7 +478,8 @@ export class FrontofficeV2Component implements OnInit {
     const heroFoire: Foire = {
       id: heroSlide.id,
       name: heroSlide.title,
-      dateRanges: ['À venir'],
+      dateRanges: [{ startDate: 'À venir', endDate: 'À venir' }],
+      dayTimeSlots: [],
       image: heroSlide.image,
       location: heroSlide.location,
       description: heroSlide.description

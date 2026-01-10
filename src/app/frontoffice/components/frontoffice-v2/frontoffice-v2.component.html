@@ -149,6 +149,26 @@
           </select>
         </div>
 
+        <!-- Date Selection -->
+        <div class="form-group">
+          <label for="selectedDate">Sélectionnez votre date de visite *</label>
+          <select id="selectedDate" [(ngModel)]="reservationForm.selectedDate" name="selectedDate" required class="form-control" [disabled]="!selectedFoire.disponible || availableDates.length === 0" (change)="onDateSelected()">
+            <option value="">Choisissez une date</option>
+            <option *ngFor="let date of availableDates" [value]="date">{{ date }}</option>
+          </select>
+          <small *ngIf="availableDates.length === 0 && selectedFoire.disponible" style="color: #dc3545;">Aucune date disponible pour cette foire</small>
+        </div>
+
+        <!-- Time Slot Selection -->
+        <div class="form-group">
+          <label for="selectedTime">Sélectionnez votre créneau horaire *</label>
+          <select id="selectedTime" [(ngModel)]="reservationForm.selectedTime" name="selectedTime" required class="form-control" [disabled]="!selectedFoire.disponible || !reservationForm.selectedDate || availableTimeSlots.length === 0">
+            <option value="">Choisissez un créneau</option>
+            <option *ngFor="let timeSlot of availableTimeSlots" [value]="timeSlot.startTime">{{ timeSlot.startTime }}</option>
+          </select>
+          <small *ngIf="reservationForm.selectedDate && availableTimeSlots.length === 0" style="color: #dc3545;">Aucun créneau disponible pour cette date</small>
+        </div>
+
         <!-- Téléphone -->
         <div class="form-group">
           <label for="telephone">Numéro de téléphone sur lequel vous êtes joignable *</label>
