@@ -314,8 +314,8 @@ export class TemplateBuilderService {
                 <div class="gps-subtitle" style="font-size: 0.95em; color: ${gpsTextColor}; margin-bottom: 12px; font-weight: 500;">ENTRÉE PRINCIPALE</div>
                 ${config.gpsCoordinates.latitude && config.gpsCoordinates.longitude ? 
                   `<a href="https://www.google.com/maps?q=${config.gpsCoordinates.latitude},${config.gpsCoordinates.longitude}" 
-                      class="gps-link" style="display: inline-block; margin-top: 10px; padding: 10px 25px; background-color: ${gpsButtonBgColor}; color: ${gpsButtonTextColor}; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 13px;">
-                      📍 Voir sur Google Maps
+                      class="gps-link" style="display: inline-block; margin-top: 10px; padding: 10px 25px; background-color: ${gpsButtonBgColor}; color: ${gpsButtonTextColor} !important; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 13px;">
+                      <span style="color: ${gpsButtonTextColor} !important;">📍 Voir sur Google Maps</span>
                   </a>` : ''}
             </div>
         </div>
