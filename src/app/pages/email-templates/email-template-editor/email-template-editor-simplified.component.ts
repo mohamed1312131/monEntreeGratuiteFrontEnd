@@ -17,6 +17,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ChangeDetectorRef } from '@angular/core';
 import { EmailTemplateService } from '../../../services/email-template.service';
 import { TemplateBuilderService } from '../../../services/template-builder.service';
 import { UploadService } from '../../../services/upload.service';
@@ -75,7 +76,8 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
     private templateBuilder: TemplateBuilderService,
     private uploadService: UploadService,
     private snackBar: MatSnackBar,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef
   ) {
     this.initForm();
   }
@@ -461,6 +463,8 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
     this.templateForm.patchValue({ 
       galleryImageUrls: this.galleryImageUrls.join('\n') 
     });
+    // Trigger change detection to update preview
+    this.cdr.detectChanges();
   }
 
   saveTemplate(): void {
