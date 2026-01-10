@@ -104,7 +104,7 @@ export class FoiresSectionComponent implements OnInit {
   }
 
   private mapFoiresToDisplayFormat(foires: FoireData[]): Foire[] {
-    return foires.map(foire => ({
+    const mappedFoires = foires.map(foire => ({
       id: foire.id,
       name: foire.name,
       dateRanges: foire.dateRanges || [],
@@ -115,6 +115,13 @@ export class FoiresSectionComponent implements OnInit {
       countryCode: foire.countryCode,
       disponible: foire.disponible
     }));
+
+    // Sort by earliest start date
+    return mappedFoires.sort((a, b) => {
+      const aStartDate = a.dateRanges.length > 0 ? new Date(a.dateRanges[0].startDate).getTime() : 0;
+      const bStartDate = b.dateRanges.length > 0 ? new Date(b.dateRanges[0].startDate).getTime() : 0;
+      return aStartDate - bStartDate;
+    });
   }
 
   formatDateRangeDisplay(range: DateRange): string {

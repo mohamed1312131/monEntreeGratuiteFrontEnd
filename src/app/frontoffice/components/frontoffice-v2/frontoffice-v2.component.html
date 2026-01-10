@@ -151,7 +151,7 @@
 
         <!-- Date Selection -->
         <div class="form-group">
-          <label for="selectedDate">Sélectionnez votre date de visite *</label>
+          <label for="selectedDate">Choisir la date de la visite *</label>
           <select id="selectedDate" [(ngModel)]="reservationForm.selectedDate" name="selectedDate" required class="form-control" [disabled]="!selectedFoire.disponible || availableDates.length === 0" (change)="onDateSelected()">
             <option value="">Choisissez une date</option>
             <option *ngFor="let date of availableDates" [value]="date">{{ date }}</option>
@@ -161,7 +161,7 @@
 
         <!-- Time Slot Selection -->
         <div class="form-group">
-          <label for="selectedTime">Sélectionnez votre créneau horaire *</label>
+          <label for="selectedTime">Choisir l'heure de la visite *</label>
           <select id="selectedTime" [(ngModel)]="reservationForm.selectedTime" name="selectedTime" required class="form-control" [disabled]="!selectedFoire.disponible || !reservationForm.selectedDate || availableTimeSlots.length === 0">
             <option value="">Choisissez un créneau</option>
             <option *ngFor="let timeSlot of availableTimeSlots" [value]="timeSlot.startTime">{{ timeSlot.startTime }}</option>

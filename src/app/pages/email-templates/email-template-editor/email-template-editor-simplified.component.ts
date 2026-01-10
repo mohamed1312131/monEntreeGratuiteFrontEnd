@@ -340,6 +340,13 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
       return;
     }
 
+    // Validate file size
+    const validationError = this.uploadService.validateFileSize(file);
+    if (validationError) {
+      this.snackBar.open(validationError, 'Close', { duration: 5000 });
+      return;
+    }
+
     // Show preview immediately
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -358,7 +365,8 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error uploading header image:', error);
-        this.snackBar.open('Error uploading image', 'Close', { duration: 3000 });
+        const errorMessage = error?.error?.error || 'Error uploading image';
+        this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
         this.uploadingHeader = false;
         this.headerImagePreview = null;
       }
@@ -383,6 +391,15 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
       }
     }
 
+    // Validate file sizes
+    for (let i = 0; i < files.length; i++) {
+      const validationError = this.uploadService.validateFileSize(files[i]);
+      if (validationError) {
+        this.snackBar.open(validationError, 'Close', { duration: 5000 });
+        return;
+      }
+    }
+
     this.uploadingGallery = true;
     const uploadPromises: Promise<string>[] = [];
 
@@ -401,7 +418,10 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
       const uploadPromise = new Promise<string>((resolve, reject) => {
         this.uploadService.uploadImage(file).subscribe({
           next: (response) => resolve(response.url),
-          error: (error) => reject(error)
+          error: (error) => {
+            console.error('Upload error:', error);
+            reject(error);
+          }
         });
       });
       uploadPromises.push(uploadPromise);
@@ -419,8 +439,11 @@ export class EmailTemplateEditorSimplifiedComponent implements OnInit {
       })
       .catch((error) => {
         console.error('Error uploading gallery images:', error);
-        this.snackBar.open('Error uploading some images', 'Close', { duration: 3000 });
+        const errorMessage = error?.error?.error || 'Error uploading some images. Please check file sizes and try again.';
+        this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
         this.uploadingGallery = false;
+        // Clear previews on error
+        this.galleryPreviews = [];
       });
   }
 
