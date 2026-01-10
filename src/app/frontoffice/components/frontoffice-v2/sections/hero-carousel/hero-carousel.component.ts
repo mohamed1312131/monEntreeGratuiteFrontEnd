@@ -32,8 +32,8 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
   // Input to control auto-slide (default: true)
   @Input() autoSlide = true;
 
-  // Input to control auto-slide interval in ms (default: 5000)
-  @Input() autoSlideIntervalMs = 5000;
+  // Input to control auto-slide interval in ms (default: 6000)
+  @Input() autoSlideIntervalMs = 6000;
 
   // Hero slides loaded from backend
   heroSlides: HeroSlide[] = [];
