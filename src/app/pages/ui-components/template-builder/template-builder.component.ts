@@ -58,20 +58,37 @@ export class TemplateBuilderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('=== TemplateBuilderComponent ngOnInit START ===');
+    console.log('Component initialized at:', new Date().toISOString());
+    console.log('Current route:', this.router.url);
     this.loadTemplates();
   }
 
   loadTemplates(): void {
+    console.log('=== loadTemplates() called ===');
+    console.log('Setting isLoading to true');
     this.isLoading = true;
+    
+    console.log('Calling customTemplateService.getAllTemplates()...');
     this.customTemplateService.getAllTemplates().subscribe({
       next: (templates) => {
+        console.log('=== getAllTemplates SUCCESS ===');
+        console.log('Received templates:', templates);
+        console.log('Number of templates:', templates.length);
         this.templates = templates;
         this.isLoading = false;
+        console.log('isLoading set to false');
       },
       error: (error) => {
-        console.error('Error loading templates:', error);
+        console.error('=== getAllTemplates ERROR ===');
+        console.error('Error object:', error);
+        console.error('Error status:', error.status);
+        console.error('Error message:', error.message);
+        console.error('Error statusText:', error.statusText);
+        console.error('Full error:', JSON.stringify(error, null, 2));
         this.showSnackBar('Erreur lors du chargement des templates', 'error');
         this.isLoading = false;
+        console.log('isLoading set to false after error');
       }
     });
   }

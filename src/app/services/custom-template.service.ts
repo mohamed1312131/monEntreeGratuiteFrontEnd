@@ -41,6 +41,9 @@ export class CustomTemplateService {
   }
 
   getAllTemplates(): Observable<CustomTemplate[]> {
+    console.log('=== CustomTemplateService.getAllTemplates() ===');
+    console.log('API URL:', this.apiUrl);
+    console.log('Making HTTP GET request...');
     return this.http.get<CustomTemplate[]>(this.apiUrl);
   }
 
