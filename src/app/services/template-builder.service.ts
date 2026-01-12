@@ -141,7 +141,7 @@ export class TemplateBuilderService {
             margin-top: 10px;
             padding: 10px 25px;
             background-color: ${config.gpsCoordinates?.buttonBackgroundColor || config.primaryColor || '#1976D2'};
-            color: ${config.gpsCoordinates?.buttonTextColor || 'white'};
+            color: ${config.gpsCoordinates?.buttonTextColor || '#ffffff'};
             text-decoration: none;
             border-radius: 25px;
             font-weight: 600;
@@ -305,7 +305,7 @@ export class TemplateBuilderService {
     const gpsBgColor = config.gpsCoordinates.backgroundColor || '#f5f7fa';
     const gpsTextColor = config.gpsCoordinates.textColor || config.primaryColor || '#1976D2';
     const gpsButtonBgColor = config.gpsCoordinates.buttonBackgroundColor || config.primaryColor || '#1976D2';
-    const gpsButtonTextColor = config.gpsCoordinates.buttonTextColor || 'white';
+    const gpsButtonTextColor = config.gpsCoordinates.buttonTextColor || '#ffffff';
     
     return `
         <div class="content-section">
@@ -314,9 +314,7 @@ export class TemplateBuilderService {
                 <div class="gps-subtitle" style="font-size: 0.95em; color: ${gpsTextColor}; margin-bottom: 12px; font-weight: 500;">ENTRÉE PRINCIPALE</div>
                 ${config.gpsCoordinates.latitude && config.gpsCoordinates.longitude ? 
                   `<a href="https://www.google.com/maps?q=${config.gpsCoordinates.latitude},${config.gpsCoordinates.longitude}" 
-                      class="gps-link" style="display: inline-block; margin-top: 10px; padding: 10px 25px; background-color: ${gpsButtonBgColor}; color: ${gpsButtonTextColor} !important; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 13px;">
-                      <span style="color: ${gpsButtonTextColor} !important;">📍 Voir sur Google Maps</span>
-                  </a>` : ''}
+                      class="gps-link" style="display: inline-block; margin-top: 10px; padding: 10px 25px; background-color: ${gpsButtonBgColor}; color: ${gpsButtonTextColor}; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 13px;">📍 Voir sur Google Maps</a>` : ''}
             </div>
         </div>
     `;

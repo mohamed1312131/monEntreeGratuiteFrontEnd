@@ -69,12 +69,6 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Primary Color</mat-label>
-              <input matInput formControlName="primaryColor" type="color">
-              <mat-icon matSuffix>palette</mat-icon>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="full-width">
               <mat-label>Font Family</mat-label>
               <mat-select formControlName="fontFamily">
                 <mat-option *ngFor="let font of fontFamilies" [value]="font.value">
