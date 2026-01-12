@@ -11,6 +11,7 @@ import { EmailTemplateEditorSimplifiedComponent } from '../email-templates/email
 import { NewsletterManagementComponent } from '../newsletter-management/newsletter-management.component';
 import { PublicUnsubscribeComponent } from '../public-unsubscribe/public-unsubscribe.component';
 import { BlockListComponent } from '../email-templates/block-list/block-list.component';
+import { CampaignListComponent } from '../email-templates/campaign-list/campaign-list.component';
 
 export const UiComponentsRoutes: Routes = [
   {
@@ -69,6 +70,11 @@ export const UiComponentsRoutes: Routes = [
       {
         path: 'email-templates/block-list',
         component: BlockListComponent,
+        data: { fullWidth: true }
+      },
+      {
+        path: 'email-templates/campaigns',
+        component: CampaignListComponent,
         data: { fullWidth: true }
       },
       {

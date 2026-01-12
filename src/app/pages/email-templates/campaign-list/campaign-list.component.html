@@ -1,0 +1,137 @@
+<div class="campaign-container">
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des campagnes...</p>
+  </div>
+
+  <!-- Compact Header Bar -->
+  <div class="header-bar">
+    <div class="header-left">
+      <div class="title-section">
+        <mat-icon class="header-icon">campaign</mat-icon>
+        <h1 class="header-title">Campagnes d'Emails</h1>
+        <span class="count-badge">{{ campaignCount }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compact Action Bar -->
+  <div class="action-bar">
+    <div class="action-left">
+      <mat-form-field appearance="outline" class="compact-search">
+        <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher une campagne..." #filterInput />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- High-Density Table -->
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort class="compact-table">
+      
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-id">ID</th>
+        <td mat-cell *matCellDef="let row" class="col-id">
+          <span class="id-text">{{ row.id }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-name">Nom</th>
+        <td mat-cell *matCellDef="let row" class="col-name">
+          <span class="name-text" [title]="row.name">{{ row.name }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Audience Column -->
+      <ng-container matColumnDef="audience">
+        <th mat-header-cell *matHeaderCellDef class="col-audience">Audience</th>
+        <td mat-cell *matCellDef="let row" class="col-audience">
+          <span class="audience-badge">
+            <mat-icon>people</mat-icon>
+            {{ row.totalRecipients || 0 }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Channel Column -->
+      <ng-container matColumnDef="channel">
+        <th mat-header-cell *matHeaderCellDef class="col-channel">Canal</th>
+        <td mat-cell *matCellDef="let row" class="col-channel">
+          <span class="channel-badge">
+            <mat-icon>email</mat-icon>
+            Email
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Template Name Column -->
+      <ng-container matColumnDef="templateName">
+        <th mat-header-cell *matHeaderCellDef class="col-template">Email Template</th>
+        <td mat-cell *matCellDef="let row" class="col-template">
+          <span class="template-text" [title]="row.template?.name">
+            {{ row.template?.name || 'N/A' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Sent At Column -->
+      <ng-container matColumnDef="sentAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-date">Date d'envoi</th>
+        <td mat-cell *matCellDef="let row" class="col-date">
+          <span>{{ formatDate(row.sentAt) }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef class="col-status">État</th>
+        <td mat-cell *matCellDef="let row" class="col-status">
+          <span class="status-badge" [ngClass]="getStatusClass(row)">
+            {{ getStatusLabel(row) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="col-actions">Actions</th>
+        <td mat-cell *matCellDef="let row" class="col-actions">
+          <div class="action-btns">
+            <button mat-icon-button 
+                    class="action-icon view-icon" 
+                    (click)="viewCampaignUsers(row); $event.stopPropagation()" 
+                    matTooltip="Voir les utilisateurs">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="compact-header"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="compact-row"></tr>
+
+      <tr class="mat-row no-data-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <div class="no-data">
+            <mat-icon>inbox</mat-icon>
+            <span>Aucune campagne trouvée</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Compact Paginator -->
+  <div class="paginator-wrapper">
+    <mat-paginator
+      [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="pageSize"
+      showFirstLastButtons
+      class="compact-paginator"
+    ></mat-paginator>
+  </div>
+</div>
