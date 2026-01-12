@@ -67,6 +67,9 @@ export class AuthInterceptor implements HttpInterceptor {
     // Public visit tracking endpoint - no auth required
     if (url.includes('/api/visits/track') && method === 'POST') return true;
     
+    // Public template viewer by slug - no auth required
+    if (url.includes('/api/custom-templates/slug/') && method === 'GET') return true;
+    
     // Only POST to /api/reservations is public (for creating reservations from frontoffice)
     // GET /api/reservations/* requires auth (for admin dashboard)
     if (url.includes('/api/reservations') && method === 'POST' && url.endsWith('/api/reservations')) {
