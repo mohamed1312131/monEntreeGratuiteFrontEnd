@@ -1,0 +1,111 @@
+<div class="blocklist-container">
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Chargement des emails bloqués...</p>
+  </div>
+
+  <!-- Compact Header Bar -->
+  <div class="header-bar">
+    <div class="header-left">
+      <div class="title-section">
+        <mat-icon class="header-icon">block</mat-icon>
+        <h1 class="header-title">Emails Bloqués (Désinscrits)</h1>
+        <span class="count-badge">{{ blockedEmailCount }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compact Action Bar -->
+  <div class="action-bar">
+    <div class="action-left">
+      <mat-form-field appearance="outline" class="compact-search">
+        <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher par email..." #filterInput />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- High-Density Table -->
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort class="compact-table">
+      
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-id">ID</th>
+        <td mat-cell *matCellDef="let row" class="col-id">
+          <span class="id-text">{{ row.id }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-email">Email</th>
+        <td mat-cell *matCellDef="let row" class="col-email">
+          <span class="email-text" [title]="row.email">{{ row.email }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Reason Column -->
+      <ng-container matColumnDef="reason">
+        <th mat-header-cell *matHeaderCellDef class="col-reason">Raison</th>
+        <td mat-cell *matCellDef="let row" class="col-reason">
+          <span class="reason-text" [title]="row.reason">{{ row.reason || 'Non spécifiée' }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Blocked At Column -->
+      <ng-container matColumnDef="blockedAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-blocked">Bloqué le</th>
+        <td mat-cell *matCellDef="let row" class="col-blocked">
+          <span>{{ formatDate(row.blockedAt) }}</span>
+        </td>
+      </ng-container>
+
+      <!-- IP Address Column -->
+      <ng-container matColumnDef="ipAddress">
+        <th mat-header-cell *matHeaderCellDef class="col-ip">Adresse IP</th>
+        <td mat-cell *matCellDef="let row" class="col-ip">
+          <span class="ip-text" [title]="row.ipAddress">{{ row.ipAddress || 'N/A' }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="col-actions">Actions</th>
+        <td mat-cell *matCellDef="let row" class="col-actions">
+          <div class="action-btns">
+            <button mat-icon-button 
+                    class="action-icon unblock-icon" 
+                    (click)="unblockEmail(row.email); $event.stopPropagation()" 
+                    matTooltip="Débloquer cet email">
+              <mat-icon>lock_open</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="compact-header"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="compact-row"></tr>
+
+      <tr class="mat-row no-data-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <div class="no-data">
+            <mat-icon>inbox</mat-icon>
+            <span>Aucun email bloqué trouvé</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Compact Paginator -->
+  <div class="paginator-wrapper">
+    <mat-paginator
+      [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="pageSize"
+      showFirstLastButtons
+      class="compact-paginator"
+    ></mat-paginator>
+  </div>
+</div>

@@ -32,6 +32,7 @@ import { EmailTemplateEditorSimplifiedComponent } from '../email-templates/email
 import { CampaignHistoryComponent } from './campaigns/campaign-history.component';
 import { CampaignStatsComponent } from './campaigns/campaign-stats.component';
 import { CampaignUsersComponent } from './campaigns/campaign-users.component';
+import { BlockListComponent } from '../email-templates/block-list/block-list.component';
 
 @NgModule({
   imports: [
@@ -61,7 +62,8 @@ import { CampaignUsersComponent } from './campaigns/campaign-users.component';
     EditVideoComponent,
     ExcelUploadComponent,
     CampaignHistoryComponent,
-    CampaignStatsComponent
+    CampaignStatsComponent,
+    BlockListComponent
   ],
 })
 export class UicomponentsModule {}

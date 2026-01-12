@@ -10,6 +10,7 @@ import { EmailTemplateEditorComponent } from '../email-templates/email-template-
 import { EmailTemplateEditorSimplifiedComponent } from '../email-templates/email-template-editor/email-template-editor-simplified.component';
 import { NewsletterManagementComponent } from '../newsletter-management/newsletter-management.component';
 import { PublicUnsubscribeComponent } from '../public-unsubscribe/public-unsubscribe.component';
+import { BlockListComponent } from '../email-templates/block-list/block-list.component';
 
 export const UiComponentsRoutes: Routes = [
   {
@@ -63,6 +64,11 @@ export const UiComponentsRoutes: Routes = [
       {
         path: 'email-templates/newsletter-subscribers',
         component: NewsletterManagementComponent,
+        data: { fullWidth: true }
+      },
+      {
+        path: 'email-templates/block-list',
+        component: BlockListComponent,
         data: { fullWidth: true }
       },
       {

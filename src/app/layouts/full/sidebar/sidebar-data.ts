@@ -52,9 +52,9 @@ export const navItems: NavItem[] = [
         route: '/admin/ui-components/email-templates/editor',
       },
       {
-        displayName: 'Manage Invitations',
+        displayName: 'block-list',
         iconName: 'users',
-        route: '/admin/ui-components/email-templates/invitations',
+        route: '/admin/ui-components/email-templates/block-list',
       },
       {
         displayName: 'Send Emails',
