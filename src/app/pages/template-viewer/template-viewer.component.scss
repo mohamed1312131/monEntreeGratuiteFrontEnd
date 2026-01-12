@@ -10,14 +10,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 24px;
+    padding: 24px;
 
     .template-image {
       width: 100%;
       max-width: 100%;
       display: block;
-      margin: 0;
-      padding: 0;
       object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 8px;
+      background: white;
+      border: 1px solid #eee;
     }
   }
 }
