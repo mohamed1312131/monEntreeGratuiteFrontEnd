@@ -1,0 +1,187 @@
+<div class="template-builder-container">
+  <div class="header">
+    <h1>Créateur de Templates</h1>
+    <p class="subtitle">Créez des templates personnalisés avec plusieurs images</p>
+  </div>
+
+  <!-- Template Creation Form -->
+  <mat-card class="builder-card">
+    <mat-card-header>
+      <mat-card-title>Nouveau Template</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- Template Name -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nom du Template</mat-label>
+        <input matInput [(ngModel)]="templateName" placeholder="Mon Template">
+        <mat-icon matSuffix>label</mat-icon>
+      </mat-form-field>
+
+      <!-- Background Color -->
+      <div class="color-picker-container">
+        <mat-form-field appearance="outline" class="color-input">
+          <mat-label>Couleur de fond</mat-label>
+          <input matInput [(ngModel)]="backgroundColor" placeholder="#ffffff">
+          <mat-icon matSuffix>palette</mat-icon>
+        </mat-form-field>
+        <input type="color" [(ngModel)]="backgroundColor" class="color-picker">
+        <div class="color-preview" [style.background-color]="backgroundColor"></div>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="upload-section">
+        <h3>Images</h3>
+        <div class="upload-area">
+          <input
+            type="file"
+            #fileInput
+            multiple
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            style="display: none">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="fileInput.click()"
+            [disabled]="isUploading">
+            <mat-icon>cloud_upload</mat-icon>
+            Télécharger des Images
+          </button>
+          <span *ngIf="isUploading" class="uploading-text">
+            <mat-spinner diameter="20"></mat-spinner>
+            Téléchargement en cours...
+          </span>
+        </div>
+      </div>
+
+      <!-- Image List with Drag & Drop -->
+      <div *ngIf="images.length > 0" class="images-section">
+        <h3>Images (Glissez pour réorganiser)</h3>
+        <div cdkDropList (cdkDropListDropped)="drop($event)" class="image-list">
+          <div
+            *ngFor="let image of images; let i = index"
+            cdkDrag
+            class="image-item">
+            <div class="drag-handle" cdkDragHandle>
+              <mat-icon>drag_indicator</mat-icon>
+            </div>
+            <div class="image-preview">
+              <img [src]="image.imageUrl" [alt]="image.altText || 'Image'">
+            </div>
+            <div class="image-info">
+              <span class="order-badge">{{ i + 1 }}</span>
+              <span class="image-url">{{ image.imageUrl | slice:0:50 }}...</span>
+            </div>
+            <div class="image-actions">
+              <button
+                mat-icon-button
+                (click)="moveUp(i)"
+                [disabled]="i === 0"
+                matTooltip="Monter">
+                <mat-icon>arrow_upward</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                (click)="moveDown(i)"
+                [disabled]="i === images.length - 1"
+                matTooltip="Descendre">
+                <mat-icon>arrow_downward</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="removeImage(i)"
+                matTooltip="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div *ngIf="images.length > 0" class="preview-section">
+        <h3>Aperçu</h3>
+        <div class="template-preview" [style.background-color]="backgroundColor">
+          <img
+            *ngFor="let image of images"
+            [src]="image.imageUrl"
+            [alt]="image.altText || 'Image'"
+            class="preview-image">
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="createTemplate()"
+        [disabled]="isCreating || images.length === 0 || !templateName.trim()">
+        <mat-icon>check</mat-icon>
+        {{ isCreating ? 'Création...' : 'Créer le Template' }}
+      </button>
+      <button
+        mat-button
+        (click)="resetForm()"
+        [disabled]="isCreating">
+        <mat-icon>clear</mat-icon>
+        Réinitialiser
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Existing Templates List -->
+  <mat-card class="templates-list-card">
+    <mat-card-header>
+      <mat-card-title>Templates Existants</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="isLoading" class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <div *ngIf="!isLoading && templates.length === 0" class="no-templates">
+        <mat-icon>inbox</mat-icon>
+        <p>Aucun template créé pour le moment</p>
+      </div>
+
+      <div *ngIf="!isLoading && templates.length > 0" class="templates-grid">
+        <div *ngFor="let template of templates" class="template-card">
+          <div class="template-preview-mini" [style.background-color]="template.backgroundColor">
+            <img
+              *ngIf="template.images.length > 0"
+              [src]="template.images[0].imageUrl"
+              [alt]="template.name">
+            <div class="image-count-badge">{{ template.images.length }} image(s)</div>
+          </div>
+          <div class="template-info">
+            <h4>{{ template.name }}</h4>
+            <p class="template-url">{{ template.publicUrl }}</p>
+            <div class="template-actions">
+              <button
+                mat-icon-button
+                (click)="viewTemplate(template.slug)"
+                matTooltip="Voir">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                (click)="copyToClipboard(template.publicUrl)"
+                matTooltip="Copier l'URL">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteTemplate(template.id)"
+                matTooltip="Supprimer">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

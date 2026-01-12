@@ -4,6 +4,7 @@ import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
 import { AuthGuard } from './guards/auth.guard';
 import { PublicUnsubscribeComponent } from './pages/public-unsubscribe/public-unsubscribe.component';
+import { TemplateViewerComponent } from './pages/template-viewer/template-viewer.component';
 
 const routes: Routes = [
   // Admin area under /admin
@@ -55,6 +56,11 @@ const routes: Routes = [
   {
     path: 'unsubscribe',
     component: PublicUnsubscribeComponent,
+  },
+  // Public template viewer (no auth required) - must be before frontoffice
+  {
+    path: ':slug',
+    component: TemplateViewerComponent,
   },
   // Frontoffice (user-facing) at site root - must be last before wildcard
   {

@@ -1,0 +1,21 @@
+<div class="template-viewer" *ngIf="!isLoading && !error && template" [style.background-color]="template.backgroundColor">
+  <div class="template-content">
+    <img
+      *ngFor="let image of template.images"
+      [src]="image.imageUrl"
+      [alt]="image.altText || template.name"
+      class="template-image"
+      loading="lazy">
+  </div>
+</div>
+
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner diameter="60"></mat-spinner>
+  <p>Chargement du template...</p>
+</div>
+
+<div class="error-container" *ngIf="error && !isLoading">
+  <mat-icon>error_outline</mat-icon>
+  <h2>Template non trouvé</h2>
+  <p>Le template que vous recherchez n'existe pas ou a été supprimé.</p>
+</div>

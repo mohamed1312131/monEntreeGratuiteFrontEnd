@@ -34,6 +34,7 @@ import { CampaignUsersComponent } from './campaigns/campaign-users.component';
 import { BlockListComponent } from '../email-templates/block-list/block-list.component';
 import { CampaignListComponent } from '../email-templates/campaign-list/campaign-list.component';
 import { CampaignStatsComponent } from '../email-templates/campaign-stats/campaign-stats.component';
+import { TemplateBuilderComponent } from './template-builder/template-builder.component';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { CampaignStatsComponent } from '../email-templates/campaign-stats/campai
     EmailTemplateEditorSimplifiedComponent,
     CampaignListComponent,
     CampaignStatsComponent,
+    TemplateBuilderComponent,
   ],
   declarations: [
     SliderComponent,

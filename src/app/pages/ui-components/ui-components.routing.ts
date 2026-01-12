@@ -12,6 +12,7 @@ import { NewsletterManagementComponent } from '../newsletter-management/newslett
 import { PublicUnsubscribeComponent } from '../public-unsubscribe/public-unsubscribe.component';
 import { BlockListComponent } from '../email-templates/block-list/block-list.component';
 import { CampaignListComponent } from '../email-templates/campaign-list/campaign-list.component';
+import { TemplateBuilderComponent } from './template-builder/template-builder.component';
 
 export const UiComponentsRoutes: Routes = [
   {
@@ -75,6 +76,11 @@ export const UiComponentsRoutes: Routes = [
       {
         path: 'email-templates/campaigns',
         component: CampaignListComponent,
+        data: { fullWidth: true }
+      },
+      {
+        path: 'template-builder',
+        component: TemplateBuilderComponent,
         data: { fullWidth: true }
       },
       {
