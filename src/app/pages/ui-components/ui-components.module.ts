@@ -30,10 +30,10 @@ import { EmailTemplateListComponent } from '../email-templates/email-template-li
 import { EmailTemplateEditorComponent } from '../email-templates/email-template-editor/email-template-editor.component';
 import { EmailTemplateEditorSimplifiedComponent } from '../email-templates/email-template-editor/email-template-editor-simplified.component';
 import { CampaignHistoryComponent } from './campaigns/campaign-history.component';
-import { CampaignStatsComponent } from './campaigns/campaign-stats.component';
 import { CampaignUsersComponent } from './campaigns/campaign-users.component';
 import { BlockListComponent } from '../email-templates/block-list/block-list.component';
 import { CampaignListComponent } from '../email-templates/campaign-list/campaign-list.component';
+import { CampaignStatsComponent } from '../email-templates/campaign-stats/campaign-stats.component';
 
 @NgModule({
   imports: [
@@ -48,6 +48,7 @@ import { CampaignListComponent } from '../email-templates/campaign-list/campaign
     EmailTemplateEditorComponent,
     EmailTemplateEditorSimplifiedComponent,
     CampaignListComponent,
+    CampaignStatsComponent,
   ],
   declarations: [
     SliderComponent,
@@ -64,7 +65,6 @@ import { CampaignListComponent } from '../email-templates/campaign-list/campaign
     EditVideoComponent,
     ExcelUploadComponent,
     CampaignHistoryComponent,
-    CampaignStatsComponent,
     BlockListComponent
   ],
 })

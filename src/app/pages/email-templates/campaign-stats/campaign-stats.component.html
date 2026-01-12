@@ -1,0 +1,196 @@
+<div class="stats-dialog">
+  <!-- Header -->
+  <div class="dialog-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">bar_chart</mat-icon>
+      <div class="header-text">
+        <h2>Statistiques de la campagne</h2>
+        <p class="campaign-name">{{ data.campaignName }}</p>
+      </div>
+    </div>
+    <button mat-icon-button (click)="close()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="dialog-content">
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="loading-spinner">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Chargement des statistiques...</p>
+    </div>
+
+    <!-- Stats Content -->
+    <div *ngIf="!isLoading && stats" class="stats-content">
+      <!-- Delivery Performance Section -->
+      <div class="stats-section">
+        <h3 class="section-title">
+          <mat-icon>send</mat-icon>
+          Performance d'envoi
+        </h3>
+        
+        <div class="stats-grid">
+          <!-- Main Delivery Circle -->
+          <div class="delivery-circle-container">
+            <div class="circle-chart">
+              <svg viewBox="0 0 36 36" class="circular-chart">
+                <path class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path class="circle"
+                  [attr.stroke-dasharray]="getDeliveryRate() + ', 100'"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" class="percentage">{{ getDeliveryRate() }}%</text>
+              </svg>
+            </div>
+            <div class="circle-label">
+              <span class="count">{{ stats.deliveredCount }}</span>
+              <span class="label">messages délivrés</span>
+            </div>
+          </div>
+
+          <!-- Stats Cards -->
+          <div class="stats-cards">
+            <div class="stat-card delivered">
+              <div class="stat-icon">
+                <mat-icon>check_circle</mat-icon>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value">{{ stats.deliveredCount }}</span>
+                <span class="stat-label">Messages délivrés</span>
+                <span class="stat-percentage">({{ getDeliveryRate() }}%)</span>
+              </div>
+            </div>
+
+            <div class="stat-card failed">
+              <div class="stat-icon">
+                <mat-icon>error</mat-icon>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value">{{ stats.failedCount }}</span>
+                <span class="stat-label">Messages non délivrés</span>
+                <span class="stat-percentage">({{ getFailureRate() }}%)</span>
+              </div>
+            </div>
+
+            <div class="stat-card bounced">
+              <div class="stat-icon">
+                <mat-icon>block</mat-icon>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Erreurs permanentes (hard bounces)</span>
+                <span class="stat-percentage">(0%)</span>
+              </div>
+            </div>
+
+            <div class="stat-card unconfirmed">
+              <div class="stat-icon">
+                <mat-icon>help_outline</mat-icon>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Réception non confirmée</span>
+                <span class="stat-percentage">(0%)</span>
+              </div>
+            </div>
+
+            <div class="stat-card temp-error">
+              <div class="stat-icon">
+                <mat-icon>warning</mat-icon>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Erreurs temporaires (soft bounces)</span>
+                <span class="stat-percentage">(0%)</span>
+              </div>
+            </div>
+
+            <div class="stat-card in-progress">
+              <div class="stat-icon">
+                <mat-icon>schedule</mat-icon>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Messages en cours d'envoi</span>
+                <span class="stat-percentage">(0%)</span>
+              </div>
+            </div>
+
+            <div class="stat-card programmed">
+              <div class="stat-icon">
+                <mat-icon>event</mat-icon>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Messages programmés</span>
+                <span class="stat-percentage">(0%)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message Performance Section -->
+      <div class="stats-section">
+        <h3 class="section-title">
+          <mat-icon>insights</mat-icon>
+          Performance du message
+        </h3>
+
+        <div class="performance-grid">
+          <div class="performance-card opens">
+            <div class="performance-header">
+              <mat-icon>visibility</mat-icon>
+              <span>Ouvreurs</span>
+            </div>
+            <div class="performance-value">{{ stats.openCount }}</div>
+            <div class="performance-percentage">({{ stats.openRate }}%)</div>
+          </div>
+
+          <div class="performance-card clicks">
+            <div class="performance-header">
+              <mat-icon>touch_app</mat-icon>
+              <span>Cliqueurs</span>
+            </div>
+            <div class="performance-value">{{ stats.clickCount }}</div>
+            <div class="performance-percentage">({{ stats.clickRate }}%)</div>
+          </div>
+
+          <div class="performance-card unsubscribes">
+            <div class="performance-header">
+              <mat-icon>unsubscribe</mat-icon>
+              <span>Désabonnements</span>
+            </div>
+            <div class="performance-value">{{ stats.unsubscribeCount }}</div>
+            <div class="performance-percentage">(0%)</div>
+          </div>
+
+          <div class="performance-card spam">
+            <div class="performance-header">
+              <mat-icon>report</mat-icon>
+              <span>Plaintes pour spam</span>
+            </div>
+            <div class="performance-value">{{ stats.spamCount }}</div>
+            <div class="performance-percentage">(0%)</div>
+          </div>
+
+          <div class="performance-card non-opens">
+            <div class="performance-header">
+              <mat-icon>visibility_off</mat-icon>
+              <span>Non ouvreurs</span>
+            </div>
+            <div class="performance-value">{{ stats.deliveredCount - stats.openCount }}</div>
+            <div class="performance-percentage">({{ 100 - stats.openRate }}%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

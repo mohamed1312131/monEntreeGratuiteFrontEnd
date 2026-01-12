@@ -15,6 +15,7 @@ import { MatCardModule } from '@angular/material/card';
 import { EmailCampaignService, EmailCampaign } from '../../../services/email-campaign.service';
 import { FormsModule } from '@angular/forms';
 import { CampaignUsersComponent } from '../../ui-components/campaigns/campaign-users.component';
+import { CampaignStatsComponent } from '../campaign-stats/campaign-stats.component';
 
 @Component({
   selector: 'app-campaign-list',
@@ -92,6 +93,19 @@ export class CampaignListComponent implements OnInit, AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  viewCampaignStats(campaign: EmailCampaign): void {
+    this.dialog.open(CampaignStatsComponent, {
+      width: '1000px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: {
+        campaignId: campaign.id,
+        campaignName: campaign.name
+      },
+      panelClass: 'campaign-stats-dialog'
+    });
   }
 
   viewCampaignUsers(campaign: EmailCampaign): void {

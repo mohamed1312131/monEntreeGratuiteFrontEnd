@@ -80,9 +80,11 @@ import { EmailCampaignService, EmailLogUser } from '../../../services/email-camp
                   <th class="col-index">#</th>
                   <th class="col-name">Nom</th>
                   <th class="col-email">Email</th>
+                  <th class="col-date">Date</th>
+                  <th class="col-heure">Heure</th>
+                  <th class="col-code">Code</th>
+                  <th class="col-foire">Foire</th>
                   <th class="col-status">Statut</th>
-                  <th *ngIf="showOpenedColumn()" class="col-opened">Ouvert</th>
-                  <th *ngIf="showClickedColumn()" class="col-clicked">Cliqué</th>
                 </tr>
               </thead>
               <tbody>
@@ -90,25 +92,15 @@ import { EmailCampaignService, EmailLogUser } from '../../../services/email-camp
                   <td class="col-index">{{ (pageIndex * pageSize) + i + 1 }}</td>
                   <td class="col-name">{{ user.recipientName }}</td>
                   <td class="col-email">{{ user.recipientEmail }}</td>
+                  <td class="col-date">{{ user.date || '-' }}</td>
+                  <td class="col-heure">{{ user.heure || '-' }}</td>
+                  <td class="col-code">{{ user.code || '-' }}</td>
+                  <td class="col-foire">{{ user.foireName || '-' }}</td>
                   <td class="col-status">
                     <span class="status-badge" [class.status-success]="user.status === 'SENT'" [class.status-error]="user.status === 'FAILED'">
                       <mat-icon>{{ user.status === 'SENT' ? 'check_circle' : 'error' }}</mat-icon>
                       {{ user.status === 'SENT' ? 'Délivré' : 'Échoué' }}
                     </span>
-                  </td>
-                  <td *ngIf="showOpenedColumn()" class="col-opened">
-                    <div class="status-cell">
-                      <mat-icon *ngIf="user.opened" class="icon-success">check_circle</mat-icon>
-                      <mat-icon *ngIf="!user.opened" class="icon-muted">remove_circle</mat-icon>
-                      <span *ngIf="user.openedAt" class="timestamp">{{ user.openedAt | date:'dd/MM HH:mm' }}</span>
-                    </div>
-                  </td>
-                  <td *ngIf="showClickedColumn()" class="col-clicked">
-                    <div class="status-cell">
-                      <mat-icon *ngIf="user.clicked" class="icon-success">check_circle</mat-icon>
-                      <mat-icon *ngIf="!user.clicked" class="icon-muted">remove_circle</mat-icon>
-                      <span *ngIf="user.clickCount > 0" class="click-count">({{ user.clickCount }})</span>
-                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -266,12 +258,14 @@ import { EmailCampaignService, EmailLogUser } from '../../../services/email-camp
       border-bottom: none;
     }
     
-    .col-index { width: 60px; color: #586069; font-weight: 600; }
-    .col-name { min-width: 150px; }
-    .col-email { min-width: 200px; color: #586069; }
-    .col-status { width: 140px; }
-    .col-opened { width: 140px; }
-    .col-clicked { width: 120px; }
+    .col-index { width: 50px; color: #586069; font-weight: 600; }
+    .col-name { min-width: 140px; }
+    .col-email { min-width: 180px; color: #586069; }
+    .col-date { width: 100px; }
+    .col-heure { width: 80px; }
+    .col-code { width: 100px; font-family: monospace; }
+    .col-foire { min-width: 140px; }
+    .col-status { width: 130px; }
     
     .status-badge {
       display: inline-flex;
@@ -421,14 +415,6 @@ export class CampaignUsersComponent implements OnInit {
       'unsubscribed': 'Utilisateurs désabonnés'
     };
     return titles[this.data.type] || 'Utilisateurs';
-  }
-
-  showOpenedColumn(): boolean {
-    return ['all', 'delivered', 'opened', 'not-opened', 'clicked', 'not-clicked'].includes(this.data.type);
-  }
-
-  showClickedColumn(): boolean {
-    return ['all', 'opened', 'clicked', 'not-clicked'].includes(this.data.type);
   }
 
   close(): void {

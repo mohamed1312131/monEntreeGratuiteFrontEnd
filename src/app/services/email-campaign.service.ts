@@ -47,6 +47,10 @@ export interface EmailLogUser {
   clickedAt: string | null;
   clickCount: number;
   errorMessage: string | null;
+  date: string | null;
+  heure: string | null;
+  code: string | null;
+  foireName: string | null;
 }
 
 @Injectable({

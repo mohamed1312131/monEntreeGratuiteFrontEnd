@@ -102,6 +102,12 @@
         <td mat-cell *matCellDef="let row" class="col-actions">
           <div class="action-btns">
             <button mat-icon-button 
+                    class="action-icon stats-icon" 
+                    (click)="viewCampaignStats(row); $event.stopPropagation()" 
+                    matTooltip="Voir les statistiques">
+              <mat-icon>bar_chart</mat-icon>
+            </button>
+            <button mat-icon-button 
                     class="action-icon view-icon" 
                     (click)="viewCampaignUsers(row); $event.stopPropagation()" 
                     matTooltip="Voir les utilisateurs">
