@@ -32,7 +32,7 @@ export interface CreateCustomTemplateRequest {
   providedIn: 'root'
 })
 export class CustomTemplateService {
-  private apiUrl = `${environment.apiUrl}/custom-templates`;
+  private apiUrl = `${environment.apiUrl}/api/custom-templates`;
 
   constructor(private http: HttpClient) {}
 
