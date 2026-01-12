@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
 import { AuthGuard } from './guards/auth.guard';
+import { PublicUnsubscribeComponent } from './pages/public-unsubscribe/public-unsubscribe.component';
 
 const routes: Routes = [
   // Admin area under /admin
@@ -49,6 +50,11 @@ const routes: Routes = [
         ],
       },
     ],
+  },
+  // Public unsubscribe page (no auth required)
+  {
+    path: 'unsubscribe',
+    component: PublicUnsubscribeComponent,
   },
   // Frontoffice (user-facing) at site root - must be last before wildcard
   {

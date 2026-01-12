@@ -1,29 +1,62 @@
 <div class="unsubscribe-container">
-  <mat-card class="unsubscribe-card">
-    <mat-card-content>
-      <!-- Loading State -->
-      <div *ngIf="loading" class="state-content loading">
-        <mat-spinner diameter="60"></mat-spinner>
-        <h2>Processing your request...</h2>
-        <p>Please wait while we unsubscribe you from our newsletter.</p>
-      </div>
+  <div class="unsubscribe-wrapper">
+    <div class="logo-section">
+      <h1 class="brand-name">Mon Entrée Gratuite</h1>
+    </div>
 
-      <!-- Success State -->
-      <div *ngIf="success && !loading" class="state-content success">
-        <mat-icon class="state-icon">check_circle</mat-icon>
-        <h2>Successfully Unsubscribed</h2>
-        <p>{{ message }}</p>
-        <p class="sub-message">You will no longer receive newsletter emails from us.</p>
-        <p class="sub-message">If you change your mind, you can always resubscribe on our website.</p>
-      </div>
+    <mat-card class="unsubscribe-card">
+      <mat-card-content>
+        <!-- Loading State -->
+        <div *ngIf="loading" class="state-content loading">
+          <mat-spinner diameter="60" color="primary"></mat-spinner>
+          <h2>Traitement en cours...</h2>
+          <p>Veuillez patienter pendant que nous traitons votre demande de désinscription.</p>
+        </div>
 
-      <!-- Error State -->
-      <div *ngIf="error && !loading" class="state-content error">
-        <mat-icon class="state-icon">error</mat-icon>
-        <h2>Unsubscribe Failed</h2>
-        <p>{{ message }}</p>
-        <p class="sub-message">If you continue to have issues, please contact our support team.</p>
-      </div>
-    </mat-card-content>
-  </mat-card>
+        <!-- Success State -->
+        <div *ngIf="success && !loading" class="state-content success">
+          <div class="icon-wrapper success-icon">
+            <mat-icon class="state-icon">check_circle</mat-icon>
+          </div>
+          <h2>Désinscription réussie</h2>
+          <p class="main-message">{{ message }}</p>
+          <div class="info-box">
+            <mat-icon>info</mat-icon>
+            <div>
+              <p class="sub-message">Vous ne recevrez plus d'emails de notre part.</p>
+              <p class="sub-message">Si vous changez d'avis, vous pouvez toujours vous réinscrire sur notre site web.</p>
+            </div>
+          </div>
+          <a href="https://www.monentreegratuite.com" class="home-button" mat-raised-button color="primary">
+            <mat-icon>home</mat-icon>
+            Retour au site
+          </a>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="error && !loading" class="state-content error">
+          <div class="icon-wrapper error-icon">
+            <mat-icon class="state-icon">error</mat-icon>
+          </div>
+          <h2>Erreur de désinscription</h2>
+          <p class="main-message">{{ message }}</p>
+          <div class="info-box error-box">
+            <mat-icon>warning</mat-icon>
+            <div>
+              <p class="sub-message">Si le problème persiste, veuillez contacter notre équipe d'assistance.</p>
+              <p class="sub-message">Email: contact@monentreegratuite.com</p>
+            </div>
+          </div>
+          <a href="https://www.monentreegratuite.com" class="home-button" mat-raised-button>
+            <mat-icon>home</mat-icon>
+            Retour au site
+          </a>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="footer-section">
+      <p>&copy; 2025 Mon Entrée Gratuite. Tous droits réservés.</p>
+    </div>
+  </div>
 </div>

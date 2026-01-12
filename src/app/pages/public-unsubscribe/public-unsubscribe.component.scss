@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #01B3A7 0%, #00d4b8 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
   position: relative;
   overflow: hidden;
@@ -17,6 +17,7 @@
     height: 600px;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
     border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
   }
 
   &::after {
@@ -28,18 +29,37 @@
     height: 500px;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
     border-radius: 50%;
+    animation: float 8s ease-in-out infinite reverse;
+  }
+
+  .unsubscribe-wrapper {
+    max-width: 650px;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .logo-section {
+    text-align: center;
+    margin-bottom: 30px;
+
+    .brand-name {
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      margin: 0;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      letter-spacing: -0.5px;
+    }
   }
 
   .unsubscribe-card {
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    border-radius: 16px;
-    z-index: 1;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
     background: white;
+    overflow: hidden;
 
     ::ng-deep .mat-mdc-card-content {
-      padding: 60px 40px;
+      padding: 50px 40px;
     }
 
     .state-content {
@@ -47,40 +67,112 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 20px;
+      gap: 24px;
 
-      h2 {
-        font-size: 28px;
-        font-weight: 700;
-        margin: 0;
-        letter-spacing: -0.5px;
-      }
+      .icon-wrapper {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: scaleIn 0.5s ease-out;
 
-      p {
-        font-size: 16px;
-        color: #586069;
-        margin: 0;
-        line-height: 1.6;
-      }
+        &.success-icon {
+          background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        }
 
-      .sub-message {
-        font-size: 14px;
-        color: #959da5;
+        &.error-icon {
+          background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+        }
       }
 
       .state-icon {
-        font-size: 80px;
-        width: 80px;
-        height: 80px;
+        font-size: 60px;
+        width: 60px;
+        height: 60px;
+      }
+
+      h2 {
+        font-size: 32px;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.5px;
+        color: #24292e;
+      }
+
+      .main-message {
+        font-size: 18px;
+        color: #586069;
+        margin: 0;
+        line-height: 1.6;
+        font-weight: 500;
+      }
+
+      .info-box {
+        background: #f6f8fa;
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        width: 100%;
+        border-left: 4px solid #01B3A7;
+
+        &.error-box {
+          background: #fff5f5;
+          border-left-color: #d73a49;
+        }
+
+        mat-icon {
+          color: #01B3A7;
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+          flex-shrink: 0;
+        }
+
+        &.error-box mat-icon {
+          color: #d73a49;
+        }
+
+        div {
+          flex: 1;
+          text-align: left;
+        }
+
+        .sub-message {
+          font-size: 14px;
+          color: #586069;
+          margin: 4px 0;
+          line-height: 1.5;
+        }
+      }
+
+      .home-button {
+        margin-top: 16px;
+        padding: 12px 32px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 50px;
+        text-transform: none;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+
+        mat-icon {
+          margin-right: 8px;
+        }
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
       }
 
       &.loading {
-        .state-icon {
-          color: #01B3A7;
-        }
-
         h2 {
-          color: #01B3A7;
+          color: #667eea;
         }
       }
 
@@ -105,30 +197,99 @@
       }
     }
   }
+
+  .footer-section {
+    text-align: center;
+    margin-top: 30px;
+    color: white;
+    font-size: 14px;
+    opacity: 0.9;
+
+    p {
+      margin: 0;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 768px) {
   .unsubscribe-container {
+    padding: 16px;
+
+    .logo-section {
+      margin-bottom: 20px;
+
+      .brand-name {
+        font-size: 24px;
+      }
+    }
+
     .unsubscribe-card {
-      mat-card-content {
-        padding: 40px 20px;
+      ::ng-deep .mat-mdc-card-content {
+        padding: 40px 24px;
       }
 
       .state-content {
+        gap: 20px;
+
+        .icon-wrapper {
+          width: 80px;
+          height: 80px;
+        }
+
+        .state-icon {
+          font-size: 48px;
+          width: 48px;
+          height: 48px;
+        }
+
         h2 {
           font-size: 24px;
         }
 
-        p {
-          font-size: 14px;
+        .main-message {
+          font-size: 16px;
         }
 
-        .state-icon {
-          font-size: 60px;
-          width: 60px;
-          height: 60px;
+        .info-box {
+          padding: 16px;
+          gap: 12px;
+
+          .sub-message {
+            font-size: 13px;
+          }
+        }
+
+        .home-button {
+          padding: 10px 24px;
+          font-size: 14px;
         }
       }
+    }
+
+    .footer-section {
+      margin-top: 20px;
+      font-size: 12px;
     }
   }
 }

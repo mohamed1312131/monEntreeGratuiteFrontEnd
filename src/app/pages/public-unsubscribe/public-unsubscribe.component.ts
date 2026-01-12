@@ -26,7 +26,7 @@ export class PublicUnsubscribeComponent implements OnInit {
   success = false;
   error = false;
   message = '';
-  token = '';
+  email = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -34,30 +34,35 @@ export class PublicUnsubscribeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.token = this.route.snapshot.paramMap.get('token') || '';
-    
-    if (this.token) {
-      this.unsubscribe();
-    } else {
-      this.loading = false;
-      this.error = true;
-      this.message = 'Invalid unsubscribe link. Please check your email and try again.';
-    }
+    // Get email from query parameter
+    this.route.queryParams.subscribe(params => {
+      this.email = params['email'] || '';
+      
+      if (this.email) {
+        this.unsubscribe();
+      } else {
+        this.loading = false;
+        this.error = true;
+        this.message = 'Invalid unsubscribe link. No email address provided.';
+      }
+    });
   }
 
   unsubscribe(): void {
-    this.http.get(`${environment.apiUrl}/api/public/unsubscribe/${this.token}`)
-      .subscribe({
-        next: (response: any) => {
-          this.loading = false;
-          this.success = true;
-          this.message = response.message || 'You have been successfully unsubscribed from our newsletter.';
-        },
-        error: (error) => {
-          this.loading = false;
-          this.error = true;
-          this.message = error.error?.error || 'An error occurred while processing your request. Please try again later.';
-        }
-      });
+    // Use the email-based unsubscribe endpoint
+    this.http.get(`${environment.apiUrl}/api/public/unsubscribe/email`, {
+      params: { email: this.email }
+    }).subscribe({
+      next: (response: any) => {
+        this.loading = false;
+        this.success = true;
+        this.message = response.message || 'Vous avez été désinscrit avec succès de notre liste de diffusion.';
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = true;
+        this.message = error.error?.error || 'Une erreur s\'est produite lors du traitement de votre demande. Veuillez réessayer plus tard.';
+      }
+    });
   }
 }
