@@ -14,7 +14,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { EmailCampaignService, EmailCampaign } from '../../../services/email-campaign.service';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { CampaignUsersComponent } from '../../ui-components/campaigns/campaign-users.component';
 
 @Component({
   selector: 'app-campaign-list',
@@ -54,8 +54,7 @@ export class CampaignListComponent implements OnInit, AfterViewInit {
   constructor(
     private campaignService: EmailCampaignService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private router: Router
+    private dialog: MatDialog
   ) {
     this.dataSource = new MatTableDataSource(this.allCampaigns);
   }
@@ -96,8 +95,16 @@ export class CampaignListComponent implements OnInit, AfterViewInit {
   }
 
   viewCampaignUsers(campaign: EmailCampaign): void {
-    // Navigate to campaign users view
-    this.router.navigate(['/admin/ui-components/email-templates/campaign-users', campaign.id]);
+    this.dialog.open(CampaignUsersComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: {
+        campaignId: campaign.id,
+        type: 'all'
+      },
+      panelClass: 'campaign-users-dialog'
+    });
   }
 
   getStatusLabel(campaign: EmailCampaign): string {

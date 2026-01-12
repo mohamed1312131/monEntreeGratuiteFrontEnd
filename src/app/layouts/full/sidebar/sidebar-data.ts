@@ -57,9 +57,9 @@ export const navItems: NavItem[] = [
         route: '/admin/ui-components/email-templates/block-list',
       },
       {
-        displayName: 'Send Emails',
+        displayName: 'campaigns',
         iconName: 'send',
-        route: '/admin/ui-components/email-templates/send',
+        route: '/admin/ui-components/email-templates/campaigns',
       },
       {
         displayName: 'Newsletter Subscribers',
