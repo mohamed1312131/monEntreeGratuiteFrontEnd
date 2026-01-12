@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CampaignService, EmailCampaign } from '../../../services/campaign.service';
-import { CampaignStatsComponent } from './campaign-stats.component';
+import { CampaignStatsComponent } from '../../email-templates/campaign-stats/campaign-stats.component';
 
 @Component({
   selector: 'app-campaign-history',
