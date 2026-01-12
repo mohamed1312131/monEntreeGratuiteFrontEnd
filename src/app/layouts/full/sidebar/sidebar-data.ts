@@ -38,6 +38,11 @@ export const navItems: NavItem[] = [
     route: '/admin/ui-components/excel-upload',
   },
   {
+    displayName: 'template-builder',
+    iconName: 'plus',
+    route: '/admin/ui-components/template-builder',
+  },
+  {
     displayName: 'Email Templates',
     iconName: 'mail',
     children: [
