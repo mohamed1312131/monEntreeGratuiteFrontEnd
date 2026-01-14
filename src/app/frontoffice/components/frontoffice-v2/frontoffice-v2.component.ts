@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ReservationService, ReservationCreateDTO } from 'src/app/services/reservation.service';
 import { ExposantRequestService, ExposantRequestCreateDTO } from 'src/app/services/exposant-request.service';
 import { UserVisitService } from 'src/app/services/user-visit.service';
+import { FoireService } from 'src/app/services/foire.service';
 import { environment } from 'src/environments/environment';
 
 declare const grecaptcha: any;
@@ -12,6 +13,7 @@ interface HeroSlide {
   description: string;
   image: string;
   location: string;
+  foireId?: number;
 }
 
 interface DateRange {
@@ -92,7 +94,8 @@ export class FrontofficeV2Component implements OnInit {
   constructor(
     private reservationService: ReservationService,
     private exposantRequestService: ExposantRequestService,
-    private userVisitService: UserVisitService
+    private userVisitService: UserVisitService,
+    private foireService: FoireService
   ) {}
 
   ngOnInit(): void {
@@ -474,16 +477,47 @@ export class FrontofficeV2Component implements OnInit {
   }
 
   openHeroReservation(heroSlide: HeroSlide): void {
-    // Create a generic foire object for hero carousel reservations
-    const heroFoire: Foire = {
-      id: heroSlide.id,
-      name: heroSlide.title,
-      dateRanges: [{ startDate: 'À venir', endDate: 'À venir' }],
-      dayTimeSlots: [],
-      image: heroSlide.image,
-      location: heroSlide.location,
-      description: heroSlide.description
-    };
-    this.onReserve(heroFoire, 'France');
+    // If the slide has a foireId, fetch the actual foire data
+    if (heroSlide.foireId) {
+      this.foireService.getFoireById(heroSlide.foireId).subscribe({
+        next: (foire) => {
+          // Map the foire to the expected format
+          const foireData: Foire = {
+            id: foire.id,
+            name: foire.name,
+            dateRanges: foire.dateRanges || [],
+            dayTimeSlots: foire.dayTimeSlots || [],
+            image: foire.image || heroSlide.image,
+            location: foire.location || foire.city || heroSlide.location,
+            description: foire.description || heroSlide.description,
+            disponible: foire.disponible
+          };
+          
+          // Determine country based on countryCode
+          let countryName = 'France';
+          if (foire.countryCode === 'BE') {
+            countryName = 'Belgique';
+          } else if (foire.countryCode === 'CH') {
+            countryName = 'Suisse';
+          }
+          
+          this.onReserve(foireData, countryName);
+        },
+        error: (error) => {
+          console.error('Error loading foire for carousel:', error);
+          // Fallback: scroll to foires section if foire cannot be loaded
+          const foiresSection = document.getElementById('foires');
+          if (foiresSection) {
+            foiresSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    } else {
+      // If no foireId, scroll to foires section
+      const foiresSection = document.getElementById('foires');
+      if (foiresSection) {
+        foiresSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SliderService } from '../../../services/slider.service';
+import { FoireService, Foire } from '../../../services/foire.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -12,15 +13,30 @@ export class AddSliderComponent implements OnInit {
   selectedFile: File | null = null;
   imageError = false;
   isSubmitting = false;
+  foires: Foire[] = [];
+  selectedFoireId: number | null = null;
 
   constructor(
     private dialogRef: MatDialogRef<AddSliderComponent>,
     private sliderService: SliderService,
+    private foireService: FoireService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    // No form initialization needed
+    this.loadFoires();
+  }
+
+  loadFoires(): void {
+    this.foireService.getAllFoires().subscribe({
+      next: (foires) => {
+        this.foires = foires;
+      },
+      error: (error) => {
+        console.error('Error loading foires:', error);
+        this.showSnackBar('Erreur lors du chargement des foires', 'error');
+      }
+    });
   }
 
   onImageSelected(event: Event): void {
@@ -61,6 +77,9 @@ export class AddSliderComponent implements OnInit {
       // Create FormData for multipart upload
       const formData = new FormData();
       formData.append('file', this.selectedFile);
+      if (this.selectedFoireId) {
+        formData.append('foireId', this.selectedFoireId.toString());
+      }
 
       this.sliderService.createSlider(formData).subscribe({
         next: (slider) => {

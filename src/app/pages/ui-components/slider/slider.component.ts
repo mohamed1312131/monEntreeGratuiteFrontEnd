@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddSliderComponent } from '../add-slider/add-slider.component';
 import { SliderService, SliderData } from '../../../services/slider.service';
+import { FoireService, Foire } from '../../../services/foire.service';
 
 
 @Component({
@@ -15,11 +16,12 @@ import { SliderService, SliderData } from '../../../services/slider.service';
 })
 export class SliderComponent implements OnInit {
   displayedColumns: string[] = [
-    'image', 'reference', 'order', 'isActive', 'actions'
+    'image', 'reference', 'foire', 'order', 'isActive', 'actions'
   ];
   dataSource: MatTableDataSource<SliderData>;
   orderOptions: number[] = [];
   sliders: SliderData[] = [];
+  foires: Foire[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -27,13 +29,26 @@ export class SliderComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private sliderService: SliderService
+    private sliderService: SliderService,
+    private foireService: FoireService
   ) {
     this.dataSource = new MatTableDataSource<SliderData>([]);
   }
 
   ngOnInit(): void {
+    this.loadFoires();
     this.loadSliders();
+  }
+
+  loadFoires(): void {
+    this.foireService.getAllFoires().subscribe({
+      next: (foires) => {
+        this.foires = foires;
+      },
+      error: (error) => {
+        console.error('Error loading foires:', error);
+      }
+    });
   }
 
   loadSliders(): void {
@@ -145,6 +160,23 @@ export class SliderComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  updateSliderFoire(slider: SliderData, foireId: number | null): void {
+    this.sliderService.updateSliderFoire(slider.id, foireId).subscribe({
+      next: (updated) => {
+        const index = this.sliders.findIndex(s => s.id === slider.id);
+        if (index > -1) {
+          this.sliders[index] = updated;
+          this.dataSource.data = [...this.sliders];
+        }
+        this.showSnackBar('Foire mise à jour avec succès', 'success');
+      },
+      error: (error) => {
+        console.error('Error updating slider foire:', error);
+        this.showSnackBar('Erreur lors de la mise à jour de la foire', 'error');
+      }
+    });
   }
 
   showSnackBar(message: string, type: 'success' | 'error'): void {

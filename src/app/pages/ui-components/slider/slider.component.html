@@ -49,6 +49,21 @@
         </td>
       </ng-container>
 
+      <!-- Foire Column -->
+      <ng-container matColumnDef="foire">
+        <th mat-header-cell *matHeaderCellDef class="col-foire">Foire</th>
+        <td mat-cell *matCellDef="let element" class="col-foire">
+          <mat-form-field appearance="outline" class="foire-select">
+            <mat-select [(ngModel)]="element.foireId" (selectionChange)="updateSliderFoire(element, element.foireId)" placeholder="Sélectionner">
+              <mat-option [value]="null">Aucune</mat-option>
+              <mat-option *ngFor="let foire of foires" [value]="foire.id">
+                {{ foire.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
       <!-- Order Column -->
       <ng-container matColumnDef="order">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-order">Ordre</th>

@@ -9,6 +9,8 @@ export interface SliderData {
   imageUrl: string;
   order: number | null;
   isActive: boolean;
+  foireId?: number;
+  foireName?: string;
 }
 
 @Injectable({
@@ -49,5 +51,18 @@ export class SliderService {
 
   updateSliderOrder(id: number, order: number): Observable<SliderData> {
     return this.http.put<SliderData>(`${this.apiUrl}/${id}/update-order?order=${order}`, {});
+  }
+
+  getSlidersByFoire(foireId: number): Observable<SliderData[]> {
+    return this.http.get<SliderData[]>(`${this.apiUrl}/foire/${foireId}`);
+  }
+
+  getActiveSlidersByFoire(foireId: number): Observable<SliderData[]> {
+    return this.http.get<SliderData[]>(`${this.apiUrl}/foire/${foireId}/active`);
+  }
+
+  updateSliderFoire(id: number, foireId: number | null): Observable<SliderData> {
+    const url = foireId ? `${this.apiUrl}/${id}/update-foire?foireId=${foireId}` : `${this.apiUrl}/${id}/update-foire`;
+    return this.http.put<SliderData>(url, {});
   }
 }

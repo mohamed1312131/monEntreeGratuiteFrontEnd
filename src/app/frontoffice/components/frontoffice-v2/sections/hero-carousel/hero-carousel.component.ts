@@ -94,11 +94,11 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
   private mapSlidersToHeroSlides(sliders: SliderData[]): HeroSlide[] {
     return sliders.map((slider, index) => ({
       id: slider.id,
-      title: `Événement ${index + 1}`,
+      title: slider.foireName || `Événement ${index + 1}`,
       description: 'Découvrez nos foires et salons exceptionnels',
       image: slider.imageUrl,
       location: 'France & Europe',
-      foireId: undefined
+      foireId: slider.foireId
     }));
   }
 
@@ -168,7 +168,14 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
    * Emits the current slide data to parent component
    */
   openHeroReservation(): void {
-    this.reservationClick.emit(this.heroSlides[this.currentSlide]);
+    const currentSlide = this.heroSlides[this.currentSlide];
+    // Only emit if the slide has an associated foire
+    if (currentSlide.foireId) {
+      this.reservationClick.emit(currentSlide);
+    } else {
+      // If no foire is associated, scroll to foires section
+      this.scrollToFoires();
+    }
   }
 
   /**

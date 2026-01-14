@@ -6,6 +6,23 @@
 
   <mat-dialog-content class="dialog-content">
     <div class="slider-form">
+      <!-- Foire Selection -->
+      <div class="foire-selection-section">
+        <label class="upload-label">
+          <mat-icon>event</mat-icon>
+          Foire associée (optionnel)
+        </label>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Sélectionner une foire</mat-label>
+          <mat-select [(ngModel)]="selectedFoireId">
+            <mat-option [value]="null">Aucune foire</mat-option>
+            <mat-option *ngFor="let foire of foires" [value]="foire.id">
+              {{ foire.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
       <!-- Image Upload -->
       <div class="image-upload-section">
         <label class="upload-label">
