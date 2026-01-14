@@ -481,12 +481,38 @@ export class FrontofficeV2Component implements OnInit {
     if (heroSlide.foireId) {
       this.foireService.getFoireById(heroSlide.foireId).subscribe({
         next: (foire) => {
+          // Parse dateRanges and dayTimeSlots if they are strings
+          let parsedDateRanges: DateRange[] = [];
+          let parsedDayTimeSlots: any[] = [];
+          
+          try {
+            if (typeof foire.dateRanges === 'string') {
+              parsedDateRanges = JSON.parse(foire.dateRanges);
+            } else if (Array.isArray(foire.dateRanges)) {
+              parsedDateRanges = foire.dateRanges;
+            }
+          } catch (e) {
+            console.error('Error parsing dateRanges:', e);
+            parsedDateRanges = [];
+          }
+          
+          try {
+            if (typeof foire.dayTimeSlots === 'string') {
+              parsedDayTimeSlots = JSON.parse(foire.dayTimeSlots);
+            } else if (Array.isArray(foire.dayTimeSlots)) {
+              parsedDayTimeSlots = foire.dayTimeSlots;
+            }
+          } catch (e) {
+            console.error('Error parsing dayTimeSlots:', e);
+            parsedDayTimeSlots = [];
+          }
+          
           // Map the foire to the expected format
           const foireData: Foire = {
             id: foire.id,
             name: foire.name,
-            dateRanges: foire.dateRanges || [],
-            dayTimeSlots: foire.dayTimeSlots || [],
+            dateRanges: parsedDateRanges,
+            dayTimeSlots: parsedDayTimeSlots,
             image: foire.image || heroSlide.image,
             location: foire.location || foire.city || heroSlide.location,
             description: foire.description || heroSlide.description,
