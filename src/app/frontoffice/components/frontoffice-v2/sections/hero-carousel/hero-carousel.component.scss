@@ -179,21 +179,30 @@
   z-index: 20;
 }
 
+/* Desktop button - hide on mobile */
+.hero-cta-desktop {
+  display: block;
+}
+
 @media (max-width: 768px) {
-  .hero-cta-container {
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 3rem;
-    width: 90%;
-    max-width: 320px;
-    display: flex;
-    justify-content: center;
+  .hero-cta-desktop {
+    display: none !important;
   }
 }
 
-@media (max-width: 480px) {
-  .hero-cta-container {
-    display: none !important;
+/* Mobile button - show only on mobile, positioned below carousel at full width */
+.hero-cta-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hero-cta-mobile {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 0;
+    margin-top: 0; /* Space below carousel - increase this value to lower the button more */
+    z-index: 20;
   }
 }
 
@@ -232,15 +241,166 @@
   }
 }
 
-@media (max-width: 480px) {
-  .hero-cta-button-inline {
-    padding: 2px 5px !important;
-    font-size: 0.65rem !important;
-    gap: 2px !important;
+/* Mobile button styles - Premium UX Design */
+.hero-cta-button-mobile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 20px 32px;
+  
+  /* Rich gradient with depth */
+  background: linear-gradient(135deg, #D4A024 0%, #B88917 50%, #9A7214 100%);
+  border: none;
+  border-radius: 0;
+  color: white;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  
+  /* Enhanced shadows for depth */
+  box-shadow: 
+    0 4px 20px rgba(184, 137, 23, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  
+  /* Subtle top border for premium feel */
+  border-top: 2px solid rgba(255, 215, 0, 0.3);
+  
+  /* Smooth transitions */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Pulse animation to draw attention */
+  animation: subtle-pulse 3s ease-in-out infinite;
+  
+  svg {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
   }
+  
+  span {
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  &:hover {
+    transform: translateY(-3px) scale(1.01);
+    background: linear-gradient(135deg, #E5B12D 0%, #C99A1F 50%, #A87F18 100%);
+    box-shadow: 
+      0 12px 40px rgba(184, 137, 23, 0.6),
+      0 4px 16px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border-top-color: rgba(255, 215, 0, 0.5);
+    animation: none; /* Stop pulse on hover */
+    
+    svg {
+      transform: translateX(6px) scale(1.1);
+    }
+    
+    .button-glow {
+      opacity: 1;
+    }
+    
+    .button-shimmer {
+      animation: shimmer 1.5s ease-in-out infinite;
+    }
+  }
+  
+  &:active {
+    transform: translateY(-1px) scale(0.99);
+    box-shadow: 
+      0 6px 20px rgba(184, 137, 23, 0.4),
+      0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}
 
-  .hero-cta-button-inline svg {
-    width: 14px !important;
-    height: 14px !important;
+.button-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.button-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  pointer-events: none;
+}
+
+/* Pulse animation for attention */
+@keyframes subtle-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 4px 20px rgba(184, 137, 23, 0.4),
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 4px 24px rgba(184, 137, 23, 0.5),
+      0 2px 10px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+}
+
+/* Shimmer animation on hover */
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+
+/* Tab shine animation - continuous shine effect like country tabs */
+.tab-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  pointer-events: none;
+  animation: tabShine 3s ease-in-out infinite;
+}
+
+@keyframes tabShine {
+  0% { 
+    left: -100%; 
+  }
+  100% { 
+    left: 200%; 
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-cta-button-mobile {
+    padding: 18px 24px;
+    font-size: 1rem;
+    gap: 10px;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+    }
   }
 }

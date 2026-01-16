@@ -63,8 +63,8 @@
       </button>
     </div>
 
-    <!-- Reservation Button -->
-    <div class="hero-cta-container">
+    <!-- Desktop Reservation Button -->
+    <div class="hero-cta-container hero-cta-desktop">
       <button 
         (click)="openHeroReservation()" 
         class="hero-cta-button-inline">
@@ -75,4 +75,21 @@
       </button>
     </div>
   </ng-container>
+
 </section>
+
+<!-- Mobile Reservation Button (completely outside carousel section) -->
+<div *ngIf="!isLoading && heroSlides.length > 0" class="hero-cta-mobile">
+  <button 
+    (click)="openHeroReservation()" 
+    class="hero-cta-button-mobile">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14"></path>
+      <path d="m12 5 7 7-7 7"></path>
+    </svg>
+    <span>Je Réserve Mon Entrée Gratuite</span>
+    <div class="button-glow"></div>
+    <div class="button-shimmer"></div>
+    <div class="tab-shine"></div>
+  </button>
+</div>
