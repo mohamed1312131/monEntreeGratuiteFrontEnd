@@ -54,7 +54,7 @@
 								<figcaption>
 									<h5>{{ foire.name }}</h5>
 									<p class="text-muted">{{ formatDate(foire.date) }}</p>
-									<button class="btn btn-primary btn-sm reserve-btn" (click)="onReserve(foire, 'France', 'FR')">Réserver Maintenant</button>
+									<button class="btn btn-primary btn-sm reserve-btn" (click)="onReserve(foire)">Réserver Maintenant</button>
 								</figcaption>
 							</figure>
 						</div>
@@ -83,7 +83,7 @@
 								<figcaption>
 									<h5>{{ foire.name }}</h5>
 									<p class="text-muted">{{ formatDate(foire.date) }}</p>
-									<button class="btn btn-primary btn-sm reserve-btn" (click)="onReserve(foire, 'Belgique', 'BE')">Réserver Maintenant</button>
+									<button class="btn btn-primary btn-sm reserve-btn" (click)="onReserve(foire)">Réserver Maintenant</button>
 								</figcaption>
 							</figure>
 						</div>
@@ -112,7 +112,7 @@
 								<figcaption>
 									<h5>{{ foire.name }}</h5>
 									<p class="text-muted">{{ formatDate(foire.date) }}</p>
-									<button class="btn btn-primary btn-sm reserve-btn" (click)="onReserve(foire, 'Suisse', 'CH')">Réserver Maintenant</button>
+									<button class="btn btn-primary btn-sm reserve-btn" (click)="onReserve(foire)">Réserver Maintenant</button>
 								</figcaption>
 							</figure>
 						</div>
@@ -127,138 +127,3 @@
 		</div>
 	</div>
 </section>
-
-<!-- Reservation Side Form -->
-<div class="reservation-overlay" [class.open]="isFormOpen" (click)="closeForm()"></div>
-<div class="reservation-form-container" [class.open]="isFormOpen">
-	<div class="form-header">
-		<button class="close-btn" (click)="closeForm()">
-			<i class="icon icon-close">×</i>
-		</button>
-	</div>
-
-	<div class="form-content" *ngIf="selectedFoire">
-		<!-- Foire Details Section -->
-		<div class="foire-details">
-			<img [src]="selectedFoire.image" [alt]="selectedFoire.name" class="foire-image">
-			<div class="foire-info">
-				<h3>{{ selectedFoire.name }}</h3>
-				<p class="foire-date"><i class="icon icon-calendar"></i> {{ selectedFoire.date }}</p>
-				<p class="foire-location"><i class="icon icon-location"></i> {{ selectedFoire.pays }}</p>
-			</div>
-		</div>
-
-		<!-- Reservation Form -->
-		<form class="reservation-form" (ngSubmit)="submitReservation()">
-			<h4> Réservez votre entrée gratuite</h4>
-			
-			<!-- Error Message -->
-			<div *ngIf="errorMessage" class="alert alert-danger" role="alert">
-				<strong>Erreur:</strong> {{ errorMessage }}
-			</div>
-			
-			<!-- Success Message -->
-			<div *ngIf="successMessage" class="alert alert-success" role="alert">
-				<strong>Succès!</strong> {{ successMessage }}
-			</div>
-
-			<!-- Pays -->
-			<div class="form-group">
-				<label for="pays">Pays *</label>
-				<select id="pays" [(ngModel)]="reservationForm.pays" name="pays" required class="form-control">
-					<option value="">Sélectionnez un pays</option>
-					<option value="France">France</option>
-					<option value="Belgique">Belgique</option>
-					<option value="Suisse">Suisse</option>
-				</select>
-			</div>
-
-			<!-- Type d'entrée -->
-			<div class="form-group">
-				<label for="entreeType">Je souhaite une entrée pour *</label>
-				<select id="entreeType" [(ngModel)]="reservationForm.entreeType" name="entreeType" required class="form-control">
-					<option value="">Sélectionnez</option>
-					<option value="couple">Couple</option>
-					<option value="moi-et-ami">Moi et mon ami(e)</option>
-					<option value="moi-seulement">Moi seulement</option>
-				</select>
-			</div>
-
-			<!-- Ville -->
-			<div class="form-group">
-				<label for="ville">Ville *</label>
-				<input type="text" id="ville" [(ngModel)]="reservationForm.ville" name="ville" required class="form-control" placeholder="Votre ville">
-			</div>
-
-			<!-- Nom et Prénom -->
-			<div class="form-row">
-				<div class="form-group">
-					<label for="nom">Nom *</label>
-					<input type="text" id="nom" [(ngModel)]="reservationForm.nom" name="nom" required class="form-control" placeholder="Nom">
-				</div>
-				<div class="form-group">
-					<label for="prenom">Prénom *</label>
-					<input type="text" id="prenom" [(ngModel)]="reservationForm.prenom" name="prenom" required class="form-control" placeholder="Prénom">
-				</div>
-			</div>
-
-			<!-- SMS Number -->
-			<div class="form-group">
-				<label for="smsNumber">Je veux recevoir mon invitation par SMS sur le numéro</label>
-				<input type="tel" id="smsNumber" [(ngModel)]="reservationForm.smsNumber" name="smsNumber" class="form-control" placeholder="+33 6 12 34 56 78">
-			</div>
-
-			<!-- Email -->
-			<div class="form-group">
-				<label for="email">Je veux recevoir mon invitation par email à l'adresse *</label>
-				<input type="email" id="email" [(ngModel)]="reservationForm.email" name="email" required class="form-control" placeholder="votre@email.com">
-			</div>
-
-			<!-- Tranche d'âge -->
-			<div class="form-group">
-				<label for="trancheAge">Tranche d'âge *</label>
-				<select id="trancheAge" [(ngModel)]="reservationForm.trancheAge" name="trancheAge" required class="form-control">
-					<option value="">Sélectionnez votre tranche d'âge</option>
-					<option value="moins-35">Moins de 35 ans</option>
-					<option value="35-70">Entre 35 et 70 ans</option>
-					<option value="plus-70">Plus de 70 ans</option>
-				</select>
-			</div>
-
-			<!-- Téléphone -->
-			<div class="form-group">
-				<label for="telephone">Numéro de téléphone sur lequel vous êtes joignable *</label>
-				<input type="tel" id="telephone" [(ngModel)]="reservationForm.telephone" name="telephone" required class="form-control" placeholder="+33 6 12 34 56 78">
-			</div>
-
-			<!-- Conditions générales -->
-			<div class="form-group checkbox-group">
-				<label class="checkbox-label">
-					<input type="checkbox" [(ngModel)]="reservationForm.acceptConditions" name="acceptConditions" required>
-					<span class="checkbox-text">
-						Je reconnais avoir lu et accepté les <a href="#" target="_blank">conditions générales de services et d'utilisation</a> *
-					</span>
-				</label>
-			</div>
-
-			<!-- Marketing consent -->
-			<div class="form-group checkbox-group">
-				<label class="checkbox-label">
-					<input type="checkbox" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing">
-					<span class="checkbox-text">
-						En cochant cette case, j'autorise VIPLUX détenteur de monentreegratuite, à utiliser mon email et/ou mon téléphone pour m'adresser mon invitation, des offres, actualités et relances liées à ses offres. Je peux retirer mon consentement à tout moment via le lien de désinscription (emails) ou en répondant STOP (SMS).
-					</span>
-				</label>
-			</div>
-
-			<!-- Submit Button -->
-			<button type="submit" class="btn-submit" [disabled]="!reservationForm.acceptConditions || isSubmitting">
-				<span *ngIf="!isSubmitting">Confirmer ma réservation</span>
-				<span *ngIf="isSubmitting">
-					<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-					Envoi en cours...
-				</span>
-			</button>
-		</form>
-	</div>
-</div>
