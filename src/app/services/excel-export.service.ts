@@ -41,14 +41,17 @@ export class ExcelExportService {
     const formattedData = reservations.map(r => ({
       'ID': r.id,
       'Pays': r.country,
-      'Date Réservation': r.reservationDate,
-      'Heure Réservation': this.extractTime(r.createdAt), // Assuming createdAt exists or needs to be added
       'Nom Foire': r.foireName,
+      'Date Foire Sélectionnée': r.selectedDate || 'N/A',
+      'Heure Foire Sélectionnée': r.selectedTime || 'N/A',
+      'Date Réservation': r.reservationDate,
+      'Heure Réservation': this.extractTime(r.createdAt),
       'Nom': r.name,
       'Ville': r.city,
       'Email': r.email,
       'Téléphone': r.phone,
-      'Catégorie Âge': ageLabels[r.ageCategory] || r.ageCategory
+      'Catégorie Âge': ageLabels[r.ageCategory] || r.ageCategory,
+      'Statut': r.status
     }));
 
     this.exportToExcel(formattedData, `Reservations_${this.getDateString()}`, 'Réservations');
