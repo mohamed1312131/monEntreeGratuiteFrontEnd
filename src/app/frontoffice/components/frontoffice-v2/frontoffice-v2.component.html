@@ -20,7 +20,10 @@
   <app-exposant-section (exhibitorFormOpened)="openExhibitorForm()"></app-exposant-section>
 
   <!-- ===== FOOTER PREMIUM ===== -->
- <app-footer-section></app-footer-section>
+ <app-footer-section 
+    (countrySelect)="scrollToFoiresAndSelectCountry($event)"
+    (sectionScroll)="scrollToSection($event)"
+    (openExposantForm)="openExhibitorForm()"></app-footer-section>
 
   <!-- ===== RESERVATION SIDEBAR ===== -->
   <div class="reservation-overlay" [class.open]="isFormOpen" (click)="closeForm()"></div>

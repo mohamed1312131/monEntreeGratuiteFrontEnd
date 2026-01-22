@@ -546,4 +546,15 @@ export class FrontofficeV2Component implements OnInit {
       }
     }
   }
+
+  scrollToSection(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  scrollToFoiresAndSelectCountry(country: 'france' | 'belgique' | 'suisse'): void {
+    this.scrollToSection('foires');
+  }
 }

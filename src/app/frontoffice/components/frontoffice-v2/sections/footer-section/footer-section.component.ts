@@ -16,6 +16,7 @@ declare const grecaptcha: any;
 export class FooterSectionComponent implements OnInit {
   @Output() countrySelect = new EventEmitter<'france' | 'belgique' | 'suisse'>();
   @Output() sectionScroll = new EventEmitter<string>();
+  @Output() openExposantForm = new EventEmitter<void>();
   
   socialLinks: SocialLinks | null = null;
   newsletterForm!: FormGroup;
@@ -60,6 +61,10 @@ export class FooterSectionComponent implements OnInit {
 
   goToUnsubscribe(): void {
     this.router.navigate(['/unsubscribe']);
+  }
+
+  openExposant(): void {
+    this.openExposantForm.emit();
   }
 
   subscribeToNewsletter(): void {

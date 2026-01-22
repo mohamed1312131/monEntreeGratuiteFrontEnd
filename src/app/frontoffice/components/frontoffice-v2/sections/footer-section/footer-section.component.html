@@ -84,9 +84,9 @@
         <div class="footer-column">
           <h3 class="footer-heading">Foires et Salons</h3>
           <ul class="footer-links">
-            <li><button (click)="selectCountry('france')" class="footer-link">Foires et Salons en France</button></li>
-            <li><button (click)="selectCountry('belgique')" class="footer-link">Foires et Salons en Belgique</button></li>
-            <li><button (click)="selectCountry('suisse')" class="footer-link">Foires et Salons en Suisse</button></li>
+            <li><button (click)="scrollToSection('foires')" class="footer-link">Foires et Salons en France</button></li>
+            <li><button (click)="scrollToSection('foires')" class="footer-link">Foires et Salons en Belgique</button></li>
+            <li><button (click)="scrollToSection('foires')" class="footer-link">Foires et Salons en Suisse</button></li>
           </ul>
         </div>
 
@@ -95,9 +95,7 @@
           <h3 class="footer-heading">Liens rapides</h3>
           <ul class="footer-links">
             <li><button (click)="scrollToSection('accueil')" class="footer-link">Accueil</button></li>
-            <li><button (click)="scrollToSection('foires')" class="footer-link">Foires et Salons</button></li>
-            <li><button (click)="scrollToSection('exposant')" class="footer-link">Devenir exposant</button></li>
-            <li><button (click)="goToUnsubscribe()" class="footer-link">Désinscrire</button></li>
+            <li><button (click)="openExposant()" class="footer-link">Devenir exposant</button></li>
           </ul>
         </div>
 
