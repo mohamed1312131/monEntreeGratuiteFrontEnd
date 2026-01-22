@@ -241,7 +241,7 @@
   }
 }
 
-/* Mobile button styles - Premium UX Design */
+/* Mobile button styles - Matching country-tab design */
 .hero-cta-button-mobile {
   position: relative;
   display: flex;
@@ -251,10 +251,10 @@
   width: 100%;
   padding: 20px 32px;
   
-  /* Rich gradient with depth */
-  background: linear-gradient(135deg, #D4A024 0%, #B88917 50%, #9A7214 100%);
-  border: none;
-  border-radius: 0;
+  /* Match country-tab gradient background */
+  background: linear-gradient(135deg, #B88917 0%, #B88917 100%);
+  border: 2px solid #B88917;
+  border-radius: 50px;
   color: white;
   font-weight: 700;
   font-size: 1.05rem;
@@ -262,45 +262,31 @@
   text-transform: uppercase;
   cursor: pointer;
   overflow: hidden;
+  backdrop-filter: blur(10px);
   
-  /* Enhanced shadows for depth */
-  box-shadow: 
-    0 4px 20px rgba(184, 137, 23, 0.4),
-    0 2px 8px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  
-  /* Subtle top border for premium feel */
-  border-top: 2px solid rgba(255, 215, 0, 0.3);
+  /* Enhanced shadows matching country-tab */
+  box-shadow: 0 8px 32px rgba(184, 137, 23, 0.4);
   
   /* Smooth transitions */
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  /* Pulse animation to draw attention */
-  animation: subtle-pulse 3s ease-in-out infinite;
   
   svg {
     flex-shrink: 0;
     width: 20px;
     height: 20px;
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+    color: white;
   }
   
   span {
     position: relative;
     z-index: 2;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
   
   &:hover {
-    transform: translateY(-3px) scale(1.01);
-    background: linear-gradient(135deg, #E5B12D 0%, #C99A1F 50%, #A87F18 100%);
-    box-shadow: 
-      0 12px 40px rgba(184, 137, 23, 0.6),
-      0 4px 16px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    border-top-color: rgba(255, 215, 0, 0.5);
-    animation: none; /* Stop pulse on hover */
+    transform: translateY(-4px);
+    border-color: #B88917;
+    box-shadow: 0 12px 40px rgba(184, 137, 23, 0.6);
     
     svg {
       transform: translateX(6px) scale(1.1);
@@ -309,17 +295,11 @@
     .button-glow {
       opacity: 1;
     }
-    
-    .button-shimmer {
-      animation: shimmer 1.5s ease-in-out infinite;
-    }
   }
   
   &:active {
-    transform: translateY(-1px) scale(0.99);
-    box-shadow: 
-      0 6px 20px rgba(184, 137, 23, 0.4),
-      0 2px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(184, 137, 23, 0.4);
   }
 }
 
@@ -343,32 +323,7 @@
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   pointer-events: none;
-}
-
-/* Pulse animation for attention */
-@keyframes subtle-pulse {
-  0%, 100% {
-    box-shadow: 
-      0 4px 20px rgba(184, 137, 23, 0.4),
-      0 2px 8px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-  50% {
-    box-shadow: 
-      0 4px 24px rgba(184, 137, 23, 0.5),
-      0 2px 10px rgba(0, 0, 0, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  }
-}
-
-/* Shimmer animation on hover */
-@keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 200%;
-  }
+  animation: tabShine 2s ease-in-out infinite;
 }
 
 /* Tab shine animation - continuous shine effect like country tabs */
@@ -380,7 +335,7 @@
   height: 100%;
   background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
   pointer-events: none;
-  animation: tabShine 3s ease-in-out infinite;
+  animation: tabShine 2s ease-in-out infinite;
 }
 
 @keyframes tabShine {

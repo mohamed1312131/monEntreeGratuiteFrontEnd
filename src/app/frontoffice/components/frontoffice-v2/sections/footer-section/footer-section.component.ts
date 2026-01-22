@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SettingsService, SocialLinks } from 'src/app/services/settings.service';
 import { NewsletterSubscriberService } from 'src/app/services/newsletter-subscriber.service';
 import { environment } from 'src/environments/environment';
@@ -25,7 +26,8 @@ export class FooterSectionComponent implements OnInit {
   constructor(
     private settingsService: SettingsService,
     private newsletterService: NewsletterSubscriberService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.newsletterForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -54,6 +56,10 @@ export class FooterSectionComponent implements OnInit {
 
   scrollToSection(section: string): void {
     this.sectionScroll.emit(section);
+  }
+
+  goToUnsubscribe(): void {
+    this.router.navigate(['/unsubscribe']);
   }
 
   subscribeToNewsletter(): void {
