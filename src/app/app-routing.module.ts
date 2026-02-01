@@ -57,16 +57,16 @@ const routes: Routes = [
     path: 'unsubscribe',
     component: PublicUnsubscribeComponent,
   },
-  // Public template viewer (no auth required) - must be before frontoffice
-  {
-    path: ':slug',
-    component: TemplateViewerComponent,
-  },
   // Frontoffice (user-facing) at site root - must be last before wildcard
   {
     path: '',
     loadChildren: () =>
       import('./frontoffice/frontoffice.module').then((m) => m.FrontofficeModule),
+  },
+  // Public template viewer (no auth required) - must be before frontoffice
+  {
+    path: ':slug',
+    component: TemplateViewerComponent,
   },
   // Fallback to frontoffice
   { path: '**', redirectTo: '' },

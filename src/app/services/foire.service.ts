@@ -65,6 +65,9 @@ export class FoireService {
   getActiveFoiresByCountry(countryCode: string): Observable<Foire[]> {
     return this.http.get<Foire[]>(`${this.apiUrl}/getAllActive/${countryCode}`);
   }
+  getFoireByName(name: string): Observable<Foire> {
+    return this.http.get<Foire>(`${this.apiUrl}/name/${encodeURIComponent(name)}`);
+  }
 
   addFoire(formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/add`, formData);
