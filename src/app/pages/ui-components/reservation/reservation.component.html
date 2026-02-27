@@ -161,7 +161,28 @@
       <!-- Phone Column -->
       <ng-container matColumnDef="phone">
         <th mat-header-cell *matHeaderCellDef class="col-phone">Tél</th>
-        <td mat-cell *matCellDef="let row" class="col-phone">{{ row.phone }}</td>
+        <td mat-cell *matCellDef="let row" class="col-phone">
+          <span *ngIf="row.phone">{{ row.phone }}</span>
+          <span *ngIf="!row.phone" style="color: #999;">N/A</span>
+        </td>
+      </ng-container>
+
+      <!-- Interests Column -->
+      <ng-container matColumnDef="interests">
+        <th mat-header-cell *matHeaderCellDef class="col-interests">Intérêts</th>
+        <td mat-cell *matCellDef="let row" class="col-interests">
+          <div class="interests-cell" [title]="formatInterests(row.interests)">
+            <span *ngIf="parseInterests(row.interests).length > 0" class="interests-badges">
+              <span *ngFor="let interest of parseInterests(row.interests).slice(0, 2)" class="interest-badge">
+                {{ getInterestLabel(interest) }}
+              </span>
+              <span *ngIf="parseInterests(row.interests).length > 2" class="more-badge">
+                +{{ parseInterests(row.interests).length - 2 }}
+              </span>
+            </span>
+            <span *ngIf="parseInterests(row.interests).length === 0" style="color: #999;">Aucun</span>
+          </div>
+        </td>
       </ng-container>
 
       <!-- Age Column -->

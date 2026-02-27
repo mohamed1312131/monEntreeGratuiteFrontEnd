@@ -24,6 +24,7 @@ interface Reservation {
   city: string;
   email: string;
   phone: string;
+  interests?: string;
   ageCategory: string;
   status: string;
   createdAt: string;
@@ -37,7 +38,7 @@ interface Reservation {
 export class ReservationComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'select', 'id', 'country', 'foireName', 'selectedDate', 'selectedTime',
-    'name', 'city', 'email', 'phone', 'ageCategory', 'createdAt', 'status', 'actions'
+    'name', 'city', 'email', 'phone', 'interests', 'ageCategory', 'createdAt', 'status', 'actions'
   ];
 
   dataSource: MatTableDataSource<Reservation>;
@@ -198,6 +199,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
           city: r.city,
           email: r.email,
           phone: r.phone,
+          interests: r.interests,
           ageCategory: r.ageCategory,
           createdAt: r.createdAt,
           status: r.status
@@ -439,6 +441,33 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       return 'N/A';
     }
     return dateRanges.map(range => `${range.startDate} - ${range.endDate}`).join(', ');
+  }
+
+  parseInterests(interestsJson: string | undefined): string[] {
+    if (!interestsJson) return [];
+    try {
+      return JSON.parse(interestsJson);
+    } catch {
+      return [];
+    }
+  }
+
+  getInterestLabel(interestValue: string): string {
+    const labels: { [key: string]: string } = {
+      'habitat_construction': '🏠 Habitat & Construction',
+      'amenagement_interieur': '🛁 Aménagement Intérieur',
+      'exterieurs_jardin': '🌱 Extérieurs & Jardin',
+      'energies_confort': '🔥 Énergies & Confort',
+      'gastronomie_terroir': '🍷 Gastronomie & Terroir',
+      'loisirs_bien_etre': '🚲 Loisirs & Bien-être'
+    };
+    return labels[interestValue] || interestValue;
+  }
+
+  formatInterests(interestsJson: string | undefined): string {
+    const interests = this.parseInterests(interestsJson);
+    if (interests.length === 0) return 'Aucun';
+    return interests.map(i => this.getInterestLabel(i)).join(', ');
   }
 
   showSnackBar(message: string, type: 'success' | 'error'): void {
