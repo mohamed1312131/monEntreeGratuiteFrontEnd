@@ -340,6 +340,7 @@ export class FrontofficeV2Component implements OnInit {
       email: this.reservationForm.email,
       interests: this.reservationForm.interests,
       smsNumber: this.reservationForm.smsNumber,
+      telephone: this.reservationForm.smsNumber,
       pays: this.reservationForm.pays,
       trancheAge: this.reservationForm.trancheAge,
       ageCategory: ageCategoryMap[this.reservationForm.trancheAge] || this.reservationForm.trancheAge,
