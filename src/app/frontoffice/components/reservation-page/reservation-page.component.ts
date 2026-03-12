@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserVisitService } from 'src/app/services/user-visit.service';
 import { FoireService } from 'src/app/services/foire.service';
@@ -45,7 +46,7 @@ interface ReservationForm {
   prenom: string;
   email: string;
   trancheAge: string;
-  telephone: string;
+  interests: string[];
   selectedDate: string;
   selectedTime: string;
   acceptConditions: boolean;
@@ -55,7 +56,18 @@ interface ReservationForm {
 @Component({
   selector: 'app-reservation-page',
   templateUrl: './reservation-page.component.html',
-  styleUrls: ['./reservation-page.component.scss']
+  styleUrls: ['./reservation-page.component.scss'],
+  animations: [
+    trigger('slideDown', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-10px)' }),
+        animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('150ms ease-in', style({ opacity: 0, transform: 'translateY(-10px)' }))
+      ])
+    ])
+  ]
 })
 export class ReservationPageComponent implements OnInit {
   selectedFoire: FoireDetails | null = null;
@@ -66,6 +78,17 @@ export class ReservationPageComponent implements OnInit {
   availableTimeSlots: TimeSlot[] = [];
   isLoading = true;
 
+  availableInterests = [
+    { value: 'habitat_construction', label: 'Habitat & Construction', icon: '🏠' },
+    { value: 'amenagement_interieur', label: 'Aménagement Intérieur', icon: '🛁' },
+    { value: 'exterieurs_jardin', label: 'Extérieurs & Jardin', icon: '🌱' },
+    { value: 'energies_confort', label: 'Énergies & Confort', icon: '🔥' },
+    { value: 'gastronomie_terroir', label: 'Gastronomie & Terroir', icon: '🍷' },
+    { value: 'loisirs_bien_etre', label: 'Loisirs & Bien-être', icon: '🚲' }
+  ];
+
+  isInterestsDropdownOpen = false;
+
   reservationForm: ReservationForm = {
     pays: '',
     entreeType: '',
@@ -75,7 +98,7 @@ export class ReservationPageComponent implements OnInit {
     prenom: '',
     email: '',
     trancheAge: '',
-    telephone: '',
+    interests: [],
     selectedDate: '',
     selectedTime: '',
     acceptConditions: false,
@@ -233,8 +256,8 @@ export class ReservationPageComponent implements OnInit {
       return;
     }
 
-    if (!this.reservationForm.telephone) {
-      this.errorMessage = 'Veuillez renseigner votre numéro de téléphone.';
+    if (!this.reservationForm.interests || this.reservationForm.interests.length === 0) {
+      this.errorMessage = 'Veuillez sélectionner au moins un univers qui vous intéresse.';
       return;
     }
 
@@ -289,8 +312,9 @@ export class ReservationPageComponent implements OnInit {
       prenom: this.reservationForm.prenom,
       ville: this.reservationForm.ville,
       email: this.reservationForm.email,
-      telephone: this.reservationForm.telephone,
+      interests: this.reservationForm.interests,
       smsNumber: this.reservationForm.smsNumber,
+      telephone: this.reservationForm.smsNumber,
       pays: this.reservationForm.pays,
       trancheAge: this.reservationForm.trancheAge,
       ageCategory: ageCategoryMap[this.reservationForm.trancheAge] || this.reservationForm.trancheAge,
@@ -335,5 +359,39 @@ export class ReservationPageComponent implements OnInit {
         }
       }
     });
+  }
+
+  toggleInterest(interestValue: string): void {
+    if (!this.selectedFoire?.disponible) {
+      return;
+    }
+    
+    const index = this.reservationForm.interests.indexOf(interestValue);
+    if (index > -1) {
+      this.reservationForm.interests.splice(index, 1);
+    } else {
+      this.reservationForm.interests.push(interestValue);
+    }
+  }
+
+  isInterestSelected(interestValue: string): boolean {
+    return this.reservationForm.interests.includes(interestValue);
+  }
+
+  toggleInterestsDropdown(): void {
+    if (!this.selectedFoire?.disponible) {
+      return;
+    }
+    this.isInterestsDropdownOpen = !this.isInterestsDropdownOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const clickedInside = target.closest('.interests-select-wrapper');
+    
+    if (!clickedInside && this.isInterestsDropdownOpen) {
+      this.isInterestsDropdownOpen = false;
+    }
   }
 }

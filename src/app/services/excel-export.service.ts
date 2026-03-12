@@ -38,6 +38,15 @@ export class ExcelExportService {
       'PLUS': 'plus de 70 ans'
     };
 
+    const interestLabels: { [key: string]: string } = {
+      'habitat_construction': 'Habitat & Construction',
+      'amenagement_interieur': 'Aménagement Intérieur',
+      'exterieurs_jardin': 'Extérieurs & Jardin',
+      'energies_confort': 'Énergies & Confort',
+      'gastronomie_terroir': 'Gastronomie & Terroir',
+      'loisirs_bien_etre': 'Loisirs & Bien-être'
+    };
+
     const formattedData = reservations.map(r => ({
       'ID': r.id,
       'Pays': r.country,
@@ -50,11 +59,25 @@ export class ExcelExportService {
       'Ville': r.city,
       'Email': r.email,
       'Téléphone': r.phone,
+      'Intérêts': this.formatInterestsForExport(r.interests, interestLabels),
       'Catégorie Âge': ageLabels[r.ageCategory] || r.ageCategory,
       'Statut': r.status
     }));
 
     this.exportToExcel(formattedData, `Reservations_${this.getDateString()}`, 'Réservations');
+  }
+
+  private formatInterestsForExport(interestsJson: string | undefined, labels: { [key: string]: string }): string {
+    if (!interestsJson) return 'Aucun';
+    
+    try {
+      const interests = JSON.parse(interestsJson);
+      if (!Array.isArray(interests) || interests.length === 0) return 'Aucun';
+      
+      return interests.map(interest => labels[interest] || interest).join('; ');
+    } catch (e) {
+      return 'Aucun';
+    }
   }
 
   private extractTime(dateString: string): string {
