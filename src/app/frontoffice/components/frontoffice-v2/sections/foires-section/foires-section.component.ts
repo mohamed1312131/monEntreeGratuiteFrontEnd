@@ -20,7 +20,7 @@ interface Foire {
   encapsulation: ViewEncapsulation.None
 })
 export class FoiresSectionComponent implements OnInit {
-  selectedCountry: 'france' | 'belgique' | 'suisse' = 'france';
+  selectedCountry: 'france' | 'belgique' | 'suisse' | 'luxembourg' = 'france';
   currentFoireSlide = 0;
   itemsPerPage = 3;
 
@@ -29,7 +29,8 @@ export class FoiresSectionComponent implements OnInit {
   foiresByCountry: { [key: string]: Foire[] } = {
     france: [],
     belgique: [],
-    suisse: []
+    suisse: [],
+    luxembourg: []
   };
 
   isLoading = true;
@@ -39,7 +40,8 @@ export class FoiresSectionComponent implements OnInit {
   private countryCodeMap: { [key: string]: string } = {
     france: 'FR',
     belgique: 'BE',
-    suisse: 'CH'
+    suisse: 'CH',
+    luxembourg: 'LU'
   };
 
   constructor(private foireService: FoireService) {}
@@ -72,7 +74,7 @@ export class FoiresSectionComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    const countries: ('france' | 'belgique' | 'suisse')[] = ['france', 'belgique', 'suisse'];
+    const countries: ('france' | 'belgique' | 'suisse' | 'luxembourg')[] = ['france', 'belgique', 'suisse', 'luxembourg'];
     let loadedCount = 0;
 
     countries.forEach(country => {
@@ -90,9 +92,10 @@ export class FoiresSectionComponent implements OnInit {
           loadedCount++;
           if (loadedCount === countries.length) {
             this.isLoading = false;
-            if (this.foiresByCountry['france'].length === 0 && 
-                this.foiresByCountry['belgique'].length === 0 && 
-                this.foiresByCountry['suisse'].length === 0) {
+            if (this.foiresByCountry['france'].length === 0 &&
+                this.foiresByCountry['belgique'].length === 0 &&
+                this.foiresByCountry['suisse'].length === 0 &&
+                this.foiresByCountry['luxembourg'].length === 0) {
               this.hasError = true;
               this.errorMessage = 'Impossible de charger les foires';
               this.loadFallbackFoires();
@@ -205,7 +208,8 @@ export class FoiresSectionComponent implements OnInit {
           image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80",
           description: "Innovation et technologie"
         }
-      ]
+      ],
+      luxembourg: []
     };
   }
 
@@ -213,7 +217,7 @@ export class FoiresSectionComponent implements OnInit {
     return this.foiresByCountry[this.selectedCountry];
   }
 
-  selectCountry(country: 'france' | 'belgique' | 'suisse'): void {
+  selectCountry(country: 'france' | 'belgique' | 'suisse' | 'luxembourg'): void {
     this.selectedCountry = country;
     this.currentFoireSlide = 0;
   }

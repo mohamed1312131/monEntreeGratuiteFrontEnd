@@ -11,6 +11,7 @@ export class PortfolioComponent implements OnInit {
   foiresFrance: any[] = [];
   foiresBelgium: any[] = [];
   foiresSwitzerland: any[] = [];
+  foiresLuxembourg: any[] = [];
   isLoading = true;
   
   constructor(
@@ -45,10 +46,18 @@ export class PortfolioComponent implements OnInit {
     this.foireService.getFoiresByCountry('CH').subscribe({
       next: (data) => {
         this.foiresSwitzerland = data.filter(f => f.isActive);
+      },
+      error: (error) => console.error('Error loading Switzerland foires:', error)
+    });
+
+    // Load Luxembourg foires
+    this.foireService.getFoiresByCountry('LU').subscribe({
+      next: (data) => {
+        this.foiresLuxembourg = data.filter(f => f.isActive);
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading Switzerland foires:', error);
+        console.error('Error loading Luxembourg foires:', error);
         this.isLoading = false;
       }
     });

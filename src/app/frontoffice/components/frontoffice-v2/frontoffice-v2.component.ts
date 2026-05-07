@@ -549,6 +549,8 @@ export class FrontofficeV2Component implements OnInit {
             countryName = 'Belgique';
           } else if (foire.countryCode === 'CH') {
             countryName = 'Suisse';
+          } else if (foire.countryCode === 'LU') {
+            countryName = 'Luxembourg';
           }
           
           this.onReserve(foireData, countryName);
@@ -578,7 +580,7 @@ export class FrontofficeV2Component implements OnInit {
     }
   }
 
-  scrollToFoiresAndSelectCountry(country: 'france' | 'belgique' | 'suisse'): void {
+  scrollToFoiresAndSelectCountry(country: 'france' | 'belgique' | 'suisse' | 'luxembourg'): void {
     this.scrollToSection('foires');
   }
 

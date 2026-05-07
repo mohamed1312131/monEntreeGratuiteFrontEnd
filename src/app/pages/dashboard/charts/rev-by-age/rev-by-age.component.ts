@@ -23,7 +23,7 @@ export class RevByAgeComponent implements OnInit {
   public loading = true;
 
   public years: number[] = [];
-  public countries: string[] = ["FR", "BE", "CH"];
+  public countries: string[] = ["FR", "BE", "CH", "LU"];
   
   public selectedYear: number;
   public selectedCountry = "FR";

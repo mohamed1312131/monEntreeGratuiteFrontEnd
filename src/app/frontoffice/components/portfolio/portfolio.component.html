@@ -25,6 +25,11 @@
 						<span class="flag-icon">🇨🇭</span> Suisse
 					</a>
 				  </li>
+				  <li class="nav-item" role="presentation">
+					<a href="#" class="nav-link" id="nav-luxembourg-tab" data-bs-toggle="tab" data-bs-target="#nav-luxembourg" type="button" role="tab" aria-controls="luxembourg" aria-selected="false">
+						<span class="flag-icon">🇱🇺</span> Luxembourg
+					</a>
+				  </li>
 				</ul>
 				
 				<!-- Tab panes -->
@@ -107,6 +112,35 @@
 					<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 flex-nowrap">
 
 						<div class="col" *ngFor="let foire of foiresSwitzerland">
+							<figure class="portfolio-style">
+								<img [src]="foire.image" [alt]="foire.name" class="img-fluid portfolio-item">
+								<figcaption>
+									<h5>{{ foire.name }}</h5>
+									<p class="text-muted">{{ formatDate(foire.date) }}</p>
+									<button class="btn btn-primary btn-sm reserve-btn" (click)="onReserve(foire)">Réserver Maintenant</button>
+								</figcaption>
+							</figure>
+						</div>
+
+					</div>
+						</div>
+					</div>
+				  </div>
+				  <div class="tab-pane" id="nav-luxembourg" role="tabpanel" aria-labelledby="nav-luxembourg-tab">
+					<div *ngIf="!isLoading && foiresLuxembourg.length === 0" class="text-center py-5">
+						<p class="text-muted">Aucune foire disponible pour le moment</p>
+					</div>
+					<div *ngIf="!isLoading && foiresLuxembourg.length > 0" class="foires-carousel-container position-relative">
+						<button class="carousel-nav-btn prev-btn" (click)="scrollCarousel('luxembourg', 'prev')">
+							<i class="icon icon-arrow-left"></i>
+						</button>
+						<button class="carousel-nav-btn next-btn" (click)="scrollCarousel('luxembourg', 'next')">
+							<i class="icon icon-arrow-right"></i>
+						</button>
+						<div class="foires-carousel" id="luxembourg-carousel">
+					<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 flex-nowrap">
+
+						<div class="col" *ngFor="let foire of foiresLuxembourg">
 							<figure class="portfolio-style">
 								<img [src]="foire.image" [alt]="foire.name" class="img-fluid portfolio-item">
 								<figcaption>

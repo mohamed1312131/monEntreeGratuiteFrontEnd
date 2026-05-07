@@ -52,6 +52,14 @@ export class FoiresComponent implements OnInit {
       pageIndex: 0,
       pageSize: 5,
       foires: []
+    },
+    {
+      name: 'Luxembourg',
+      image: 'assets/images/flags/Luxembourg.png',
+      apiKey: 'LU',
+      pageIndex: 0,
+      pageSize: 5,
+      foires: []
     }
   ];
 
