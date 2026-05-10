@@ -148,15 +148,15 @@
 
         <!-- Interests Selection -->
         <div class="form-group">
-          <label for="interests">Quel univers vous intéresse particulièrement pour votre visite ? *</label>
+          <label for="interests">Quel projet souhaitez-vous concrétiser lors de votre visite à la {{ selectedFoire.name }} ? *</label>
           <div class="interests-select-wrapper" [class.disabled]="!selectedFoire.disponible">
-            <div class="interests-select-trigger" 
+            <div class="interests-select-trigger"
                  (click)="toggleInterestsDropdown()"
                  [class.open]="isInterestsDropdownOpen"
                  [class.has-selection]="reservationForm.interests.length > 0">
-              <span class="selected-text" *ngIf="reservationForm.interests.length === 0">Sélectionnez vos univers d'intérêt</span>
+              <span class="selected-text" *ngIf="reservationForm.interests.length === 0">Sélectionnez votre projet</span>
               <span class="selected-text" *ngIf="reservationForm.interests.length > 0">
-                {{ reservationForm.interests.length }} univers sélectionné{{ reservationForm.interests.length > 1 ? 's' : '' }}
+                {{ reservationForm.interests.length }} projet sélectionné{{ reservationForm.interests.length > 1 ? 's' : '' }}
               </span>
               <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -176,7 +176,7 @@
               </div>
             </div>
           </div>
-          <small class="form-text text-muted">Sélectionnez un ou plusieurs univers qui vous intéressent</small>
+          <small class="form-text text-muted">En précisant votre projet, nous vous mettons en relation directe avec les experts certifiés du salon. Bénéficiez d'un accès prioritaire et d'un rendez-vous conseil avec l'expert de votre secteur avec un diagnostic gratuit et un accueil VIP sur le stand.</small>
         </div>
 
         <!-- Conditions générales -->

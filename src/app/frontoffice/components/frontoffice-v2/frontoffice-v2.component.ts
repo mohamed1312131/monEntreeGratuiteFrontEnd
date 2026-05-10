@@ -134,12 +134,12 @@ export class FrontofficeV2Component implements OnInit {
   availableTimeSlots: TimeSlot[] = [];
   
   availableInterests = [
-    { value: 'habitat_construction', label: 'Habitat & Construction', icon: '🏠' },
-    { value: 'amenagement_interieur', label: 'Aménagement Intérieur', icon: '🛁' },
-    { value: 'exterieurs_jardin', label: 'Extérieurs & Jardin', icon: '🌱' },
-    { value: 'energies_confort', label: 'Énergies & Confort', icon: '🔥' },
-    { value: 'gastronomie_terroir', label: 'Gastronomie & Terroir', icon: '🍷' },
-    { value: 'loisirs_bien_etre', label: 'Loisirs & Bien-être', icon: '🚲' }
+    { value: 'piscine_spa_exterieur', label: 'Piscine, Spa & Aménagement Extérieur', icon: '🌊' },
+    { value: 'renovation_menuiserie_isolation', label: 'Rénovation, Menuiserie & Isolation (Fenêtres, toiture, façades)', icon: '🏠' },
+    { value: 'cuisine_bain_design', label: 'Cuisine, Bain & Design Intérieur (Aménagement complet et décoration)', icon: '🍳' },
+    { value: 'energies_renouvelables_chauffage', label: 'Énergies Renouvelables & Chauffage (Panneaux solaires, pompes à chaleur, poêles)', icon: '☀️' },
+    { value: 'mobilite_vehicules_loisirs', label: 'Mobilité & Véhicules de Loisirs (Camping-cars, vans, voitures électriques)', icon: '🚗' },
+    { value: 'visite_simple', label: 'Non, je visite simplement le salon', icon: '❌' }
   ];
 
   isInterestsDropdownOpen = false;
@@ -279,7 +279,7 @@ export class FrontofficeV2Component implements OnInit {
     }
 
     if (!this.reservationForm.interests || this.reservationForm.interests.length === 0) {
-      this.errorMessage = 'Veuillez sélectionner au moins un univers qui vous intéresse.';
+      this.errorMessage = 'Veuillez sélectionner au moins un projet.';
       return;
     }
 

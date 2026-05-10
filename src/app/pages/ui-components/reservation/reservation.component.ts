@@ -459,7 +459,13 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       'exterieurs_jardin': '🌱 Extérieurs & Jardin',
       'energies_confort': '🔥 Énergies & Confort',
       'gastronomie_terroir': '🍷 Gastronomie & Terroir',
-      'loisirs_bien_etre': '🚲 Loisirs & Bien-être'
+      'loisirs_bien_etre': '🚲 Loisirs & Bien-être',
+      'piscine_spa_exterieur': '🌊 Piscine, Spa & Aménagement Extérieur',
+      'renovation_menuiserie_isolation': '🏠 Rénovation, Menuiserie & Isolation',
+      'cuisine_bain_design': '🍳 Cuisine, Bain & Design Intérieur',
+      'energies_renouvelables_chauffage': '☀️ Énergies Renouvelables & Chauffage',
+      'mobilite_vehicules_loisirs': '🚗 Mobilité & Véhicules de Loisirs',
+      'visite_simple': '❌ Visite simple'
     };
     return labels[interestValue] || interestValue;
   }
