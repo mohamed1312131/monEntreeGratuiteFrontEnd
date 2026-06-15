@@ -79,12 +79,10 @@ export class ReservationPageComponent implements OnInit {
   isLoading = true;
 
   availableInterests = [
-    { value: 'piscine_spa_exterieur', label: 'Piscine, Spa & Aménagement Extérieur', icon: '🌊' },
-    { value: 'renovation_menuiserie_isolation', label: 'Rénovation, Menuiserie & Isolation (Fenêtres, toiture, façades)', icon: '🏠' },
-    { value: 'cuisine_bain_design', label: 'Cuisine, Bain & Design Intérieur (Aménagement complet et décoration)', icon: '🍳' },
-    { value: 'energies_renouvelables_chauffage', label: 'Énergies Renouvelables & Chauffage (Panneaux solaires, pompes à chaleur, poêles)', icon: '☀️' },
-    { value: 'mobilite_vehicules_loisirs', label: 'Mobilité & Véhicules de Loisirs (Camping-cars, vans, voitures électriques)', icon: '🚗' },
-    { value: 'visite_simple', label: 'Non, je visite simplement le salon', icon: '❌' }
+    { value: 'equipement_cuisine_gastronomie', label: 'Équipement de cuisine & Gastronomie (pour les passionnés de cuisine, démonstrations culinaires ou projet de rééquipement.)', icon: '🍳' },
+    { value: 'amenagement_exterieur_mobilier', label: 'Aménagement extérieur & Mobilier (pour ceux qui ont un projet de terrasse, de pergola ou de brasero haut de gamme.)', icon: '🏡' },
+    { value: 'parcs_jardins_espaces_verts', label: 'Parcs, Jardins & Espaces verts (pour l\'entretien, les plantes, l\'arboriculture et le matériel paysager.)', icon: '🌳' },
+    { value: 'visite_generale_culture_rurale', label: 'Visite générale & Culture rurale (pour profiter de l\'ambiance de la foire, des animaux et des animations en famille.)', icon: '🌾' }
   ];
 
   isInterestsDropdownOpen = false;
@@ -257,7 +255,7 @@ export class ReservationPageComponent implements OnInit {
     }
 
     if (!this.reservationForm.interests || this.reservationForm.interests.length === 0) {
-      this.errorMessage = 'Veuillez sélectionner au moins un projet.';
+      this.errorMessage = 'Veuillez sélectionner votre principal centre d\'intérêt.';
       return;
     }
 
@@ -366,12 +364,7 @@ export class ReservationPageComponent implements OnInit {
       return;
     }
     
-    const index = this.reservationForm.interests.indexOf(interestValue);
-    if (index > -1) {
-      this.reservationForm.interests.splice(index, 1);
-    } else {
-      this.reservationForm.interests.push(interestValue);
-    }
+    this.reservationForm.interests = this.isInterestSelected(interestValue) ? [] : [interestValue];
   }
 
   isInterestSelected(interestValue: string): boolean {

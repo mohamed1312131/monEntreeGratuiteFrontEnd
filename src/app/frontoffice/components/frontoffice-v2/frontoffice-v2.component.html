@@ -175,15 +175,15 @@
 
         <!-- Interests Selection -->
         <div class="form-group">
-          <label for="interests">Quel projet souhaitez-vous concrétiser lors de votre visite à la {{ selectedFoire.name }} ? *</label>
+          <label for="interests">📋 Quel est votre principal centre d'intérêt à la Foire de Libramont ? *</label>
           <div class="interests-select-wrapper" [class.disabled]="!selectedFoire.disponible">
             <div class="interests-select-trigger"
                  (click)="toggleInterestsDropdown()"
                  [class.open]="isInterestsDropdownOpen"
                  [class.has-selection]="reservationForm.interests.length > 0">
-              <span class="selected-text" *ngIf="reservationForm.interests.length === 0">Sélectionnez votre projet</span>
+              <span class="selected-text" *ngIf="reservationForm.interests.length === 0">Sélectionnez votre centre d'intérêt</span>
               <span class="selected-text" *ngIf="reservationForm.interests.length > 0">
-                {{ reservationForm.interests.length }} projet sélectionné{{ reservationForm.interests.length > 1 ? 's' : '' }}
+                Centre d'intérêt sélectionné
               </span>
               <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -203,7 +203,7 @@
               </div>
             </div>
           </div>
-          <small class="form-text text-muted">En sélectionnant un projet, vous acceptez que vos coordonnées soient transmises à l'exposant référent de votre secteur ou à notre partenaire sponsor VIPLUX pour organiser votre accueil VIP et votre diagnostic gratuit. Vous pouvez retirer votre consentement à tout moment.</small>
+          <small class="form-text text-muted">En sélectionnant un centre d'intérêt, vous acceptez que vos coordonnées soient transmises à l'exposant référent de votre secteur ou à notre partenaire sponsor VIPLUX pour organiser votre accueil VIP et votre diagnostic gratuit. Vous pouvez retirer votre consentement à tout moment.</small>
         </div>
 
         <!-- Conditions générales -->
