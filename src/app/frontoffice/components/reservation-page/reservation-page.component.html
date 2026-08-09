@@ -176,7 +176,23 @@
               </div>
             </div>
           </div>
-          <small class="form-text text-muted">En sélectionnant un centre d'intérêt, vous acceptez que vos coordonnées soient transmises à l'exposant référent de votre secteur ou à notre partenaire sponsor VIPLUX pour organiser votre accueil VIP et votre diagnostic gratuit. Vous pouvez retirer votre consentement à tout moment.</small>
+          <small class="form-text text-muted">En remplissant ce formulaire, vous autorisez VIPLUX (monentreegratuite) à traiter vos données pour vous transmettre votre invitation et organiser votre accueil VIP. Vos données peuvent être partagées avec l'exposant référent de votre secteur pour l'établissement de votre diagnostic. Retrait du consentement à tout moment : contact&#64;monentreegratuite.com.</small>
+        </div>
+
+        <!-- Phone contact consent -->
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="acceptPhoneContact" [(ngModel)]="reservationForm.acceptPhoneContact" name="acceptPhoneContact" required [disabled]="!selectedFoire.disponible">
+          <label for="acceptPhoneContact">
+            J'accepte d'être recontacté(e) par téléphone par VIPLUX ou l'exposant référent pour confirmer mon invitation et mon rendez-vous VIP.* (Obligatoire pour la confirmation téléphonique)
+          </label>
+        </div>
+
+        <!-- Marketing consent -->
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="acceptMarketing" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing" [disabled]="!selectedFoire.disponible">
+          <label for="acceptMarketing">
+            J'accepte de recevoir les offres et actualités de VIPLUX par e-mail et SMS. (Optionnel)
+          </label>
         </div>
 
         <!-- Conditions générales -->
@@ -187,16 +203,8 @@
           </label>
         </div>
 
-        <!-- Marketing consent -->
-        <div class="form-group checkbox-group">
-          <input type="checkbox" id="acceptMarketing" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing" required [disabled]="!selectedFoire.disponible">
-          <label for="acceptMarketing">
-            En cochant cette case, j'autorise VIPLUX détenteur de monentreegratuite, à utiliser mon email et/ou mon téléphone pour m'adresser mon invitation, des offres, actualités et relances liées à ses offres. Je peux retirer mon consentement à tout moment via le lien de désinscription (emails) ou en répondant STOP (SMS).
-          </label>
-        </div>
-
         <!-- Submit Button -->
-        <button type="submit" class="btn-submit" [disabled]="!selectedFoire.disponible || !reservationForm.acceptConditions || !reservationForm.acceptMarketing || isSubmitting">
+        <button type="submit" class="btn-submit" [disabled]="!selectedFoire.disponible || !reservationForm.acceptConditions || !reservationForm.acceptPhoneContact || isSubmitting">
           <span *ngIf="!isSubmitting">Confirmer ma réservation</span>
           <span *ngIf="isSubmitting">
             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>

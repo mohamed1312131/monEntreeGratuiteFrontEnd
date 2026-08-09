@@ -49,6 +49,7 @@ interface ReservationForm {
   interests: string[];
   selectedDate: string;
   selectedTime: string;
+  acceptPhoneContact: boolean;
   acceptConditions: boolean;
   acceptMarketing: boolean;
 }
@@ -79,10 +80,14 @@ export class ReservationPageComponent implements OnInit {
   isLoading = true;
 
   availableInterests = [
-    { value: 'equipement_cuisine_gastronomie', label: 'Équipement de cuisine & Gastronomie (pour les passionnés de cuisine, démonstrations culinaires ou projet de rééquipement.)', icon: '🍳' },
-    { value: 'amenagement_exterieur_mobilier', label: 'Aménagement extérieur & Mobilier (pour ceux qui ont un projet de terrasse, de pergola ou de brasero haut de gamme.)', icon: '🏡' },
-    { value: 'parcs_jardins_espaces_verts', label: 'Parcs, Jardins & Espaces verts (pour l\'entretien, les plantes, l\'arboriculture et le matériel paysager.)', icon: '🌳' },
-    { value: 'visite_generale_culture_rurale', label: 'Visite générale & Culture rurale (pour profiter de l\'ambiance de la foire, des animaux et des animations en famille.)', icon: '🌾' }
+    { value: 'equipement_cuisine_gastronomie', label: 'Équipement de cuisine & Gastronomie (pour les passionnés de cuisine, spécialités du terroir, démonstrations et rééquipement.)', icon: '🍳' },
+    { value: 'habitat_ameublement_renovation', label: 'Habitat, Ameublement & Rénovation (pour ceux qui ont un projet d\'aménagement intérieur, de mobilier, de cuisine ou de travaux d\'isolation.)', icon: '🏡' },
+    { value: 'amenagement_exterieur_mobilier_jardin', label: 'Aménagement extérieur & Mobilier de jardin (pour ceux qui ont un projet de terrasse, pergola, mobilier outdoor, spa ou brasero haut de gamme.)', icon: '🔥' },
+    { value: 'jardins_paysagisme_espaces_verts', label: 'Jardins, Paysagisme & Espaces verts (pour l\'aménagement paysager, les plantes, l\'entretien des extérieurs et le matériel d\'espaces verts.)', icon: '🌳' },
+    { value: 'mobilites_auto_moto', label: 'Mobilités & Auto-Moto (pour découvrir les véhicules électriques, mobilités douces, nouvelles technologies et solutions de transport.)', icon: '🚗' },
+    { value: 'artisanat_monde_decoration', label: 'Artisanat du monde & Décoration (pour dénicher des créations uniques, des objets de déco, de la mode et des produits artisanaux locaux ou internationaux.)', icon: '🏺' },
+    { value: 'village_international_culture', label: 'Village International & Culture (pour voyager à travers le pavillon invité d\'honneur, découvrir d\'autres cultures et échanger avec des exposants du monde.)', icon: '🌍' },
+    { value: 'visite_generale_ambiance_foire', label: 'Visite générale & Ambiance foire (pour profiter de l\'ambiance, des animations en famille, des spectacles, des scènes musicales et de la vie nocturne.)', icon: '🌾' }
   ];
 
   isInterestsDropdownOpen = false;
@@ -99,6 +104,7 @@ export class ReservationPageComponent implements OnInit {
     interests: [],
     selectedDate: '',
     selectedTime: '',
+    acceptPhoneContact: false,
     acceptConditions: false,
     acceptMarketing: false
   };
@@ -236,6 +242,11 @@ export class ReservationPageComponent implements OnInit {
     // Validation
     if (!this.reservationForm.acceptConditions) {
       this.errorMessage = 'Vous devez accepter les conditions générales pour continuer.';
+      return;
+    }
+
+    if (!this.reservationForm.acceptPhoneContact) {
+      this.errorMessage = 'Vous devez accepter d\'être recontacté(e) par téléphone pour confirmer votre invitation.';
       return;
     }
     
