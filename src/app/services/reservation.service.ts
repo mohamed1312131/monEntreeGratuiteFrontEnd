@@ -17,6 +17,7 @@ export interface ReservationData {
   city: string;
   email: string;
   phone: string;
+  ipAddress?: string;
   interests?: string;
   selectedDate?: string;
   selectedTime?: string;

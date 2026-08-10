@@ -54,7 +54,14 @@ export class ExcelExportService {
       'equipement_cuisine_gastronomie': 'Équipement de cuisine & Gastronomie',
       'amenagement_exterieur_mobilier': 'Aménagement extérieur & Mobilier',
       'parcs_jardins_espaces_verts': 'Parcs, Jardins & Espaces verts',
-      'visite_generale_culture_rurale': 'Visite générale & Culture rurale'
+      'visite_generale_culture_rurale': 'Visite générale & Culture rurale',
+      'habitat_ameublement_renovation': 'Habitat, Ameublement & Rénovation',
+      'amenagement_exterieur_mobilier_jardin': 'Aménagement extérieur & Mobilier de jardin',
+      'jardins_paysagisme_espaces_verts': 'Jardins, Paysagisme & Espaces verts',
+      'mobilites_auto_moto': 'Mobilités & Auto-Moto',
+      'artisanat_monde_decoration': 'Artisanat du monde & Décoration',
+      'village_international_culture': 'Village International & Culture',
+      'visite_generale_ambiance_foire': 'Visite générale & Ambiance foire'
     };
 
     const formattedData = reservations.map(r => ({
@@ -69,6 +76,7 @@ export class ExcelExportService {
       'Ville': r.city,
       'Email': r.email,
       'Téléphone': r.phone,
+      'Adresse IP': r.ipAddress || 'N/A',
       'Intérêts': this.formatInterestsForExport(r.interests, interestLabels),
       'Catégorie Âge': ageLabels[r.ageCategory] || r.ageCategory,
       'Statut': r.status
