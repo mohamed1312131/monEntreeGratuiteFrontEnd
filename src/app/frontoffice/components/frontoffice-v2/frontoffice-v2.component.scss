@@ -209,6 +209,7 @@
         &:hover {
           border-color: #cbd5e1;
         }
+
       }
 
       select {
@@ -347,6 +348,11 @@
           &:hover {
             color: #C5A028;
           }
+        }
+
+        .consent-optional {
+          color: #64748b;
+          white-space: nowrap;
         }
       }
     }

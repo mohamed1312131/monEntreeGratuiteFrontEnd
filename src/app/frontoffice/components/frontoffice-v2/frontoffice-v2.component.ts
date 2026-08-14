@@ -57,6 +57,7 @@ interface ReservationForm {
   selectedDate: string;
   selectedTime: string;
   acceptPhoneContact: boolean;
+  acceptPartnerShare: boolean;
   acceptConditions: boolean;
   acceptMarketing: boolean;
 }
@@ -160,6 +161,7 @@ export class FrontofficeV2Component implements OnInit {
     selectedDate: '',
     selectedTime: '',
     acceptPhoneContact: false,
+    acceptPartnerShare: false,
     acceptConditions: false,
     acceptMarketing: false
   };
@@ -252,6 +254,7 @@ export class FrontofficeV2Component implements OnInit {
       selectedDate: '',
       selectedTime: '',
       acceptPhoneContact: false,
+      acceptPartnerShare: false,
       acceptConditions: false,
       acceptMarketing: false
     };
