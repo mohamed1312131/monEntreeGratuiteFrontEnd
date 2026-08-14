@@ -50,6 +50,7 @@ interface ReservationForm {
   selectedDate: string;
   selectedTime: string;
   acceptPhoneContact: boolean;
+  acceptPartnerShare: boolean;
   acceptConditions: boolean;
   acceptMarketing: boolean;
 }
@@ -105,6 +106,7 @@ export class ReservationPageComponent implements OnInit {
     selectedDate: '',
     selectedTime: '',
     acceptPhoneContact: false,
+    acceptPartnerShare: false,
     acceptConditions: false,
     acceptMarketing: false
   };
@@ -322,6 +324,10 @@ export class ReservationPageComponent implements OnInit {
       ville: this.reservationForm.ville,
       email: this.reservationForm.email,
       interests: this.reservationForm.interests,
+      phoneContactConsent: this.reservationForm.acceptPhoneContact,
+      partnerDataSharingConsent: this.reservationForm.acceptPartnerShare,
+      marketingConsent: this.reservationForm.acceptMarketing,
+      termsAccepted: this.reservationForm.acceptConditions,
       smsNumber: this.reservationForm.smsNumber,
       telephone: this.reservationForm.smsNumber,
       pays: this.reservationForm.pays,

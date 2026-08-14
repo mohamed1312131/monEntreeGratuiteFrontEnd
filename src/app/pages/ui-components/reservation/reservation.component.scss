@@ -328,6 +328,11 @@
     max-width: 250px;
   }
 
+  .col-consents {
+    min-width: 230px;
+    max-width: 280px;
+  }
+
   .col-age {
     width: 70px;
     text-align: center;
@@ -430,6 +435,37 @@
   font-weight: 600;
   background: #e5e7eb;
   color: #4b5563;
+}
+
+.consents-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 280px;
+}
+
+.consent-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.consent-accepted {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.consent-declined {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.consent-unknown {
+  background: #eceff1;
+  color: #546e7a;
 }
 
 // Status Badges

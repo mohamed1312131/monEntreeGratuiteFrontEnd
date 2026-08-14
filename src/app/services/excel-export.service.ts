@@ -78,6 +78,13 @@ export class ExcelExportService {
       'Téléphone': r.phone,
       'Adresse IP': r.ipAddress || 'N/A',
       'Intérêts': this.formatInterestsForExport(r.interests, interestLabels),
+      'Consentement contact téléphonique': this.formatConsentForExport(r.phoneContactConsent),
+      'Consentement partage avec l\'exposant': this.formatConsentForExport(r.partnerDataSharingConsent),
+      'Consentement marketing e-mail/SMS': this.formatConsentForExport(r.marketingConsent),
+      'Conditions Générales acceptées': this.formatConsentForExport(r.termsAccepted),
+      'Consentements recueillis le': this.formatConsentDateForExport(r.consentCapturedAt),
+      'Version Conditions Générales': r.termsVersion || 'Non renseigné',
+      'Version Politique de confidentialité': r.privacyPolicyVersion || 'Non renseigné',
       'Catégorie Âge': ageLabels[r.ageCategory] || r.ageCategory,
       'Statut': r.status
     }));
@@ -96,6 +103,18 @@ export class ExcelExportService {
     } catch (e) {
       return 'Aucun';
     }
+  }
+
+  private formatConsentForExport(value: boolean | null | undefined): string {
+    if (value === true) return 'Oui';
+    if (value === false) return 'Non';
+    return 'Non renseigné';
+  }
+
+  private formatConsentDateForExport(value: string | undefined): string {
+    if (!value) return 'Non renseigné';
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleString('fr-FR');
   }
 
   private extractTime(dateString: string): string {

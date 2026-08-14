@@ -194,6 +194,19 @@
         </td>
       </ng-container>
 
+      <!-- Consent choices Column -->
+      <ng-container matColumnDef="consents">
+        <th mat-header-cell *matHeaderCellDef class="col-consents">Consentements</th>
+        <td mat-cell *matCellDef="let row" class="col-consents">
+          <div class="consents-cell" [title]="formatConsentSummary(row)">
+            <span class="consent-badge" [class]="'consent-badge ' + getConsentClass(row.phoneContactConsent)">Appel : {{ formatConsentStatus(row.phoneContactConsent) }}</span>
+            <span class="consent-badge" [class]="'consent-badge ' + getConsentClass(row.partnerDataSharingConsent)">Partenaire : {{ formatConsentStatus(row.partnerDataSharingConsent) }}</span>
+            <span class="consent-badge" [class]="'consent-badge ' + getConsentClass(row.marketingConsent)">Marketing : {{ formatConsentStatus(row.marketingConsent) }}</span>
+            <span class="consent-badge" [class]="'consent-badge ' + getConsentClass(row.termsAccepted)">CGS : {{ formatConsentStatus(row.termsAccepted) }}</span>
+          </div>
+        </td>
+      </ng-container>
+
       <!-- Age Column -->
       <ng-container matColumnDef="ageCategory">
         <th mat-header-cell *matHeaderCellDef class="col-age">Âge</th>

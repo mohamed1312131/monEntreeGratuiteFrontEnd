@@ -19,6 +19,13 @@ export interface ReservationData {
   phone: string;
   ipAddress?: string;
   interests?: string;
+  phoneContactConsent?: boolean | null;
+  partnerDataSharingConsent?: boolean | null;
+  marketingConsent?: boolean | null;
+  termsAccepted?: boolean | null;
+  consentCapturedAt?: string;
+  termsVersion?: string;
+  privacyPolicyVersion?: string;
   selectedDate?: string;
   selectedTime?: string;
   reservationDate: string;
@@ -35,6 +42,10 @@ export interface ReservationCreateDTO {
   email: string;
   phone: string;
   ageCategory: string;
+  phoneContactConsent: boolean;
+  partnerDataSharingConsent: boolean;
+  marketingConsent: boolean;
+  termsAccepted: boolean;
 }
 
 @Injectable({

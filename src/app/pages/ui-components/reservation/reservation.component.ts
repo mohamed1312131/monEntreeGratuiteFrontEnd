@@ -26,6 +26,13 @@ interface Reservation {
   phone: string;
   ipAddress?: string;
   interests?: string;
+  phoneContactConsent?: boolean | null;
+  partnerDataSharingConsent?: boolean | null;
+  marketingConsent?: boolean | null;
+  termsAccepted?: boolean | null;
+  consentCapturedAt?: string;
+  termsVersion?: string;
+  privacyPolicyVersion?: string;
   ageCategory: string;
   status: string;
   createdAt: string;
@@ -39,7 +46,7 @@ interface Reservation {
 export class ReservationComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'select', 'id', 'country', 'foireName', 'selectedDate', 'selectedTime',
-    'name', 'city', 'email', 'phone', 'ipAddress', 'interests', 'ageCategory', 'createdAt', 'status', 'actions'
+    'name', 'city', 'email', 'phone', 'ipAddress', 'interests', 'consents', 'ageCategory', 'createdAt', 'status', 'actions'
   ];
 
   dataSource: MatTableDataSource<Reservation>;
@@ -202,6 +209,13 @@ export class ReservationComponent implements OnInit, AfterViewInit {
           phone: r.phone,
           ipAddress: r.ipAddress,
           interests: r.interests,
+          phoneContactConsent: r.phoneContactConsent,
+          partnerDataSharingConsent: r.partnerDataSharingConsent,
+          marketingConsent: r.marketingConsent,
+          termsAccepted: r.termsAccepted,
+          consentCapturedAt: r.consentCapturedAt,
+          termsVersion: r.termsVersion,
+          privacyPolicyVersion: r.privacyPolicyVersion,
           ageCategory: r.ageCategory,
           createdAt: r.createdAt,
           status: r.status
@@ -488,6 +502,27 @@ export class ReservationComponent implements OnInit, AfterViewInit {
     const interests = this.parseInterests(interestsJson);
     if (interests.length === 0) return 'Aucun';
     return interests.map(i => this.getInterestLabel(i)).join(', ');
+  }
+
+  formatConsentStatus(value: boolean | null | undefined): string {
+    if (value === true) return 'Oui';
+    if (value === false) return 'Non';
+    return 'Non renseigné';
+  }
+
+  getConsentClass(value: boolean | null | undefined): string {
+    if (value === true) return 'consent-accepted';
+    if (value === false) return 'consent-declined';
+    return 'consent-unknown';
+  }
+
+  formatConsentSummary(reservation: Reservation): string {
+    return [
+      `Contact téléphonique : ${this.formatConsentStatus(reservation.phoneContactConsent)}`,
+      `Partage avec l'exposant : ${this.formatConsentStatus(reservation.partnerDataSharingConsent)}`,
+      `Marketing : ${this.formatConsentStatus(reservation.marketingConsent)}`,
+      `Conditions générales : ${this.formatConsentStatus(reservation.termsAccepted)}`
+    ].join('\n');
   }
 
   showSnackBar(message: string, type: 'success' | 'error'): void {

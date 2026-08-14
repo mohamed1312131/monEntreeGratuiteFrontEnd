@@ -176,14 +176,21 @@
               </div>
             </div>
           </div>
-          <small class="form-text text-muted">En remplissant ce formulaire, vous autorisez VIPLUX (monentreegratuite) à traiter vos données pour vous transmettre votre invitation et organiser votre accueil VIP. Vos données peuvent être partagées avec l'exposant référent de votre secteur pour l'établissement de votre diagnostic. Retrait du consentement à tout moment : contact&#64;monentreegratuite.com.</small>
+          <small class="form-text text-muted">En remplissant ce formulaire, vous permettez à VIPLUX (monentreegratuite.com) de traiter vos données pour valider et vous transmettre votre invitation. Pour plus d'informations ou pour exercer vos droits, consultez notre <a routerLink="/politique-confidentialite" target="_blank">Politique de Confidentialité</a> ou contactez : <a href="mailto:contact@monentreegratuite.com">contact&#64;monentreegratuite.com</a>.</small>
         </div>
 
         <!-- Phone contact consent -->
         <div class="form-group checkbox-group">
           <input type="checkbox" id="acceptPhoneContact" [(ngModel)]="reservationForm.acceptPhoneContact" name="acceptPhoneContact" required [disabled]="!selectedFoire.disponible">
           <label for="acceptPhoneContact">
-            J'accepte d'être recontacté(e) par téléphone par VIPLUX ou l'exposant référent pour confirmer mon invitation et mon rendez-vous VIP.* (Obligatoire pour la confirmation téléphonique)
+            J'accepte d'être recontacté(e) par téléphone par VIPLUX pour vérifier et confirmer ma demande d'invitation. *
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="acceptPartnerShare" [(ngModel)]="reservationForm.acceptPartnerShare" name="acceptPartnerShare" [disabled]="!selectedFoire.disponible">
+          <label for="acceptPartnerShare">
+            J'accepte que mes coordonnées soient transmises à l'exposant référent de mon secteur pour la réalisation de mon diagnostic et la confirmation de mon rendez-vous VIP. <span class="consent-optional">(Optionnel)</span>
           </label>
         </div>
 
@@ -191,7 +198,7 @@
         <div class="form-group checkbox-group">
           <input type="checkbox" id="acceptMarketing" [(ngModel)]="reservationForm.acceptMarketing" name="acceptMarketing" [disabled]="!selectedFoire.disponible">
           <label for="acceptMarketing">
-            J'accepte de recevoir les offres et actualités de VIPLUX par e-mail et SMS. (Optionnel)
+            J'accepte de recevoir les offres et actualités des prochains salons par e-mail et SMS de la part de VIPLUX. <span class="consent-optional">(Optionnel)</span>
           </label>
         </div>
 
@@ -199,7 +206,7 @@
         <div class="form-group checkbox-group">
           <input type="checkbox" id="acceptConditions" [(ngModel)]="reservationForm.acceptConditions" name="acceptConditions" required [disabled]="!selectedFoire.disponible">
           <label for="acceptConditions">
-            Je reconnais avoir lu et accepté les <a routerLink="/conditions-generales" target="_blank">conditions générales de services et d'utilisation</a> *
+            J'ai lu et j'accepte les <a routerLink="/conditions-generales" target="_blank">Conditions Générales de Services et d'Utilisation</a>. *
           </label>
         </div>
 
