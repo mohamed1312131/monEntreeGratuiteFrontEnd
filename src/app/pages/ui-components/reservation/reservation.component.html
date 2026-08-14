@@ -42,8 +42,9 @@
       
       <mat-form-field appearance="outline" class="compact-filter">
         <mat-label>Foire</mat-label>
-        <mat-select [(ngModel)]="selectedFoires" (selectionChange)="applyFilters()" multiple>
-          <mat-option *ngFor="let foire of uniqueFoires" [value]="foire">{{ foire }}</mat-option>
+        <mat-select [(ngModel)]="selectedFoireId" (selectionChange)="onFoireChange()">
+          <mat-option [value]="null">Toutes les foires</mat-option>
+          <mat-option *ngFor="let foire of uniqueFoires" [value]="foire.id">{{ foire.name }}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>

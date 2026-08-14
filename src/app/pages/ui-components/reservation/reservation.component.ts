@@ -14,6 +14,7 @@ interface DateRange {
 
 interface Reservation {
   id: number;
+  foireId: number;
   country: string;
   selectedDate?: string;
   selectedTime?: string;
@@ -54,23 +55,26 @@ export class ReservationComponent implements OnInit, AfterViewInit {
   reservationCount: number = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50, 100];
   pageSize: number = 10;
-  showCompleted: boolean = false;
+  // All statuses are shown on first open. The toggle remains available for later use.
+  showCompleted: boolean = true;
   
   // Filters
   selectedStatus: string[] = [];
-  selectedFoires: string[] = [];
-  uniqueFoires: string[] = [];
+  selectedFoireId: number | null = null;
+  uniqueFoires: Array<{ id: number; name: string }> = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   private allReservations: Reservation[] = [];
+  private reservationRequestId = 0;
   isLoading = false;
 
   // Old static mock data (kept for reference)
   private mockReservations: Reservation[] = [
     {
       id: 1,
+      foireId: 0,
       country: 'FR',
       reservationDate: '2024-12-01',
       foireDateRanges: [{startDate: '2025-02-22', endDate: '2025-02-25'}],
@@ -85,6 +89,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
     },
     {
       id: 2,
+      foireId: 0,
       country: 'FR',
       reservationDate: '2024-12-02',
       foireDateRanges: [{startDate: '2025-04-28', endDate: '2025-05-02'}],
@@ -99,6 +104,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
     },
     {
       id: 3,
+      foireId: 0,
       country: 'BL',
       reservationDate: '2024-12-03',
       foireDateRanges: [{startDate: '2025-03-15', endDate: '2025-03-18'}],
@@ -113,6 +119,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
     },
     {
       id: 4,
+      foireId: 0,
       country: 'FR',
       reservationDate: '2024-12-04',
       foireDateRanges: [{startDate: '2025-10-28', endDate: '2025-11-01'}],
@@ -127,6 +134,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
     },
     {
       id: 5,
+      foireId: 0,
       country: 'SU',
       reservationDate: '2024-12-05',
       foireDateRanges: [{startDate: '2025-06-10', endDate: '2025-06-14'}],
@@ -141,6 +149,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
     },
     {
       id: 6,
+      foireId: 0,
       country: 'FR',
       reservationDate: '2024-12-06',
       foireDateRanges: [{startDate: '2025-02-22', endDate: '2025-02-25'}],
@@ -155,6 +164,7 @@ export class ReservationComponent implements OnInit, AfterViewInit {
     },
     {
       id: 7,
+      foireId: 0,
       country: 'BL',
       reservationDate: '2024-12-07',
       foireDateRanges: [{startDate: '2025-05-20', endDate: '2025-05-23'}],
@@ -182,8 +192,12 @@ export class ReservationComponent implements OnInit, AfterViewInit {
   }
   
   extractUniqueFoires(): void {
-    const foiresSet = new Set(this.allReservations.map(r => r.foireName));
-    this.uniqueFoires = Array.from(foiresSet).sort();
+    const foires = new Map<number, string>();
+    this.allReservations.forEach(reservation => {
+      foires.set(reservation.foireId, reservation.foireName);
+    });
+    this.uniqueFoires = Array.from(foires, ([id, name]) => ({ id, name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   ngAfterViewInit(): void {
@@ -192,11 +206,18 @@ export class ReservationComponent implements OnInit, AfterViewInit {
   }
 
   loadReservationsFromBackend(): void {
+    const requestId = ++this.reservationRequestId;
     this.isLoading = true;
-    this.reservationService.getAllReservations().subscribe({
+    this.reservationService.getAllReservations(this.selectedFoireId).subscribe({
       next: (data: ReservationData[]) => {
+        // Ignore a response for a fair that was changed while the request was in flight.
+        if (requestId !== this.reservationRequestId) {
+          return;
+        }
+
         this.allReservations = data.map(r => ({
           id: r.id,
+          foireId: r.foireId,
           country: r.country,
           selectedDate: r.selectedDate,
           selectedTime: r.selectedTime,
@@ -221,10 +242,18 @@ export class ReservationComponent implements OnInit, AfterViewInit {
           status: r.status
         }));
         this.loadReservations();
-        this.extractUniqueFoires();
+        // The fair list must continue to contain every fair when a single fair is selected.
+        if (this.selectedFoireId === null) {
+          this.extractUniqueFoires();
+        }
+        this.applyAllFilters();
         this.isLoading = false;
       },
       error: (error) => {
+        if (requestId !== this.reservationRequestId) {
+          return;
+        }
+
         console.error('Error loading reservations:', error);
         this.showSnackBar('Erreur lors du chargement des réservations', 'error');
         this.isLoading = false;
@@ -243,18 +272,28 @@ export class ReservationComponent implements OnInit, AfterViewInit {
 
   toggleShowCompleted(): void {
     this.showCompleted = !this.showCompleted;
+    this.selection.clear();
     this.loadReservations();
+    this.applyAllFilters();
   }
 
   private searchText = '';
 
   applyFilter(event: Event): void {
     this.searchText = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.selection.clear();
     this.applyAllFilters();
   }
   
   applyFilters(): void {
+    this.selection.clear();
     this.applyAllFilters();
+  }
+
+  onFoireChange(): void {
+    // A selection always belongs to one export scope; do not carry it to another fair.
+    this.selection.clear();
+    this.loadReservationsFromBackend();
   }
   
   private applyAllFilters(): void {
@@ -273,15 +312,17 @@ export class ReservationComponent implements OnInit, AfterViewInit {
       const matchesStatus = this.selectedStatus.length === 0 || 
         this.selectedStatus.includes(data.status);
       
-      // Foire filter
-      const matchesFoire = this.selectedFoires.length === 0 || 
-        this.selectedFoires.includes(data.foireName);
+      // Fair filtering is performed by the API. This guard keeps the table scoped
+      // correctly even if a stale response reaches the browser.
+      const matchesFoire = this.selectedFoireId === null ||
+        data.foireId === this.selectedFoireId;
       
       return matchesSearch && matchesStatus && matchesFoire;
     };
     
     // Trigger filter by setting a unique value each time
     this.dataSource.filter = Math.random().toString();
+    this.reservationCount = this.dataSource.filteredData.length;
     
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
@@ -294,7 +335,9 @@ export class ReservationComponent implements OnInit, AfterViewInit {
   }
 
   exportToExcel(): void {
-    const selectedReservations = this.selection.selected;
+    // Export only rows in the current table scope, never a row selected before a filter changed.
+    const selectedReservations = this.dataSource.filteredData
+      .filter(reservation => this.selection.isSelected(reservation));
     
     if (selectedReservations.length === 0) {
       this.showSnackBar('Veuillez sélectionner au moins une réservation à exporter', 'error');
@@ -307,17 +350,18 @@ export class ReservationComponent implements OnInit, AfterViewInit {
   }
 
   isAllSelected(): boolean {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    const visibleReservations = this.dataSource.filteredData;
+    return visibleReservations.length > 0 &&
+      visibleReservations.every(reservation => this.selection.isSelected(reservation));
   }
 
   toggleAllRows(): void {
+    const visibleReservations = this.dataSource.filteredData;
     if (this.isAllSelected()) {
-      this.selection.clear();
+      this.selection.deselect(...visibleReservations);
       return;
     }
-    this.selection.select(...this.dataSource.data);
+    this.selection.select(...visibleReservations);
   }
 
   updateReservationStatus(id: number, status: string): void {

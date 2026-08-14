@@ -56,8 +56,12 @@ export class ReservationService {
 
   constructor(private http: HttpClient) {}
 
-  getAllReservations(): Observable<ReservationData[]> {
-    return this.http.get<ReservationData[]>(`${this.apiUrl}/GetAll`);
+  getAllReservations(foireId?: number | null): Observable<ReservationData[]> {
+    const params = foireId == null
+      ? undefined
+      : new HttpParams().set('foireId', foireId.toString());
+
+    return this.http.get<ReservationData[]>(`${this.apiUrl}/GetAll`, { params });
   }
 
   getReservationById(id: number): Observable<ReservationData> {
