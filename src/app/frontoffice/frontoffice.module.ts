@@ -28,6 +28,7 @@ import { SafePipe } from '../pipes/safe.pipe';
 import { ConditionsGeneralesComponent } from './components/conditions-generales/conditions-generales.component';
 import { PolitiqueConfidentialiteComponent } from './components/politique-confidentialite/politique-confidentialite.component';
 import { ReservationPageComponent } from './components/reservation-page/reservation-page.component';
+import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ReservationPageComponent } from './components/reservation-page/reservat
     SafePipe,
     ConditionsGeneralesComponent,
     PolitiqueConfidentialiteComponent,
-    ReservationPageComponent
+    ReservationPageComponent,
+    CookieConsentComponent
   ],
   imports: [CommonModule, FrontofficeRoutingModule, FormsModule, ReactiveFormsModule],
 })

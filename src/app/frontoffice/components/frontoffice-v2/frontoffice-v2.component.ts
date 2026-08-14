@@ -1,10 +1,12 @@
-import { Component, ViewEncapsulation, OnInit, HostListener } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ReservationService, ReservationCreateDTO } from 'src/app/services/reservation.service';
 import { ExposantRequestService, ExposantRequestCreateDTO } from 'src/app/services/exposant-request.service';
 import { UserVisitService } from 'src/app/services/user-visit.service';
 import { FoireService } from 'src/app/services/foire.service';
 import { environment } from 'src/environments/environment';
+import { CookieConsentService } from 'src/app/services/cookie-consent.service';
+import { Subscription } from 'rxjs';
 
 declare const grecaptcha: any;
 
@@ -103,17 +105,33 @@ interface ExhibitorForm {
     ])
   ]
 })
-export class FrontofficeV2Component implements OnInit {
+export class FrontofficeV2Component implements OnInit, OnDestroy {
+  private cookieConsentSubscription?: Subscription;
+  private visitTracked = false;
   
   constructor(
     private reservationService: ReservationService,
     private exposantRequestService: ExposantRequestService,
     private userVisitService: UserVisitService,
-    private foireService: FoireService
+    private foireService: FoireService,
+    private cookieConsentService: CookieConsentService
   ) {}
 
   ngOnInit(): void {
-    // Track user visit when component loads
+    // Visit measurement is optional and never prevents the reservation flow.
+    this.cookieConsentSubscription = this.cookieConsentService.preferences$.subscribe(() => {
+      if (this.cookieConsentService.isAudienceMeasurementAllowed() && !this.visitTracked) {
+        this.trackVisit();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.cookieConsentSubscription?.unsubscribe();
+  }
+
+  private trackVisit(): void {
+    this.visitTracked = true;
     this.userVisitService.trackVisit().subscribe({
       next: () => console.log('User visit tracked'),
       error: (err) => console.error('Error tracking visit:', err)
